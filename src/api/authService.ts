@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://65.38.96.125:3005", // tu URL de backend
+  baseURL: "https://65.38.96.125:3005", // tu URL de backend
   withCredentials: false, // no es necesario si usas token, no cookies
 });
 
