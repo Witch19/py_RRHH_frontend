@@ -21,7 +21,7 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3005/auth/register', form);
+      const res = await axios.post('http://65.38.96.125:3005/auth/register', form);
       console.log(res.data);
       navigate('/');
     } catch (err) {
