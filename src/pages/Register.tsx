@@ -3,7 +3,6 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from "../api/authService";
 import axios from 'axios';
 
 const Register = () => {
