@@ -13,7 +13,7 @@ function App() {
   return (
     <Routes>
       {/* Rutas públicas */}
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
       {/* Rutas privadas */}

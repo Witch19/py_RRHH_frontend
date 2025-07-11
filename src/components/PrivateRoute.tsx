@@ -8,7 +8,7 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
   
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
