@@ -5,7 +5,6 @@ import {
   Heading,
   Image,
   Stack,
-  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";

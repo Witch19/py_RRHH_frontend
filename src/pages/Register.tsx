@@ -59,14 +59,33 @@ const Register = () => {
         role: form.role,
       });
 
+      console.log("✅ Respuesta del backend:", res.data);
+
+      // Capturar mensaje y token si existen
+      const mensaje =
+        typeof res.data === "string"
+          ? res.data
+          : res.data?.message || "Usuario registrado correctamente";
+
+      const token =
+        typeof res.data === "object" && res.data?.token
+          ? res.data.token
+          : null;
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+
       toast({
-        title: "Usuario registrado",
+        title: mensaje,
         status: "success",
         duration: 2000,
         isClosable: true,
       });
 
-      navigate("/");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (err: any) {
       toast({
         title: "Error al registrarse",
@@ -179,7 +198,12 @@ const Register = () => {
               I agree to the Terms of Service and Privacy Policy
             </Checkbox>
 
-            <Button type="submit" colorScheme="purple" w="full" borderRadius="full">
+            <Button
+              type="submit"
+              colorScheme="purple"
+              w="full"
+              borderRadius="full"
+            >
               Register
             </Button>
           </VStack>
@@ -192,11 +216,25 @@ const Register = () => {
           </Link>
         </Text>
 
-        {/* Cambiador de colores */}
         <Flex justify="center" gap={4} mt={6}>
-          <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
-          <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
-          <Icon as={FaCircle} color="teal.400" onClick={() => setTheme("teal")} cursor="pointer" />
+          <Icon
+            as={FaCircle}
+            color="gray.300"
+            onClick={() => setTheme("gray")}
+            cursor="pointer"
+          />
+          <Icon
+            as={FaCircle}
+            color="orange.400"
+            onClick={() => setTheme("orange")}
+            cursor="pointer"
+          />
+          <Icon
+            as={FaCircle}
+            color="teal.400"
+            onClick={() => setTheme("teal")}
+            cursor="pointer"
+          />
         </Flex>
       </Box>
     </Flex>
