@@ -1,74 +1,205 @@
 import {
-  Box, Button, FormControl, FormLabel, Input, Heading, Text, Link,
-} from '@chakra-ui/react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  Input,
+  VStack,
+  Heading,
+  Text,
+  Link,
+  useToast,
+  Icon,
+  Select,
+} from "@chakra-ui/react";
+import { FaCircle } from "react-icons/fa";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "../api/authService";
+import { useThemeColor } from "../context/ThemeContext";
 
 const Register = () => {
   const [form, setForm] = useState({
-    username: '',
-    email: '',
-    password: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "trabajador",
   });
 
   const navigate = useNavigate();
+  const toast = useToast();
+  const { gradient, setTheme } = useThemeColor();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      toast({
+        title: "Las contraseñas no coinciden",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
-      const res = await axios.post('http://65.38.96.125:3005/auth/register', form);
-      console.log(res.data);
-      navigate('/');
-    } catch (err) {
-      alert('Error al registrarse');
+      const res = await API.post("/auth/register", {
+        username: `${form.firstName} ${form.lastName}`,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+      });
+
+      toast({
+        title: "Usuario registrado",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
+
+      navigate("/");
+    } catch (err: any) {
+      toast({
+        title: "Error al registrarse",
+        description: err.response?.data?.message || err.message,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    <Box maxW="sm" mx="auto" mt={20} p={6} borderWidth={1} borderRadius="md">
-      <Heading size="lg" mb={4}>Registro de Usuario</Heading>
-      <form onSubmit={handleSubmit}>
-        <FormControl mb={3}>
-          <FormLabel>Nombre de usuario</FormLabel>
-          <Input
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-        </FormControl>
-        <FormControl mb={3}>
-          <FormLabel>Email</FormLabel>
-          <Input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </FormControl>
-        <FormControl mb={3}>
-          <FormLabel>Contraseña</FormLabel>
-          <Input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-          />
-        </FormControl>
-        <Button colorScheme="green" type="submit" width="100%">Registrar</Button>
-      </form>
-      <Text mt={4}>
-        ¿Ya tienes cuenta?{' '}
-        <Link color="blue.500" href="/">Inicia sesión</Link>
-      </Text>
-    </Box>
+    <Flex
+      minH="100vh"
+      align="center"
+      justify="center"
+      bgGradient={gradient}
+      px={4}
+    >
+      <Box
+        bg="whiteAlpha.200"
+        backdropFilter="blur(10px)"
+        borderRadius="2xl"
+        p={8}
+        w="full"
+        maxW="sm"
+        textAlign="center"
+        boxShadow="2xl"
+      >
+        <Box mb={6}>
+          <Icon as={FaCircle} boxSize={8} color="white" />
+          <Heading size="md" color="white" mt={2}>
+            Technology
+          </Heading>
+        </Box>
+
+        <Heading size="lg" color="white" mb={6}>
+          Sign Up
+        </Heading>
+
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={4}>
+            <FormControl isRequired>
+              <Input
+                placeholder="First Name"
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                bg="white"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                placeholder="Last Name"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+                bg="white"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                type="email"
+                placeholder="Your Email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                bg="white"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Select
+                placeholder="Seleccione un rol"
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+                bg="white"
+              >
+                <option value="trabajador">Trabajador</option>
+                <option value="supervisor">Supervisor</option>
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                type="password"
+                placeholder="Password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                bg="white"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                bg="white"
+              />
+            </FormControl>
+
+            <Checkbox color="white" alignSelf="start" isRequired>
+              I agree to the Terms of Service and Privacy Policy
+            </Checkbox>
+
+            <Button type="submit" colorScheme="purple" w="full" borderRadius="full">
+              Register
+            </Button>
+          </VStack>
+        </form>
+
+        <Text mt={4} color="white" fontSize="sm">
+          Already have an account?{" "}
+          <Link color="blue.200" href="/" fontWeight="bold">
+            Login
+          </Link>
+        </Text>
+
+        {/* Cambiador de colores */}
+        <Flex justify="center" gap={4} mt={6}>
+          <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
+          <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
+          <Icon as={FaCircle} color="teal.400" onClick={() => setTheme("teal")} cursor="pointer" />
+        </Flex>
+      </Box>
+    </Flex>
   );
 };
 

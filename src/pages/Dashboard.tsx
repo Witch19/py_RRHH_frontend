@@ -1,22 +1,26 @@
 import {
   Box,
+  Button,
   Flex,
   Text,
   VStack,
-  Button,
   Heading,
   useColorModeValue,
   Input,
   FormControl,
   FormLabel,
   useToast,
+  Icon,
+  Spinner,
 } from "@chakra-ui/react";
+import { FaCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import Trabajadores from "./Trabajadores";
 import Cursos from "./Cursos";
 import Solicitudes from "./Solicitudes";
 import API from "../api/authService";
+import { useThemeColor } from "../context/ThemeContext";
 
 const menuItems = [
   { key: "trabajadores", label: "Trabajadores" },
@@ -29,46 +33,50 @@ const Dashboard = () => {
   const { user, logout, login } = useAuth();
   const [activeMenu, setActiveMenu] = useState("trabajadores");
 
-  const bgSidebar = useColorModeValue("gray.100", "gray.900");
-  const bgHeader = useColorModeValue("white", "gray.800");
+  /* Theme */
+  const { gradient, setTheme } = useThemeColor();
 
-  // Estado para formulario perfil
+  /* Sidebar/header colors (sobre el gradient) */
+  const bgSidebar = useColorModeValue("whiteAlpha.200", "whiteAlpha.200");
+  const bgHeader = useColorModeValue("whiteAlpha.100", "whiteAlpha.100");
+
+  /* Perfil */
   const [username, setUsername] = useState(user?.username || "");
   const [email, setEmail] = useState(user?.email || "");
   const [loading, setLoading] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   const toast = useToast();
+  const token = localStorage.getItem("token") || "";
 
+  /* Obtener perfil */
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await API.get("/auth/profile");
-        setUsername(res.data.username || "");
-        setEmail(res.data.email || "");
+        const { data } = await API.get("/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUsername(data.username || "");
+        setEmail(data.email || "");
       } catch (error: any) {
         console.error("Error al obtener perfil:", error.response?.data || error.message);
+      } finally {
+        setProfileLoading(false);
       }
     };
-    fetchProfile();
-  }, []);
+    if (token) fetchProfile();
+  }, [token]);
 
+  /* Actualizar perfil */
   const handleUpdateProfile = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token") || "";
-
-      const res = await API.put(
+      const { data } = await API.put(
         "/auth/profile",
         { username, email },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      login(res.data.user, token); // Actualiza contexto usuario
-
+      login(data.user, token); // Actualiza contexto
       toast({
         title: "Perfil actualizado",
         status: "success",
@@ -89,19 +97,20 @@ const Dashboard = () => {
   };
 
   return (
-    <Flex height="100vh" overflow="hidden">
-      {/* Sidebar */}
+    <Flex minH="100vh" bgGradient={gradient} overflow="hidden">
+      {/* ────────────── Sidebar ────────────── */}
       <Box
         bg={bgSidebar}
-        w="220px"
+        backdropFilter="blur(10px)"
+        w="240px"
         p={4}
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
-        height="100vh"
       >
+        {/* Menú principal */}
         <Box>
-          <Heading size="md" mb={6} textAlign="center">
+          <Heading size="md" mb={6} textAlign="center" color="white">
             Menú
           </Heading>
           <VStack spacing={3} align="stretch">
@@ -109,7 +118,7 @@ const Dashboard = () => {
               <Button
                 key={item.key}
                 variant={activeMenu === item.key ? "solid" : "ghost"}
-                colorScheme="blue"
+                colorScheme="purple"
                 justifyContent="flex-start"
                 onClick={() => setActiveMenu(item.key)}
               >
@@ -119,25 +128,47 @@ const Dashboard = () => {
           </VStack>
         </Box>
 
-        <Box>
+        {/* Selector de color + Logout */}
+        <VStack spacing={4}>
+          <Flex justify="center" gap={3}>
+            <Icon
+              as={FaCircle}
+              color="gray.300"
+              cursor="pointer"
+              onClick={() => setTheme("gray")}
+            />
+            <Icon
+              as={FaCircle}
+              color="orange.400"
+              cursor="pointer"
+              onClick={() => setTheme("orange")}
+            />
+            <Icon
+              as={FaCircle}
+              color="teal.400"
+              cursor="pointer"
+              onClick={() => setTheme("teal")}
+            />
+          </Flex>
           <Button colorScheme="red" size="sm" onClick={logout} width="100%">
             Cerrar sesión
           </Button>
-        </Box>
+        </VStack>
       </Box>
 
-      {/* Main content */}
-      <Box flex="1" display="flex" flexDirection="column" overflow="auto">
+      {/* ────────────── Contenido ────────────── */}
+      <Box flex="1" display="flex" flexDirection="column" overflow="hidden">
         {/* Header */}
         <Flex
           bg={bgHeader}
+          backdropFilter="blur(6px)"
           p={4}
           justifyContent="flex-end"
           alignItems="center"
           borderBottom="1px solid"
-          borderColor="gray.200"
+          borderColor="whiteAlpha.300"
         >
-          <Text fontWeight="medium" mr={4}>
+          <Text fontWeight="medium" color="white">
             Hola, {user ? user.username ?? user.email ?? "Invitado" : "Invitado"}
           </Text>
         </Flex>
@@ -148,38 +179,44 @@ const Dashboard = () => {
           {activeMenu === "cursos" && <Cursos />}
           {activeMenu === "solicitudes" && <Solicitudes />}
           {activeMenu === "perfil" && (
-            <Box maxW="400px">
-              <Heading size="md" mb={4}>
-                Editar perfil
-              </Heading>
-              <VStack spacing={4} align="stretch">
-                <FormControl>
-                  <FormLabel>Nombre de usuario</FormLabel>
-                  <Input
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Nombre de usuario"
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>Email</FormLabel>
-                  <Input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Correo electrónico"
-                  />
-                </FormControl>
-                <Button
-                  colorScheme="blue"
-                  onClick={handleUpdateProfile}
-                  isLoading={loading}
-                  alignSelf="flex-start"
-                >
-                  Guardar cambios
-                </Button>
-              </VStack>
-            </Box>
+            profileLoading ? (
+              <Spinner color="white" />
+            ) : (
+              <Box maxW="400px">
+                <Heading size="md" mb={4} color="white">
+                  Editar perfil
+                </Heading>
+                <VStack spacing={4} align="stretch">
+                  <FormControl>
+                    <FormLabel color="white">Nombre de usuario</FormLabel>
+                    <Input
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="Nombre de usuario"
+                      bg="white"
+                    />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel color="white">Email</FormLabel>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Correo electrónico"
+                      bg="white"
+                    />
+                  </FormControl>
+                  <Button
+                    colorScheme="purple"
+                    onClick={handleUpdateProfile}
+                    isLoading={loading}
+                    alignSelf="flex-start"
+                  >
+                    Guardar cambios
+                  </Button>
+                </VStack>
+              </Box>
+            )
           )}
         </Box>
       </Box>

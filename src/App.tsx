@@ -8,12 +8,17 @@ import Cursos from "./pages/Cursos";
 import Solicitudes from "./pages/Solicitudes";
 import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./components/Layout";
+import IntroCarousel from "./carousel/IntroCarousel";
+import LandingCarousel from "./pages/LandingCarousel";
 
 function App() {
   return (
     <Routes>
       {/* Rutas públicas */}
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<IntroCarousel />} />
+      <Route path="/bienvenida" element={<LandingCarousel />} />
+
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
       {/* Rutas privadas */}

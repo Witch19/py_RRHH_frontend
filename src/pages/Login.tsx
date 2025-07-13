@@ -1,22 +1,27 @@
-// src/pages/Login.tsx
 import {
   Box,
   Button,
   FormControl,
-  FormLabel,
   Input,
-  Heading,
   VStack,
   InputGroup,
+  InputLeftElement,
   InputRightElement,
   IconButton,
+  Text,
+  Flex,
   useToast,
+  Link,
+  Heading,
+  Icon,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { FaUser, FaLock, FaCircle } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
+import { useThemeColor } from "../context/ThemeContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,31 +30,25 @@ const Login = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { login } = useAuth();
+  const { gradient, setTheme } = useThemeColor();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login", { email, password });
-
       const { user, token } = res.data;
-      console.log('Login response:', res.data);
-
-
       if (user && token) {
         login(user, token);
-
         toast({
           title: "¡Bienvenido!",
           status: "success",
           duration: 2000,
           isClosable: true,
         });
-
         navigate("/dashboard");
       } else {
         throw new Error("Respuesta del servidor inválida");
       }
-
     } catch (err: any) {
       toast({
         title: "Error al iniciar sesión",
@@ -61,38 +60,67 @@ const Login = () => {
     }
   };
 
-
   return (
-    <Box minH="100vh" display="flex" alignItems="center" justifyContent="center" bg="gray.50">
-      <Box w="full" maxW="md" p={8} borderWidth={1} borderRadius="md" bg="white" boxShadow="lg">
-        <Heading mb={6} textAlign="center">
-          Iniciar Sesión
+    <Flex
+      minH="100vh"
+      align="center"
+      justify="center"
+      bgGradient={gradient}
+      px={4}
+    >
+      <Box
+        bg="whiteAlpha.200"
+        backdropFilter="blur(10px)"
+        borderRadius="2xl"
+        p={8}
+        w="full"
+        maxW="sm"
+        textAlign="center"
+        boxShadow="2xl"
+      >
+        <Box mb={6}>
+          <Icon as={FaCircle} boxSize={8} color="white" />
+          <Heading size="md" color="white" mt={2}>
+            Technology
+          </Heading>
+        </Box>
+
+        <Heading size="lg" color="white" mb={6}>
+          Welcome
         </Heading>
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
             <FormControl isRequired>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tuemail@ejemplo.com"
-              />
+              <InputGroup>
+                <InputLeftElement>
+                  <FaUser color="gray" />
+                </InputLeftElement>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Username"
+                  bg="white"
+                />
+              </InputGroup>
             </FormControl>
 
             <FormControl isRequired>
-              <FormLabel>Contraseña</FormLabel>
               <InputGroup>
+                <InputLeftElement>
+                  <FaLock color="gray" />
+                </InputLeftElement>
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Contraseña"
+                  placeholder="Password"
+                  bg="white"
                 />
                 <InputRightElement>
                   <IconButton
-                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                    aria-label="Mostrar/Ocultar contraseña"
                     icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
                     size="sm"
                     variant="ghost"
@@ -102,13 +130,33 @@ const Login = () => {
               </InputGroup>
             </FormControl>
 
-            <Button type="submit" colorScheme="blue" width="full">
-              Entrar
+            <Flex w="full" justify="flex-end">
+              <Link color="white" fontSize="sm">
+                Forgot Password?
+              </Link>
+            </Flex>
+
+            <Button type="submit" colorScheme="purple" w="full" borderRadius="full">
+              Login
             </Button>
           </VStack>
         </form>
+
+        <Text mt={4} color="white" fontSize="sm">
+          Don’t have an account?{" "}
+          <Link color="blue.200" href="/register" fontWeight="bold">
+            Sign Up
+          </Link>
+        </Text>
+
+        {/* Cambiador de colores */}
+        <Flex justify="center" gap={4} mt={6}>
+          <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
+          <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
+          <Icon as={FaCircle} color="teal.400" onClick={() => setTheme("teal")} cursor="pointer" />
+        </Flex>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 
