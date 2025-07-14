@@ -212,7 +212,7 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
                         Cancelar
                     </Button>
                     <Button colorScheme="blue" ml={3} onClick={handleSave}>
-                        Guardar cambios
+                        Actualizar
                     </Button>
                 </ModalFooter>
             </ModalContent>

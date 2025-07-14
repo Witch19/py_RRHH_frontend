@@ -29,20 +29,22 @@ import { useThemeColor } from "../context/ThemeContext";
 import { useAuth } from "../auth/AuthContext";
 import AgregarCurso, { type Curso } from "../components/AgregarCursos";
 import EditarCursos from "../components/EditarCursos";
+import React from "react";
 
 /* ---------- Botones con íconos estilizados ---------- */
-const BtnEditar = (props: any) => (
+export const BtnEditar = React.forwardRef((props: any, ref) => (
   <IconButton
     icon={<EditIcon />}
     aria-label="Editar"
     size="sm"
     bg="gray.100"
     _hover={{ bg: "gray.200" }}
+    ref={ref}
     {...props}
   />
-);
+));
 
-const BtnEliminar = (props: any) => (
+export const BtnEliminar = React.forwardRef((props: any, ref) => (
   <IconButton
     icon={<DeleteIcon />}
     aria-label="Eliminar"
@@ -50,9 +52,10 @@ const BtnEliminar = (props: any) => (
     bg="red.400"
     color="white"
     _hover={{ bg: "red.500" }}
+    ref={ref}
     {...props}
   />
-);
+));
 
 const Cursos = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
@@ -120,14 +123,9 @@ const Cursos = () => {
   return (
     <>
       <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
-        {/* Encabezado */}
+        {/* Encabezado sin número */}
         <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
-          <Heading mb={0}>
-            Lista de Cursos{" "}
-            <Badge colorScheme="blue" fontSize="0.8em">
-              {cursos.length}
-            </Badge>
-          </Heading>
+          <Heading mb={0}>Lista de Cursos</Heading>
 
           {/* Botón Agregar */}
           {isAdmin && (

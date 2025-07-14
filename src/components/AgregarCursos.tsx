@@ -28,8 +28,8 @@ export interface Curso {
 }
 
 interface Props {
-  onAdd: (nuevo: Curso) => void; // callback al crear
-  triggerButton?: ReactElement; // botón externo opcional
+  onAdd: (nuevo: Curso) => void;
+  triggerButton?: ReactElement;
 }
 
 const AgregarCurso = ({ onAdd, triggerButton }: Props) => {
@@ -43,12 +43,24 @@ const AgregarCurso = ({ onAdd, triggerButton }: Props) => {
     areas: [],
   });
 
+  const [areasInput, setAreasInput] = useState(""); // ✅ colocado correctamente
+
   const handleGuardar = async () => {
     try {
-      const res = await API.post("/curso", form);
-      onAdd(res.data); // notifica al padre
+      const nuevoCurso: Curso = {
+        ...form,
+        areas: areasInput
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      };
+
+      const res = await API.post("/curso", nuevoCurso);
+      onAdd(res.data);
       toast({ title: "Curso creado", status: "success", duration: 2000 });
+
       setForm({ nombre: "", descripcion: "", duracion: "", areas: [] });
+      setAreasInput("");
       onClose();
     } catch (err: any) {
       toast({
@@ -62,16 +74,16 @@ const AgregarCurso = ({ onAdd, triggerButton }: Props) => {
 
   return (
     <>
-      {/* Botón personalizado o predeterminado */}
       {triggerButton ? (
-        <span onClick={onOpen} style={{ cursor: "pointer" }}>{triggerButton}</span>
+        <span onClick={onOpen} style={{ cursor: "pointer" }}>
+          {triggerButton}
+        </span>
       ) : (
         <Button leftIcon={<AddIcon />} colorScheme="green" onClick={onOpen}>
-                Agregar
-              </Button>
+          Agregar
+        </Button>
       )}
 
-      {/* Modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -102,24 +114,19 @@ const AgregarCurso = ({ onAdd, triggerButton }: Props) => {
                 <Input
                   placeholder="Ej. 40 h"
                   value={form.duracion}
-                  onChange={(e) => setForm({ ...form, duracion: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, duracion: e.target.value })
+                  }
                 />
               </FormControl>
 
               <FormControl>
                 <FormLabel>Áreas (coma‑separadas)</FormLabel>
                 <Input
+                  type="text"
                   placeholder="RRHH, IT"
-                  value={form.areas.join(", ")}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      areas: e.target.value
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter(Boolean),
-                    })
-                  }
+                  value={areasInput}
+                  onChange={(e) => setAreasInput(e.target.value)}
                 />
               </FormControl>
             </Stack>

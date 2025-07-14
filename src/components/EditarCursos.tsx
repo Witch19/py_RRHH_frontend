@@ -25,8 +25,9 @@ interface Props {
   onDelete: (id: number) => void;
 }
 
-const EditarCurso = ({ isOpen, onClose, curso, onUpdate, onDelete }: Props) => {
+const EditarCurso = ({ isOpen, onClose, curso, onUpdate}: Props) => {
   const toast = useToast();
+
   const [form, setForm] = useState<Curso>({
     nombre: "",
     descripcion: "",
@@ -34,36 +35,33 @@ const EditarCurso = ({ isOpen, onClose, curso, onUpdate, onDelete }: Props) => {
     areas: [],
   });
 
+  const [areasInput, setAreasInput] = useState(""); // Nuevo estado para texto de áreas
+
   useEffect(() => {
-    if (curso) setForm({ ...curso });
+    if (curso) {
+      setForm({ ...curso });
+      setAreasInput(curso.areas.join(", ")); // mostrar áreas como texto
+    }
   }, [curso]);
 
   const handleGuardar = async () => {
+    if (!curso?.id) return;
     try {
-      const res = await API.put(`/curso/${curso?.id}`, form);
+      const actualizado: Curso = {
+        ...form,
+        areas: areasInput
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      };
+
+      const res = await API.patch(`/curso/${curso.id}`, actualizado);
       onUpdate(res.data);
       toast({ title: "Curso actualizado", status: "success", duration: 2000 });
       onClose();
     } catch (err: any) {
       toast({
         title: "Error al actualizar",
-        description: err.response?.data?.message || err.message,
-        status: "error",
-        duration: 4000,
-      });
-    }
-  };
-
-  const handleEliminar = async () => {
-    if (!curso?.id) return;
-    try {
-      await API.delete(`/curso/${curso.id}`);
-      onDelete(curso.id);
-      toast({ title: "Curso eliminado", status: "success", duration: 2000 });
-      onClose();
-    } catch (err: any) {
-      toast({
-        title: "Error al eliminar curso",
         description: err.response?.data?.message || err.message,
         status: "error",
         duration: 4000,
@@ -86,38 +84,39 @@ const EditarCurso = ({ isOpen, onClose, curso, onUpdate, onDelete }: Props) => {
                 onChange={(e) => setForm({ ...form, nombre: e.target.value })}
               />
             </FormControl>
+
             <FormControl>
               <FormLabel>Descripción</FormLabel>
               <Input
                 value={form.descripcion}
-                onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, descripcion: e.target.value })
+                }
               />
             </FormControl>
+
             <FormControl>
               <FormLabel>Duración</FormLabel>
               <Input
                 value={form.duracion}
-                onChange={(e) => setForm({ ...form, duracion: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, duracion: e.target.value })
+                }
               />
             </FormControl>
+
             <FormControl>
               <FormLabel>Áreas (coma‑separadas)</FormLabel>
               <Input
-                value={form.areas.join(", ")}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    areas: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-                  })
-                }
+                type="text"
+                value={areasInput}
+                onChange={(e) => setAreasInput(e.target.value)}
               />
             </FormControl>
           </Stack>
         </ModalBody>
+
         <ModalFooter>
-          <Button colorScheme="red" mr="auto" onClick={handleEliminar}>
-            Eliminar
-          </Button>
           <Button variant="ghost" onClick={onClose}>
             Cancelar
           </Button>
