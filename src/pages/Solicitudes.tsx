@@ -16,18 +16,21 @@ import {
   useToast,
   IconButton,
   Tooltip,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useThemeColor } from "../context/ThemeContext";
 import { useAuth } from "../auth/AuthContext";
 
 interface Solicitud {
-  _id: string;
-  trabajadorNombre: string;
-  permisoTipo: string;
+  id: string; // MongoDB usa strings como IDs
+  tipo: string;
   descripcion: string;
-  fechaSolicitud: string;
-  estado?: string;
+  fechaInicio: string;
+  fechaFin: string;
+  estado: string;
+  trabajadorId: number; // ID que viene del sistema de trabajadores en PostgreSQL
 }
 
 const Solicitudes = () => {
@@ -36,7 +39,7 @@ const Solicitudes = () => {
   const toast = useToast();
   const { gradient } = useThemeColor();
   const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "ADMIN";
 
   useEffect(() => {
     const fetchSolicitudes = async () => {
@@ -58,23 +61,42 @@ const Solicitudes = () => {
     fetchSolicitudes();
   }, [toast]);
 
+  const actualizarEstado = async (id: string, estado: string) => {
+    try {
+      await API.put(`/solicitudes/${id}`, { estado });
+      setSolicitudes((prev) =>
+        prev.map((s) => (s.id === id ? { ...s, estado } : s))
+      );
+      toast({
+        title: `Solicitud ${estado}`,
+        status: "success",
+        duration: 2000,
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error al actualizar estado",
+        description: err.response?.data?.message || err.message,
+        status: "error",
+        duration: 4000,
+      });
+    }
+  };
+
   const handleEliminar = async (id: string) => {
     try {
       await API.delete(`/solicitudes/${id}`);
-      setSolicitudes((prev) => prev.filter((s) => s._id !== id));
+      setSolicitudes((prev) => prev.filter((s) => s.id !== id));
       toast({
         title: "Solicitud eliminada",
         status: "success",
         duration: 2000,
-        isClosable: true,
       });
     } catch (err: any) {
       toast({
-        title: "Error al eliminar solicitud",
+        title: "Error al eliminar",
         description: err.response?.data?.message || err.message,
         status: "error",
         duration: 4000,
-        isClosable: true,
       });
     }
   };
@@ -87,13 +109,7 @@ const Solicitudes = () => {
     );
 
   return (
-    <Box
-      p={6}
-      bgGradient={gradient}
-      borderRadius="lg"
-      boxShadow="lg"
-      color="white"
-    >
+    <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
       <Heading mb={4} display="flex" alignItems="center" gap={3}>
         Solicitudes{" "}
         <Badge colorScheme="purple" fontSize="0.9em">
@@ -105,7 +121,7 @@ const Solicitudes = () => {
         <Thead bg="gray.100">
           <Tr>
             <Th>Trabajador</Th>
-            <Th>Tipo de Permiso</Th>
+            <Th>Tipo</Th>
             <Th>Descripción</Th>
             <Th>Fecha</Th>
             <Th>Estado</Th>
@@ -116,41 +132,66 @@ const Solicitudes = () => {
         <Tbody>
           {solicitudes.length === 0 ? (
             <Tr>
-              <Td colSpan={isAdmin ? 6 : 5}>
+              <Td colSpan={6}>
                 <Center py={4}>No hay solicitudes registradas</Center>
               </Td>
             </Tr>
           ) : (
-            solicitudes.map((solicitud) => (
-              <Tr key={solicitud._id}>
-                <Td>{solicitud.trabajadorNombre}</Td>
-                <Td>{solicitud.permisoTipo}</Td>
-                <Td>{solicitud.descripcion}</Td>
-                <Td>{new Date(solicitud.fechaSolicitud).toLocaleDateString()}</Td>
+            solicitudes.map((s) => (
+              <Tr key={s.id}>
+                <Td>
+                  <Text fontWeight="bold">ID Trabajador: {s.trabajadorId}</Text>
+                </Td>
+                <Td>{s.tipo}</Td>
+                <Td>{s.descripcion}</Td>
+                <Td>
+                  {new Date(s.fechaInicio).toLocaleDateString()} -{" "}
+                  {new Date(s.fechaFin).toLocaleDateString()}
+                </Td>
                 <Td>
                   <Tag
                     colorScheme={
-                      solicitud.estado === "aprobado"
+                      s.estado === "aprobada"
                         ? "green"
-                        : solicitud.estado === "rechazado"
+                        : s.estado === "rechazada"
                         ? "red"
                         : "yellow"
                     }
                   >
-                    {solicitud.estado || "Pendiente"}
+                    {s.estado}
                   </Tag>
                 </Td>
                 {isAdmin && (
                   <Td>
-                    <Tooltip label="Eliminar">
-                      <IconButton
-                        aria-label="Eliminar solicitud"
-                        icon={<DeleteIcon />}
-                        size="sm"
-                        colorScheme="red"
-                        onClick={() => handleEliminar(solicitud._id)}
-                      />
-                    </Tooltip>
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip label="Aprobar">
+                        <IconButton
+                          icon={<CheckIcon />}
+                          aria-label="Aprobar"
+                          colorScheme="green"
+                          size="sm"
+                          onClick={() => actualizarEstado(s.id, "aprobada")}
+                        />
+                      </Tooltip>
+                      <Tooltip label="Rechazar">
+                        <IconButton
+                          icon={<CloseIcon />}
+                          aria-label="Rechazar"
+                          colorScheme="red"
+                          size="sm"
+                          onClick={() => actualizarEstado(s.id, "rechazada")}
+                        />
+                      </Tooltip>
+                      <Tooltip label="Eliminar">
+                        <IconButton
+                          icon={<DeleteIcon />}
+                          aria-label="Eliminar"
+                          colorScheme="gray"
+                          size="sm"
+                          onClick={() => handleEliminar(s.id)}
+                        />
+                      </Tooltip>
+                    </Stack>
                   </Td>
                 )}
               </Tr>

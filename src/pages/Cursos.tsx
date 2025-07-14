@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
 import API from "../api/authService";
-import {
-  Box,
-  Heading,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
+import {Box, Heading, Table, Thead, Tbody, Tr,
   Th,
   Td,
   Text,
   Center,
-  Badge,
   Wrap,
   WrapItem,
   Tag,
