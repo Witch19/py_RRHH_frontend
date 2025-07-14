@@ -34,11 +34,33 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      toast({
+        title: "Campos requeridos",
+        description: "Por favor completa todos los campos.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
       const res = await API.post("/auth/login", { email, password });
       const { user, token } = res.data;
+
       if (user && token) {
-        login(user, token);
+        login(
+          {
+            id: user._id || user.id, // corregido: usa _id o id según el backend
+            email: user.email,
+            username: user.username,
+            role: user.role,
+          },
+          token
+        );
+
         toast({
           title: "¡Bienvenido!",
           status: "success",

@@ -1,11 +1,11 @@
-// auth/AuthContext.tsx
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface User {
+  id?: string; // ✅ AGREGADO: para que puedas acceder a user.id
   username?: string;
   email?: string;
-  role?: string; // ✅ añadimos role
+  role?: string;
 }
 
 interface AuthContextType {
@@ -17,7 +17,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  // ✅ Cargar usuario desde localStorage si existe
   const [user, setUser] = useState<User | null>(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -26,10 +25,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
 
   const login = (userData: User, token: string) => {
-    setUser(userData);
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(userData)); // ✅ guarda role también
-  };
+  setUser(userData);
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(userData));
+};
+
 
   const logout = () => {
     setUser(null);

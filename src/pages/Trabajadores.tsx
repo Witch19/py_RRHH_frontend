@@ -13,53 +13,52 @@ import {
   Spinner,
   useToast,
   IconButton,
-  Button,
   Tooltip,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Input,
   HStack,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useAuth } from "../auth/AuthContext";
 import { useThemeColor } from "../context/ThemeContext";
-
-interface Trabajador {
-  _id?: string;
-  nombre: string;
-  correo: string;
-  area: string;
-}
+import AgregarTrabajador from "./AgregarTrabajador";
+import EditarTrabajador from "./EditarTrabajador";
+import type { TrabajadorModal } from "./EditarTrabajador";
 
 const Trabajadores = () => {
-  /* ───────── Hooks ───────── */
-  const [trabajadores, setTrabajadores] = useState<Trabajador[]>([]);
+  const [trabajadores, setTrabajadores] = useState<TrabajadorModal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [trabajadorActual, setTrabajadorActual] = useState<TrabajadorModal | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const toast = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role?.toUpperCase() === "ADMIN";
   const { gradient } = useThemeColor();
 
-  /* ───────── Modal state ───────── */
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [editing, setEditing] = useState<Trabajador | null>(null);
-  const [form, setForm] = useState<Trabajador>({ nombre: "", correo: "", area: "" });
-  const [saving, setSaving] = useState(false);
+  const openEditar = (trabajador: TrabajadorModal) => {
+    setTrabajadorActual(trabajador);
+    setIsEditing(true);
+  };
 
-  /* ───────── Fetch list ───────── */
+  const closeEditar = () => {
+    setTrabajadorActual(null);
+    setIsEditing(false);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await API.get("/trabajador");
-        setTrabajadores(data);
+        const conCamposCompletos: TrabajadorModal[] = data.map((t: any) => ({
+          id: Number(t._id ?? t.id ?? ""),
+          nombre: t.nombre,
+          email: t.email ?? t.correo ?? "-",
+          area: t.area || t.tipoTrabajo?.nombre || "-",
+          telefono: t.telefono || "-",
+          direccion: t.direccion || "-",
+          cvUrl: t.cvUrl || "",
+          tipoTrabajo: t.tipoTrabajo,
+        }));
+
+        setTrabajadores(conCamposCompletos);
       } catch (err: any) {
         toast({
           title: "Error al cargar trabajadores",
@@ -75,57 +74,11 @@ const Trabajadores = () => {
     fetchData();
   }, [toast]);
 
-  /* ───────── Handlers ───────── */
-  const openAddModal = () => {
-    setEditing(null);
-    setForm({ nombre: "", correo: "", area: "" });
-    onOpen();
-  };
-
-  const openEditModal = (trab: Trabajador) => {
-    setEditing(trab);
-    setForm({ ...trab });
-    onOpen();
-  };
-
-  const handleSave = async () => {
-    if (!form.nombre || !form.correo) {
-      toast({ title: "Completa todos los campos", status: "warning" });
-      return;
-    }
-
-    setSaving(true);
-    try {
-      if (editing?._id) {
-        // editar
-        const { data } = await API.put(`/trabajador/${editing._id}`, form);
-        setTrabajadores((prev) =>
-          prev.map((t) => (t._id === editing._id ? data : t))
-        );
-        toast({ title: "Trabajador actualizado", status: "success" });
-      } else {
-        // agregar
-        const { data } = await API.post("/trabajador", form);
-        setTrabajadores((prev) => [...prev, data]);
-        toast({ title: "Trabajador creado", status: "success" });
-      }
-      onClose();
-    } catch (err: any) {
-      toast({
-        title: "Error al guardar",
-        description: err.response?.data?.message || err.message,
-        status: "error",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleEliminar = async (id?: string) => {
+  const handleEliminar = async (id?: number) => {
     if (!id) return;
     try {
       await API.delete(`/trabajador/${id}`);
-      setTrabajadores((prev) => prev.filter((t) => t._id !== id));
+      setTrabajadores((prev) => prev.filter((t) => t.id !== id));
       toast({ title: "Trabajador eliminado", status: "success" });
     } catch (err: any) {
       toast({
@@ -136,7 +89,13 @@ const Trabajadores = () => {
     }
   };
 
-  /* ───────── UI loading ───────── */
+  const handleActualizar = (actualizado: TrabajadorModal) => {
+    setTrabajadores((prev) =>
+      prev.map((t) => (t.id === actualizado.id ? actualizado : t))
+    );
+    toast({ title: "Trabajador actualizado", status: "success" });
+  };
+
   if (loading)
     return (
       <Center minH="200px">
@@ -144,108 +103,110 @@ const Trabajadores = () => {
       </Center>
     );
 
-  /* ───────── JSX ───────── */
   return (
     <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
       <HStack mb={4} justify="space-between">
         <Heading>Lista de Trabajadores</Heading>
         {isAdmin && (
-          <Button leftIcon={<AddIcon />} colorScheme="green" onClick={openAddModal}>
-            Agregar
-          </Button>
+          <AgregarTrabajador
+            onAdd={(nuevo: any) => {
+              const nuevoConCampos: TrabajadorModal = {
+                id: Number(nuevo.id),
+                nombre: nuevo.nombre,
+                email: nuevo.email,
+                area: nuevo.area || "-",
+                telefono: nuevo.telefono || "-",
+                direccion: nuevo.direccion || "-",
+                cvUrl: nuevo.cvUrl || "",
+                tipoTrabajo: nuevo.tipoTrabajo,
+              };
+              setTrabajadores((prev) => [...prev, nuevoConCampos]);
+            }}
+          />
         )}
       </HStack>
 
-      <Table variant="simple" bg="white" color="gray.800" borderRadius="md">
-        <Thead bg="gray.100">
-          <Tr>
-            <Th>Nombre</Th>
-            <Th>Correo</Th>
-            <Th>Área</Th>
-            {isAdmin && <Th>Acciones</Th>}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {trabajadores.length === 0 ? (
+      {/* 📌 Contenedor con scroll vertical interno */}
+      <Box overflowY="auto" maxHeight="700px" borderRadius="md" border="1px solid #ccc">
+        <Table variant="simple" bg="white" color="gray.800" minWidth="800px">
+          <Thead position="sticky" top={0} zIndex="docked" bg="gray.100">
             <Tr>
-              <Td colSpan={isAdmin ? 4 : 3}>
-                <Center py={4}>No hay trabajadores registrados</Center>
-              </Td>
+              <Th>Nombre</Th>
+              <Th>Email</Th>
+              <Th>Área</Th>
+              <Th>Teléfono</Th>
+              <Th>Dirección</Th>
+              <Th>Hoja de Vida</Th>
+              {isAdmin && <Th>Acciones</Th>}
             </Tr>
-          ) : (
-            trabajadores.map((t) => (
-              <Tr key={t._id}>
-                <Td>{t.nombre}</Td>
-                <Td>{t.correo}</Td>
-                <Td>{t.area}</Td>
-                {isAdmin && (
-                  <Td>
-                    <Tooltip label="Editar">
-                      <IconButton
-                        aria-label="Editar"
-                        icon={<EditIcon />}
-                        size="sm"
-                        mr={2}
-                        onClick={() => openEditModal(t)}
-                      />
-                    </Tooltip>
-                    <Tooltip label="Eliminar">
-                      <IconButton
-                        aria-label="Eliminar"
-                        icon={<DeleteIcon />}
-                        size="sm"
-                        colorScheme="red"
-                        onClick={() => handleEliminar(t._id)}
-                      />
-                    </Tooltip>
-                  </Td>
-                )}
-              </Tr>
-            ))
-          )}
-        </Tbody>
-      </Table>
+          </Thead>
 
-      {/* ───────── Modal Agregar / Editar ───────── */}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{editing ? "Editar Trabajador" : "Agregar Trabajador"}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl mb={3}>
-              <FormLabel>Nombre</FormLabel>
-              <Input
-                value={form.nombre}
-                onChange={(e) => setForm({ ...form, nombre: e.target.value })}
-              />
-            </FormControl>
-            <FormControl mb={3}>
-              <FormLabel>Correo</FormLabel>
-              <Input
-                type="email"
-                value={form.correo}
-                onChange={(e) => setForm({ ...form, correo: e.target.value })}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Área</FormLabel>
-              <Input
-                value={form.area}
-                onChange={(e) => setForm({ ...form, area: e.target.value })}
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose} mr={3}>
-              Cancelar
-            </Button>
-            <Button colorScheme="purple" isLoading={saving} onClick={handleSave}>
-              Guardar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          <Tbody>
+            {trabajadores.length === 0 ? (
+              <Tr>
+                <Td colSpan={isAdmin ? 7 : 6}>
+                  <Center py={4}>No hay trabajadores registrados</Center>
+                </Td>
+              </Tr>
+            ) : (
+              trabajadores.map((t) => (
+                <Tr key={t.id}>
+                  <Td>{t.nombre}</Td>
+                  <Td>{t.email}</Td>
+                  <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td>
+                  <Td>{t.telefono}</Td>
+                  <Td>{t.direccion}</Td>
+                  <Td>
+                    {t.cvUrl ? (
+                      <a
+                        href={`http://localhost:3005/trabajador/cv/${t.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Ver CV
+                      </a>
+                    ) : (
+                      "No adjunto"
+                    )}
+                  </Td>
+                  {isAdmin && (
+                    <Td>
+                      <HStack spacing={2}>
+                        <Tooltip label="Editar">
+                          <IconButton
+                            aria-label="Editar"
+                            icon={<EditIcon />}
+                            size="sm"
+                            onClick={() => openEditar(t)}
+                          />
+                        </Tooltip>
+                        <Tooltip label="Eliminar">
+                          <IconButton
+                            aria-label="Eliminar"
+                            icon={<DeleteIcon />}
+                            size="sm"
+                            colorScheme="red"
+                            onClick={() => handleEliminar(t.id)}
+                          />
+                        </Tooltip>
+                      </HStack>
+                    </Td>
+                  )}
+                </Tr>
+              ))
+            )}
+          </Tbody>
+        </Table>
+      </Box>
+
+      {isAdmin && trabajadorActual && (
+        <EditarTrabajador
+          isOpen={isEditing}
+          onClose={closeEditar}
+          trabajador={trabajadorActual}
+          onUpdate={handleActualizar}
+        />
+      )}
     </Box>
   );
 };
