@@ -12,13 +12,14 @@ import {
   useToast,
   Icon,
   Select,
+  Avatar,
 } from "@chakra-ui/react";
 import { FaCircle } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
-
+import logoImg from "../assets/Logo.png";   // ⬅️ Importa tu logo
 const Register = () => {
   const [form, setForm] = useState({
     firstName: "",
@@ -115,12 +116,15 @@ const Register = () => {
         textAlign="center"
         boxShadow="2xl"
       >
-        <Box mb={6}>
-          <Icon as={FaCircle} boxSize={8} color="white" />
-          <Heading size="md" color="white" mt={2}>
-            Technology
-          </Heading>
-        </Box>
+        {/* Logo en círculo */}
+        <Avatar
+          src={logoImg}
+          size="xl"
+          border="4px solid white"
+          bg="white"
+          mx="auto"
+          mb={6}
+        />
 
         <Heading size="lg" color="white" mb={6}>
           Sign Up

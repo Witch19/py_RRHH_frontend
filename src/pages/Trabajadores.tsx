@@ -33,6 +33,15 @@ const Trabajadores = () => {
   const isAdmin = user?.role?.toUpperCase() === "ADMIN";
   const { gradient } = useThemeColor();
 
+  // 🔒 Bloquear completamente si no es ADMIN
+  if (!isAdmin) {
+    return (
+      <Center minH="100vh">
+        <Heading fontSize="2xl" color="white">Acceso restringido</Heading>
+      </Center>
+    );
+  }
+
   const openEditar = (trabajador: TrabajadorModal) => {
     setTrabajadorActual(trabajador);
     setIsEditing(true);
@@ -126,7 +135,6 @@ const Trabajadores = () => {
         )}
       </HStack>
 
-      {/* 📌 Contenedor con scroll vertical interno */}
       <Box overflowY="auto" maxHeight="700px" borderRadius="md" border="1px solid #ccc">
         <Table variant="simple" bg="white" color="gray.800" minWidth="800px">
           <Thead position="sticky" top={0} zIndex="docked" bg="gray.100">
@@ -144,7 +152,7 @@ const Trabajadores = () => {
           <Tbody>
             {trabajadores.length === 0 ? (
               <Tr>
-                <Td colSpan={isAdmin ? 7 : 6}>
+                <Td colSpan={7}>
                   <Center py={4}>No hay trabajadores registrados</Center>
                 </Td>
               </Tr>
