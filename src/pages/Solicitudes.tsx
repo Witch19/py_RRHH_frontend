@@ -24,13 +24,22 @@ import { useThemeColor } from "../context/ThemeContext";
 import { useAuth } from "../auth/AuthContext";
 
 interface Solicitud {
-  id: string; // MongoDB usa strings como IDs
+  id: string;
   tipo: string;
   descripcion: string;
   fechaInicio: string;
   fechaFin: string;
   estado: string;
-  trabajadorId: number; // ID que viene del sistema de trabajadores en PostgreSQL
+  trabajadorId: number;
+  trabajador?: {
+    id: number;
+    nombre: string;
+    apellido: string;
+    email: string;
+    telefono?: string;
+    direccion?: string;
+    area?: string;
+  };
 }
 
 const Solicitudes = () => {
@@ -63,12 +72,15 @@ const Solicitudes = () => {
 
   const actualizarEstado = async (id: string, estado: string) => {
     try {
-      await API.put(`/solicitudes/${id}`, { estado });
+      const estadoMayuscula = estado.toUpperCase();
+      await API.put(`/solicitudes/${id}`, { estado: estadoMayuscula });
+
       setSolicitudes((prev) =>
-        prev.map((s) => (s.id === id ? { ...s, estado } : s))
+        prev.map((s) => (s.id === id ? { ...s, estado: estadoMayuscula } : s))
       );
+
       toast({
-        title: `Solicitud ${estado}`,
+        title: `Solicitud ${estadoMayuscula}`,
         status: "success",
         duration: 2000,
       });
@@ -140,7 +152,21 @@ const Solicitudes = () => {
             solicitudes.map((s) => (
               <Tr key={s.id}>
                 <Td>
-                  <Text fontWeight="bold">ID Trabajador: {s.trabajadorId}</Text>
+                  {s.trabajador ? (
+                    <Box>
+                      <Text fontWeight="bold">
+                        {s.trabajador.nombre} {s.trabajador.apellido}
+                      </Text>
+                      <Text fontSize="sm" color="gray.600">
+                        {s.trabajador.email}
+                      </Text>
+                      <Text fontSize="sm" color="gray.600">
+                        Área: {s.trabajador.area || "-"}
+                      </Text>
+                    </Box>
+                  ) : (
+                    <Text>ID Trabajador: {s.trabajadorId}</Text>
+                  )}
                 </Td>
                 <Td>{s.tipo}</Td>
                 <Td>{s.descripcion}</Td>
@@ -151,9 +177,9 @@ const Solicitudes = () => {
                 <Td>
                   <Tag
                     colorScheme={
-                      s.estado === "aprobada"
+                      s.estado === "APROBADO"
                         ? "green"
-                        : s.estado === "rechazada"
+                        : s.estado === "RECHAZADO"
                         ? "red"
                         : "yellow"
                     }
@@ -170,7 +196,7 @@ const Solicitudes = () => {
                           aria-label="Aprobar"
                           colorScheme="green"
                           size="sm"
-                          onClick={() => actualizarEstado(s.id, "aprobada")}
+                          onClick={() => actualizarEstado(s.id, "APROBADO")}
                         />
                       </Tooltip>
                       <Tooltip label="Rechazar">
@@ -179,16 +205,7 @@ const Solicitudes = () => {
                           aria-label="Rechazar"
                           colorScheme="red"
                           size="sm"
-                          onClick={() => actualizarEstado(s.id, "rechazada")}
-                        />
-                      </Tooltip>
-                      <Tooltip label="Eliminar">
-                        <IconButton
-                          icon={<DeleteIcon />}
-                          aria-label="Eliminar"
-                          colorScheme="gray"
-                          size="sm"
-                          onClick={() => handleEliminar(s.id)}
+                          onClick={() => actualizarEstado(s.id, "RECHAZADO")}
                         />
                       </Tooltip>
                     </Stack>
