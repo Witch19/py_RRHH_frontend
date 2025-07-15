@@ -16,7 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useAuth } from "../auth/AuthContext";
+//import { useAuth } from "../auth/AuthContext";
 import API from "../api/authService";
 
 interface Props {
@@ -27,7 +27,7 @@ interface Props {
 
 const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
   const toast = useToast();
-  const { user } = useAuth();
+  //const { user } = useAuth();
 
   const [form, setForm] = useState({
     tipo: "",
