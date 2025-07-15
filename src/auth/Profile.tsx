@@ -6,8 +6,21 @@ const Profile: React.FC = () => {
 
   if (!user) {
     return (
-      <button onClick={() => login({ username: "Josy", email: "josy@example.com" }, "token_fake")}>
-        Login
+      <button
+        onClick={() =>
+          login(
+            {
+              username: "Josy",
+              email: "josy@example.com",
+              role: "ADMIN",
+              trabajadorId: 99, // ✅ si quieres simular un trabajador
+            },
+            "token_fake"
+          )
+
+        }
+      >
+        Login de prueba
       </button>
     );
   }
@@ -16,6 +29,7 @@ const Profile: React.FC = () => {
     <div>
       <h1>Hola, {user.username}</h1>
       <p>Email: {user.email}</p>
+      <p>Rol: {user.role}</p>
       <button onClick={logout}>Logout</button>
     </div>
   );

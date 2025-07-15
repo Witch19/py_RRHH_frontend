@@ -1,3 +1,4 @@
+// src/components/Dashboard.tsx
 import {
   Box,
   Button,
@@ -22,21 +23,24 @@ import Solicitudes from "./Solicitudes";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
 
-const menuItems = [
-  { key: "trabajadores", label: "Trabajadores" },
-  { key: "cursos", label: "Cursos" },
-  { key: "solicitudes", label: "Solicitudes" },
-  { key: "perfil", label: "Editar Perfil" },
-];
-
 const Dashboard = () => {
   const { user, logout, login } = useAuth();
-  const [activeMenu, setActiveMenu] = useState("trabajadores");
+  const isAdmin = user?.role === "ADMIN";          // ⬅️ Rol del usuario
+
+  /* Estado inicial según rol */
+  const [activeMenu, setActiveMenu] = useState(isAdmin ? "trabajadores" : "cursos");
+
+  /* Menú dinámico */
+  const menuItems = [
+    ...(isAdmin ? [{ key: "trabajadores", label: "Trabajadores" }] : []),
+    { key: "cursos", label: "Cursos" },
+    { key: "solicitudes", label: "Solicitudes" },
+    { key: "perfil", label: "Editar Perfil" },
+  ];
 
   /* Theme */
   const { gradient, setTheme } = useThemeColor();
-
-  /* Sidebar/header colors (sobre el gradient) */
+  
   const bgSidebar = useColorModeValue("whiteAlpha.200", "whiteAlpha.200");
   const bgHeader = useColorModeValue("whiteAlpha.100", "whiteAlpha.100");
 
@@ -131,24 +135,9 @@ const Dashboard = () => {
         {/* Selector de color + Logout */}
         <VStack spacing={4}>
           <Flex justify="center" gap={3}>
-            <Icon
-              as={FaCircle}
-              color="gray.300"
-              cursor="pointer"
-              onClick={() => setTheme("gray")}
-            />
-            <Icon
-              as={FaCircle}
-              color="orange.400"
-              cursor="pointer"
-              onClick={() => setTheme("orange")}
-            />
-            <Icon
-              as={FaCircle}
-              color="teal.400"
-              cursor="pointer"
-              onClick={() => setTheme("teal")}
-            />
+            <Icon as={FaCircle} color="gray.300" cursor="pointer" onClick={() => setTheme("gray")} />
+            <Icon as={FaCircle} color="orange.400" cursor="pointer" onClick={() => setTheme("orange")} />
+            <Icon as={FaCircle} color="teal.400" cursor="pointer" onClick={() => setTheme("teal")} />
           </Flex>
           <Button colorScheme="red" size="sm" onClick={logout} width="100%">
             Cerrar sesión
