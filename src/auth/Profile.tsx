@@ -10,6 +10,7 @@ const Profile: React.FC = () => {
         onClick={() =>
           login(
             {
+              id: "12345", // Simulación de ID
               username: "Josy",
               email: "josy@example.com",
               role: "ADMIN",
