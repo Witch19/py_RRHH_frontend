@@ -84,7 +84,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
       });
     }
   };
-
+  
   return (
     <>
       <Button leftIcon={<AddIcon />} colorScheme="green" onClick={onOpen}>
@@ -114,6 +114,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
 
             <FormControl isRequired mt={4}>
               <FormLabel>Área</FormLabel>
+              
               <Select
                 placeholder="Selecciona área"
                 value={tipoTrabajoId}
@@ -125,6 +126,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                   </option>
                 ))}
               </Select>
+              
+              """"""
             </FormControl>
 
             <FormControl mt={4}>
