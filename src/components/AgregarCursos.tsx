@@ -43,7 +43,7 @@ const AgregarCurso = ({ onAdd, triggerButton }: Props) => {
     areas: [],
   });
 
-  const [areasInput, setAreasInput] = useState(""); // ✅ colocado correctamente
+  const [areasInput, setAreasInput] = useState(""); 
 
   const handleGuardar = async () => {
     try {

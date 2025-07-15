@@ -1,8 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
-// 🎨 Nuevos degradados
 const colorThemes = {
-  default: "linear(to-b, #2c3e50, #4ca1af)", // nuevo fondo por defecto
+  default: "linear(to-b, #2c3e50, #4ca1af)", 
   gray: "linear(to-b, gray.700, gray.500)",
   orange: "linear(to-b, orange.400, yellow.300)",
   teal: "linear(to-b, teal.500, blue.300)",

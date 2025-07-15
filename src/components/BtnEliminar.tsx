@@ -1,4 +1,3 @@
-// src/components/BtnEliminar.tsx
 import React from "react";
 import { IconButton } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";

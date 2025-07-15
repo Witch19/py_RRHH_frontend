@@ -7,11 +7,11 @@ import { createContext, useContext, useState,useEffect} from "react";
 /* ---------- Tipo de usuario ---------- */
 // src/auth/AuthContext.tsx
 export interface User {
-  id: string;                // ← ID único del usuario (normalizado)
+  id: string;              
   username: string;
   email: string;
   role: string;
-  trabajadorId?: number;     // ← opcional si aplica a algunos usuarios
+  trabajadorId?: number;     
 }
 
 
@@ -51,15 +51,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   localStorage.setItem("token", token);
 };
 
-
-
-
-
   const logout = () => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/");                                      // Redirige al landing
+    navigate("/");                                     
   };
 
   return (

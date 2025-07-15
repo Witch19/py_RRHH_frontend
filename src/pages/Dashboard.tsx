@@ -25,7 +25,7 @@ import { useThemeColor } from "../context/ThemeContext";
 
 const Dashboard = () => {
   const { user, logout, login } = useAuth();
-  const isAdmin = user?.role === "ADMIN";          // ⬅️ Rol del usuario
+  const isAdmin = user?.role === "ADMIN";          
 
   /* Estado inicial según rol */
   const [activeMenu, setActiveMenu] = useState(isAdmin ? "trabajadores" : "cursos");

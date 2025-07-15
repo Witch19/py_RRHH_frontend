@@ -35,12 +35,12 @@ const EditarCurso = ({ isOpen, onClose, curso, onUpdate}: Props) => {
     areas: [],
   });
 
-  const [areasInput, setAreasInput] = useState(""); // Nuevo estado para texto de áreas
+  const [areasInput, setAreasInput] = useState(""); 
 
   useEffect(() => {
     if (curso) {
       setForm({ ...curso });
-      setAreasInput(curso.areas.join(", ")); // mostrar áreas como texto
+      setAreasInput(curso.areas.join(", ")); 
     }
   }, [curso]);
 

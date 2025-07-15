@@ -10,11 +10,11 @@ const Profile: React.FC = () => {
         onClick={() =>
           login(
             {
-              id: "12345", // Simulación de ID
+              id: "12345", 
               username: "Josy",
               email: "josy@example.com",
               role: "ADMIN",
-              trabajadorId: 99, // ✅ si quieres simular un trabajador
+              trabajadorId: 99, 
             },
             "token_fake"
           )
