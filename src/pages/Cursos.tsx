@@ -83,7 +83,7 @@ const Cursos = () => {
   const { gradient } = useThemeColor();
   const toast = useToast();
   const { user } = useAuth();
-  const isAdmin = (user?.role || '').toString().toLowerCase() === 'admin';
+  const isAdmin = (user?.role || '').toString().toLowerCase() === 'ADMIN';
 
   const {
     isOpen: isEditOpen,
