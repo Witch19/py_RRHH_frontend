@@ -112,23 +112,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
               <Input value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
 
-            <FormControl isRequired mt={4}>
-              <FormLabel>Área</FormLabel>
-              
-              <Select
-                placeholder="Selecciona área"
-                value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(Number(e.target.value))}
-              >
-                {tipoTrabajos.map((tt) => (
-                  <option key={tt.id} value={tt.id}>
-                    {tt.nombre}
-                  </option>
-                ))}
-              </Select>
-              
-              """"""
-            </FormControl>
+            
 
             <FormControl mt={4}>
               <FormLabel>Teléfono</FormLabel>

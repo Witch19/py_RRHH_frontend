@@ -124,7 +124,7 @@ const Trabajadores = () => {
                 id: Number(nuevo.id),
                 nombre: nuevo.nombre,
                 email: nuevo.email,
-                
+                area: nuevo.area || "-",
                 telefono: nuevo.telefono || "-",
                 direccion: nuevo.direccion || "-",
                 cvUrl: nuevo.cvUrl || "",
@@ -162,12 +162,13 @@ const Trabajadores = () => {
                 <Tr key={t.id}>
                   <Td>{t.nombre}</Td>
                   <Td>{t.email}</Td>
+                  <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td>
                   <Td>{t.telefono}</Td>
                   <Td>{t.direccion}</Td>
                   <Td>
                     {t.cvUrl ? (
                       <a
-                        href={`http://localhost:3005/trabajador/cv/${t.id}`}
+                        href={`/trabajador/cv/${t.id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
