@@ -11,7 +11,6 @@ import {
   FormControl,
   FormLabel,
   Input,
-  //Select,
   useToast,
   Select,
 } from "@chakra-ui/react";
@@ -34,13 +33,14 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajo, setTipoTrabajo] = useState("");
+
   const [tipoTrabajos, setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
 
   useEffect(() => {
     const fetchTipos = async () => {
       try {
         const { data } = await API.get("/tipo-trabajo/enum");
-        setTipoTrabajos(data); // ← [{ key, value }]
+        setTipoTrabajos(data); // [{ key, value }]
       } catch (err: any) {
         toast({
           title: "Error al cargar áreas",
@@ -51,6 +51,16 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     };
     fetchTipos();
   }, [toast]);
+
+  const resetForm = () => {
+    setNombre("");
+    setApellido("");
+    setEmail("");
+    setTelefono("");
+    setDireccion("");
+    setTipoTrabajo("");
+    setCv(null);
+  };
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -70,12 +80,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
       onAdd(data);
       toast({ title: "Trabajador agregado", status: "success" });
       onClose();
-      setNombre("");
-      setApellido("");
-      setEmail("");
-      setTelefono("");
-      setDireccion("");
-      setCv(null);
+      resetForm();
     } catch (err: any) {
       toast({
         title: "Error al guardar",
@@ -139,7 +144,11 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
 
             <FormControl mt={4}>
               <FormLabel>Hoja de Vida (PDF)</FormLabel>
-              <Input type="file" accept="application/pdf" onChange={(e) => setCv(e.target.files?.[0] || null)} />
+              <Input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setCv(e.target.files?.[0] || null)}
+              />
             </FormControl>
           </ModalBody>
 
