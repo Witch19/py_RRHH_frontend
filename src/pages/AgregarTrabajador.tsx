@@ -11,7 +11,7 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Select,
+  //Select,
   useToast,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
@@ -32,14 +32,12 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState<number>();
-  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchTipos = async () => {
       try {
         const { data } = await API.get("/tipo-trabajo");
-        setTipoTrabajos(data);
+       // setTipoTrabajos(data);
       } catch (err: any) {
         toast({
           title: "Error al cargar áreas",
@@ -75,7 +73,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
       setTelefono("");
       setDireccion("");
       setCv(null);
-      setTipoTrabajoId(undefined);
     } catch (err: any) {
       toast({
         title: "Error al guardar",
