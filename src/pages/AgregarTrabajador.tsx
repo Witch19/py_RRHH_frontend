@@ -22,6 +22,15 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
+// Enum frontend para tipoTrabajador
+const opcionesTipoTrabajador = [
+  { key: "ADMINISTRATIVO", label: "Administrativo" },
+  { key: "OPERARIO", label: "Operario" },
+  { key: "INGENIERIA", label: "Ingeniería" },
+  { key: "MANTENIMIENTO", label: "Mantenimiento" },
+  { key: "OTRO", label: "Otro" },
+];
+
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -33,6 +42,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajo, setTipoTrabajo] = useState("");
+  const [tipoTrabajador, setTipoTrabajador] = useState("");
 
   const [tipoTrabajos, setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
 
@@ -59,6 +69,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setTelefono("");
     setDireccion("");
     setTipoTrabajo("");
+    setTipoTrabajador("");
     setCv(null);
   };
 
@@ -71,6 +82,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
     if (tipoTrabajo) formData.append("tipoTrabajo", tipoTrabajo);
+    if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
       const { data } = await API.post("/trabajador", formData, {
@@ -127,6 +139,21 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 {tipoTrabajos.map((tt) => (
                   <option key={tt.key} value={tt.key}>
                     {tt.value}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl mt={4} isRequired>
+              <FormLabel>Tipo de Trabajador</FormLabel>
+              <Select
+                placeholder="Seleccione tipo"
+                value={tipoTrabajador}
+                onChange={(e) => setTipoTrabajador(e.target.value)}
+              >
+                {opcionesTipoTrabajador.map((tt) => (
+                  <option key={tt.key} value={tt.key}>
+                    {tt.label}
                   </option>
                 ))}
               </Select>
