@@ -44,13 +44,13 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [tipoTrabajo, setTipoTrabajo] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
 
-  const [tipoTrabajos, setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
+  //const [ setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
 
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        const { data } = await API.get("/tipo-trabajo/enum");
-        setTipoTrabajos(data); // [{ key, value }]
+        //const { data } = await API.get("/tipo-trabajo/enum");
+        //setTipoTrabajos(data); // [{ key, value }]
       } catch (err: any) {
         toast({
           title: "Error al cargar áreas",
@@ -131,21 +131,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
 
             <FormControl mt={4} isRequired>
               <FormLabel>Área de trabajo</FormLabel>
-              <Select
-                placeholder="Seleccione un área"
-                value={tipoTrabajo}
-                onChange={(e) => setTipoTrabajo(e.target.value)}
-              >
-                {tipoTrabajos.map((tt) => (
-                  <option key={tt.key} value={tt.key}>
-                    {tt.value}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl mt={4} isRequired>
-              <FormLabel>Tipo de Trabajador</FormLabel>
               <Select
                 placeholder="Seleccione tipo"
                 value={tipoTrabajador}
