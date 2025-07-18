@@ -7,6 +7,7 @@ import {
   Textarea,
   FormControl,
   FormLabel,
+  //VStack,
   useToast,
   Select,
   Flex,
@@ -97,18 +98,18 @@ const Home = () => {
   return (
     <Box>
       {/* NAVBAR */}
-      <Flex bgGradient="linear(to-r, teal.700, blue.700)" p={4} alignItems="center" color="white">
+      <Flex bg="teal.700" p={4} alignItems="center" color="white">
         <Image src="/logo192.png" alt="Logo" boxSize="40px" mr={4} />
         <Heading size="md">Mi Empresa</Heading>
         <Spacer />
         <HStack spacing={4}>
           <Link to="/login">
-            <Button variant="ghost" colorScheme="whiteAlpha">
+            <Button colorScheme="teal" variant="outline">
               Login
             </Button>
           </Link>
           <Link to="/register">
-            <Button colorScheme="whiteAlpha" variant="outline">
+            <Button colorScheme="teal" variant="solid">
               Registro
             </Button>
           </Link>
@@ -149,20 +150,20 @@ const Home = () => {
       </Box>
 
       {/* TRABAJA CON NOSOTROS */}
-      <Box p={10} bg="gray.100">
+      <Box p={8} bg="gray.100">
         <Heading size="lg" textAlign="center" mb={6}>
-          ¿En qué podemos ayudarte?
+          Trabaja con Nosotros
         </Heading>
-        <SimpleGrid columns={[1, 2]} spacing={8} maxW="5xl" mx="auto">
+
+        <SimpleGrid columns={[1, 2]} spacing={6} maxW="4xl" mx="auto">
           <Box
-            bgGradient="linear(to-br, teal.400, teal.600)"
-            color="white"
+            bg="white"
             borderRadius="xl"
-            p={8}
-            boxShadow="lg"
+            p={6}
+            boxShadow="md"
             textAlign="center"
             cursor="pointer"
-            _hover={{ transform: "scale(1.03)", boxShadow: "2xl" }}
+            _hover={{ transform: "scale(1.03)", boxShadow: "xl" }}
             onClick={onOpen}
           >
             <Heading size="md" mb={2}>📄 Postularme</Heading>
@@ -170,26 +171,110 @@ const Home = () => {
           </Box>
 
           <Box
-            bgGradient="linear(to-br, orange.400, orange.600)"
-            color="white"
+            bg="white"
             borderRadius="xl"
-            p={8}
-            boxShadow="lg"
+            p={6}
+            boxShadow="md"
             textAlign="center"
             cursor="pointer"
-            _hover={{ transform: "scale(1.03)", boxShadow: "2xl" }}
+            _hover={{ transform: "scale(1.03)", boxShadow: "xl" }}
             onClick={onOpenMaquinaria}
           >
             <Heading size="md" mb={2}>🛠️ Solicitar Maquinaria</Heading>
-            <Text>Solicita cotización para maquinaria o equipos industriales.</Text>
+            <Text>Solicita cotización para maquinaria o equipos.</Text>
           </Box>
         </SimpleGrid>
       </Box>
 
+      {/* MODAL ASPIRANTE */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Formulario de Postulación</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl isRequired>
+              <FormLabel>Nombre</FormLabel>
+              <Input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            </FormControl>
+            <FormControl isRequired mt={4}>
+              <FormLabel>Email</FormLabel>
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            </FormControl>
+            <FormControl isRequired mt={4}>
+              <FormLabel>Área de interés</FormLabel>
+              <Select
+                placeholder="Selecciona un área"
+                value={tipoTrabajo}
+                onChange={(e) => setTipoTrabajo(e.target.value)}
+              >
+                {opciones.map((opt) => (
+                  <option key={opt.key} value={opt.key}>
+                    {opt.value}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Mensaje</FormLabel>
+              <Textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} />
+            </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Subir CV (PDF)</FormLabel>
+              <Input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setCv(e.target.files?.[0] || null)}
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose} mr={3}>Cancelar</Button>
+            <Button colorScheme="teal" onClick={handleSubmit}>Enviar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* MODAL MAQUINARIA */}
+      <Modal isOpen={isOpenMaquinaria} onClose={onCloseMaquinaria}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Solicitud de Maquinaria</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl isRequired>
+              <FormLabel>Empresa</FormLabel>
+              <Input value={empresa} onChange={(e) => setEmpresa(e.target.value)} />
+            </FormControl>
+            <FormControl isRequired mt={4}>
+              <FormLabel>Descripción</FormLabel>
+              <Textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onCloseMaquinaria} mr={3}>Cancelar</Button>
+            <Button
+              colorScheme="orange"
+              onClick={() => {
+                toast({ title: "Solicitud enviada", status: "info" });
+                setEmpresa("");
+                setDescripcion("");
+                onCloseMaquinaria();
+              }}
+            >
+              Enviar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       {/* INFORMACIÓN DE LA EMPRESA */}
-      <Box bg="teal.700" color="white" py={16} px={8}>
+      <Box bg="teal.700" color="white" py={12} px={8}>
         <Box maxW="4xl" mx="auto" textAlign="center">
-          <Heading fontWeight="semibold" letterSpacing="wider" mb={4}>
+          <Heading size="md" mb={4}>
             Sobre Nosotros
           </Heading>
           <Text fontSize="lg">
@@ -199,9 +284,6 @@ const Home = () => {
           </Text>
         </Box>
       </Box>
-
-      {/* MODALES (Postulación y Maquinaria) se mantienen igual */}
-
     </Box>
   );
 };
