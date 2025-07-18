@@ -8,14 +8,15 @@ import Cursos from "./pages/Cursos";
 import Solicitudes from "./pages/Solicitudes";
 import PrivateRoute from "./components/PrivateRoute";
 import Layout from "./components/Layout";
-import Landing from "./pages/Landing";
+//import Landing from "./pages/Landing";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <Routes>
       {/* Rutas públicas */}
 
-      <Route path="/" element={<Landing />} />
+      <Route path="/" element={<Home />} />
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
