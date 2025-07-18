@@ -10,7 +10,7 @@ import {
   VStack,
   useToast,
   Select,
-  Text,
+  //Text,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import API from "../api/authService";
