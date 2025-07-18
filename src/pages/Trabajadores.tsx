@@ -33,7 +33,6 @@ const Trabajadores = () => {
   const isAdmin = user?.role?.toUpperCase() === "ADMIN";
   const { gradient } = useThemeColor();
 
-  // 🔒 Bloquear completamente si no es ADMIN
   if (!isAdmin) {
     return (
       <Center minH="100vh">
@@ -60,7 +59,7 @@ const Trabajadores = () => {
           id: Number(t._id ?? t.id ?? ""),
           nombre: t.nombre,
           email: t.email ?? t.correo ?? "-",
-          area: t.area || t.tipoTrabajo?.nombre || "-",
+          area: t.tipoTrabajo ?? t.area ?? "-",
           telefono: t.telefono || "-",
           direccion: t.direccion || "-",
           cvUrl: t.cvUrl || "",
@@ -105,13 +104,13 @@ const Trabajadores = () => {
     toast({ title: "Trabajador actualizado", status: "success" });
   };
 
-  if (loading)
+  if (loading) {
     return (
       <Center minH="200px">
         <Spinner size="lg" color="white" />
       </Center>
     );
-    // <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td> area: nuevo.area || "-",
+  }
 
   return (
     <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
@@ -124,7 +123,7 @@ const Trabajadores = () => {
                 id: Number(nuevo.id),
                 nombre: nuevo.nombre,
                 email: nuevo.email,
-                area: nuevo.area || "-",
+                area: nuevo.tipoTrabajo ?? nuevo.area ?? "-",
                 telefono: nuevo.telefono || "-",
                 direccion: nuevo.direccion || "-",
                 cvUrl: nuevo.cvUrl || "",
@@ -162,7 +161,7 @@ const Trabajadores = () => {
                 <Tr key={t.id}>
                   <Td>{t.nombre}</Td>
                   <Td>{t.email}</Td>
-                  <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td>
+                  <Td>{t.area || "-"}</Td>
                   <Td>{t.telefono}</Td>
                   <Td>{t.direccion}</Td>
                   <Td>
