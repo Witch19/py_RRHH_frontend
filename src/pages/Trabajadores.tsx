@@ -111,7 +111,7 @@ const Trabajadores = () => {
         <Spinner size="lg" color="white" />
       </Center>
     );
-    // <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td>
+    // <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td> area: nuevo.area || "-",
 
   return (
     <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
@@ -124,7 +124,7 @@ const Trabajadores = () => {
                 id: Number(nuevo.id),
                 nombre: nuevo.nombre,
                 email: nuevo.email,
-                area: nuevo.area || "-",
+                
                 telefono: nuevo.telefono || "-",
                 direccion: nuevo.direccion || "-",
                 cvUrl: nuevo.cvUrl || "",
