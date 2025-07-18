@@ -13,6 +13,7 @@ import {
   Input,
   //Select,
   useToast,
+  Select,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
@@ -32,14 +33,14 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId] = useState<number>();
- // const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
+  const [tipoTrabajo, setTipoTrabajo] = useState("");
+  const [tipoTrabajos, setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
 
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        //const { data } = await API.get("/tipo-trabajo");
-        //setTipoTrabajos(data);
+        const { data } = await API.get("/tipo-trabajo/enum");
+        setTipoTrabajos(data); // ← [{ key, value }]
       } catch (err: any) {
         toast({
           title: "Error al cargar áreas",
@@ -59,7 +60,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    if (tipoTrabajoId) formData.append("tipoTrabajoId", String(tipoTrabajoId));
+    if (tipoTrabajo) formData.append("tipoTrabajo", tipoTrabajo);
 
     try {
       const { data } = await API.post("/trabajador", formData, {
@@ -83,7 +84,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
       });
     }
   };
-  
+
   return (
     <>
       <Button leftIcon={<AddIcon />} colorScheme="green" onClick={onOpen}>
@@ -111,7 +112,20 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
               <Input value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
 
-            
+            <FormControl mt={4} isRequired>
+              <FormLabel>Área de trabajo</FormLabel>
+              <Select
+                placeholder="Seleccione un área"
+                value={tipoTrabajo}
+                onChange={(e) => setTipoTrabajo(e.target.value)}
+              >
+                {tipoTrabajos.map((tt) => (
+                  <option key={tt.key} value={tt.key}>
+                    {tt.value}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Teléfono</FormLabel>
