@@ -111,6 +111,7 @@ const Trabajadores = () => {
         <Spinner size="lg" color="white" />
       </Center>
     );
+    // <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td>
 
   return (
     <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
@@ -161,7 +162,6 @@ const Trabajadores = () => {
                 <Tr key={t.id}>
                   <Td>{t.nombre}</Td>
                   <Td>{t.email}</Td>
-                  <Td>{t.area || t.tipoTrabajo?.nombre || "-"}</Td>
                   <Td>{t.telefono}</Td>
                   <Td>{t.direccion}</Td>
                   <Td>
