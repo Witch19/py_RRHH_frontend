@@ -1,7 +1,7 @@
 // src/pages/Home.tsx
 import {
   Box, Button, Heading, Input, Textarea, FormControl, FormLabel,
-  useToast, Select, Flex, Spacer, Image, HStack, Text,
+  useToast, Select, Flex, Image, HStack, Text,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody,
   ModalFooter, ModalCloseButton, SimpleGrid, useDisclosure,
   IconButton, useColorMode,
