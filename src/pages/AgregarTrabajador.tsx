@@ -4,17 +4,20 @@ import {
   FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import API from "../api/authService";
 
 interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-interface TipoTrabajo {
-  id: number;
-  nombre: string;
-}
+const opcionesTipo = [
+  "Administración",
+  "Sistemas",
+  "Producción",
+  "Mantenimiento",
+  "Recursos Humanos",
+];
 
 const opcionesTipoTrabajador = [
   { key: "ADMINISTRATIVO", label: "Administrativo" },
@@ -34,21 +37,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
+  const [tipo, setTipo] = useState(""); // ✅ ahora usamos "tipo" en vez de tipoTrabajoId
   const [tipoTrabajador, setTipoTrabajador] = useState("");
-  const [tipos, setTipos] = useState<TipoTrabajo[]>([]);
-
-  useEffect(() => {
-    API.get("/tipo-trabajo")
-      .then((res) => setTipos(res.data))
-      .catch((err) =>
-        toast({
-          title: "Error al cargar tipos de trabajo",
-          description: err.response?.data?.message || err.message,
-          status: "error",
-        })
-      );
-  }, [toast]);
 
   const resetForm = () => {
     setNombre("");
@@ -56,14 +46,14 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
-    setTipoTrabajoId("");
+    setTipo("");
     setTipoTrabajador("");
     setCv(null);
   };
 
   const handleSubmit = async () => {
-    if (!tipoTrabajoId) {
-      toast({ title: "Debe seleccionar un tipo de trabajo", status: "warning" });
+    if (!tipo) {
+      toast({ title: "Debe seleccionar un área (tipo)", status: "warning" });
       return;
     }
 
@@ -74,7 +64,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", tipoTrabajoId); // ✅ CAMBIO CLAVE
+    formData.append("tipo", tipo); // ✅ nuevo campo
     if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
@@ -133,15 +123,15 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             </FormControl>
 
             <FormControl isRequired mt={4}>
-              <FormLabel>Área (Tipo de Trabajo)</FormLabel>
+              <FormLabel>Área (Tipo)</FormLabel>
               <Select
                 placeholder="Seleccione área"
-                value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(e.target.value)}
+                value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
               >
-                {tipos.map((tipo) => (
-                  <option key={tipo.id} value={tipo.id}>
-                    {tipo.nombre}
+                {opcionesTipo.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
                   </option>
                 ))}
               </Select>
