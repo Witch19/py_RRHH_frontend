@@ -85,7 +85,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
-      const { data } = await API.post("/trabajador", formData, {
+      const { data } = await API.post("/trabajadores", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

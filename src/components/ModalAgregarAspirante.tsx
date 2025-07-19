@@ -1,11 +1,15 @@
-// src/components/ModalAgregarAspirante.tsx
 import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
   ModalBody, ModalCloseButton, Button, FormControl, FormLabel,
   Input, Textarea, Select, useToast, useDisclosure
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import API from "../api/authService"; // asegúrate de que tenga baseURL correcta
+import API from "../api/authService";
+
+interface TipoTrabajo {
+  id: number;
+  nombre: string;
+}
 
 const ModalAgregarAspirante = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,20 +17,20 @@ const ModalAgregarAspirante = () => {
 
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
-  const [tipoTrabajo, setTipoTrabajo] = useState("");
+  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipos, setTipos] = useState<string[]>([]);
+  const [tipos, setTipos] = useState<TipoTrabajo[]>([]);
 
   useEffect(() => {
-    // obtener enum de tipo de trabajo
-    API.get("/tipo-trabajo/enum").then((res) => {
+    // Trae los tipos desde la base de datos
+    API.get("/tipo-trabajo").then((res) => {
       setTipos(res.data);
     });
   }, []);
 
   const handleSubmit = async () => {
-    if (!nombre || !email || !tipoTrabajo || !cv) {
+    if (!nombre || !email || !tipoTrabajoId || !cv) {
       toast({ title: "Campos obligatorios faltantes", status: "warning" });
       return;
     }
@@ -34,7 +38,7 @@ const ModalAgregarAspirante = () => {
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("email", email);
-    formData.append("tipoTrabajo", tipoTrabajo);
+    formData.append("tipoTrabajoId", tipoTrabajoId); // ✅ ID correcto
     formData.append("mensaje", mensaje);
     formData.append("cv", cv);
 
@@ -44,7 +48,7 @@ const ModalAgregarAspirante = () => {
       });
 
       toast({ title: "Postulación enviada con éxito", status: "success" });
-      setNombre(""); setEmail(""); setTipoTrabajo(""); setMensaje(""); setCv(null);
+      setNombre(""); setEmail(""); setTipoTrabajoId(""); setMensaje(""); setCv(null);
       onClose();
     } catch (error) {
       toast({ title: "Error al enviar", description: "Intenta nuevamente", status: "error" });
@@ -73,9 +77,13 @@ const ModalAgregarAspirante = () => {
             </FormControl>
             <FormControl isRequired mb={3}>
               <FormLabel>Tipo de Trabajo</FormLabel>
-              <Select placeholder="Selecciona un tipo" value={tipoTrabajo} onChange={(e) => setTipoTrabajo(e.target.value)}>
+              <Select
+                placeholder="Selecciona un tipo"
+                value={tipoTrabajoId}
+                onChange={(e) => setTipoTrabajoId(e.target.value)}
+              >
                 {tipos.map((tipo) => (
-                  <option key={tipo} value={tipo}>{tipo}</option>
+                  <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
                 ))}
               </Select>
             </FormControl>
