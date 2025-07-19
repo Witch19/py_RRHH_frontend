@@ -11,14 +11,6 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-const opcionesTipoTrabajador = [
-  { key: "ADMINISTRATIVO", label: "Administrativo" },
-  { key: "OPERARIO", label: "Operario" },
-  { key: "INGENIERIA", label: "Ingeniería" },
-  { key: "MANTENIMIENTO", label: "Mantenimiento" },
-  { key: "OTRO", label: "Otro" },
-];
-
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -126,21 +118,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 {tipoTrabajos.map((tt) => (
                   <option key={tt.id} value={tt.id}>
                     {tt.nombre}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Tipo de trabajador (categoría)</FormLabel>
-              <Select
-                placeholder="Seleccione tipo"
-                value={tipoTrabajador}
-                onChange={(e) => setTipoTrabajador(e.target.value)}
-              >
-                {opcionesTipoTrabajador.map((tt) => (
-                  <option key={tt.key} value={tt.key}>
-                    {tt.label}
                   </option>
                 ))}
               </Select>

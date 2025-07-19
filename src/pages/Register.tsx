@@ -15,10 +15,11 @@ import {
   Avatar,
 } from "@chakra-ui/react";
 import { FaCircle } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
+import { useAuth } from "../auth/AuthContext"; // ✅ tu contexto
 import logoImg from "../assets/Logo.png";
 
 const Register = () => {
@@ -28,12 +29,33 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "trabajador",
+    role: "TRABAJADOR",
+    telefono: "",
+    direccion: "",
+    tipoTrabajoId: "",
   });
 
+  const [tipoTrabajos, setTipoTrabajos] = useState([]);
   const navigate = useNavigate();
   const toast = useToast();
   const { setTheme } = useThemeColor();
+  const { login } = useAuth(); // ✅ usamos el login del contexto
+
+  useEffect(() => {
+    const fetchTipos = async () => {
+      try {
+        const { data } = await API.get("/tipo-trabajo");
+        setTipoTrabajos(data);
+      } catch (err: any) {
+        toast({
+          title: "Error al cargar áreas",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        });
+      }
+    };
+    fetchTipos();
+  }, [toast]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -43,6 +65,7 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (form.password !== form.confirmPassword) {
       toast({
         title: "Las contraseñas no coinciden",
@@ -54,37 +77,37 @@ const Register = () => {
     }
 
     try {
-      const res = await API.post("/auth/register", {
+      // 1. Registro
+      await API.post("/auth/register", {
         username: `${form.firstName} ${form.lastName}`,
         email: form.email,
         password: form.password,
-        role: form.role,
+        role: form.role.toUpperCase(),
+        telefono: form.telefono,
+        direccion: form.direccion,
+        tipoTrabajoId: Number(form.tipoTrabajoId),
       });
 
-      const mensaje =
-        typeof res.data === "string"
-          ? res.data
-          : res.data?.message || "Usuario registrado correctamente";
+      // 2. Login automático
+      const res = await API.post("/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
 
-      const token =
-        typeof res.data === "object" && res.data?.token
-          ? res.data.token
-          : null;
+      const { token, user } = res.data;
 
       if (token) {
-        localStorage.setItem("token", token);
+        login(user, token); // ✅ actualiza el contexto y guarda token
       }
 
       toast({
-        title: mensaje,
+        title: `Bienvenido, ${user.username}`,
         status: "success",
         duration: 2000,
         isClosable: true,
       });
 
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      navigate("/");
     } catch (err: any) {
       toast({
         title: "Error al registrarse",
@@ -115,14 +138,7 @@ const Register = () => {
         boxShadow="dark-lg"
         color="white"
       >
-        <Avatar
-          src={logoImg}
-          size="xl"
-          border="4px solid white"
-          bg="white"
-          mx="auto"
-          mb={6}
-        />
+        <Avatar src={logoImg} size="xl" mx="auto" mb={6} />
 
         <Heading size="lg" mb={6}>
           Sign Up
@@ -138,7 +154,6 @@ const Register = () => {
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
-                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -150,7 +165,6 @@ const Register = () => {
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
-                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -163,21 +177,58 @@ const Register = () => {
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
-                _placeholder={{ color: "gray.400" }}
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                placeholder="Teléfono"
+                name="telefono"
+                value={form.telefono}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                placeholder="Dirección"
+                name="direccion"
+                value={form.direccion}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
               />
             </FormControl>
 
             <FormControl isRequired>
               <Select
-                placeholder="Seleccione un rol"
+                placeholder="Área de trabajo"
+                name="tipoTrabajoId"
+                value={form.tipoTrabajoId}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              >
+                {tipoTrabajos.map((tt: any) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired>
+              <Select
                 name="role"
                 value={form.role}
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
               >
-                <option value="trabajador">Trabajador</option>
-                <option value="supervisor">Supervisor</option>
+                <option value="TRABAJADOR">Trabajador</option>
+                <option value="ADMIN">Admin</option>
               </Select>
             </FormControl>
 
@@ -190,7 +241,6 @@ const Register = () => {
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
-                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -203,7 +253,6 @@ const Register = () => {
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
-                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -226,7 +275,7 @@ const Register = () => {
 
         <Text mt={4} fontSize="sm">
           Already have an account?{" "}
-          <Link color="blue.200" href="/" fontWeight="bold">
+          <Link color="blue.200" href="/login" fontWeight="bold">
             Login
           </Link>
         </Text>
