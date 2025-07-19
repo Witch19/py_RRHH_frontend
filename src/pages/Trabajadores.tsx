@@ -61,11 +61,10 @@ const Trabajadores = () => {
           id: Number(t._id ?? t.id ?? ""),
           nombre: t.nombre,
           email: t.email ?? t.correo ?? "-",
-          area: t.tipoTrabajo?.nombre ?? t.area ?? "-",
+          tipoTrabajo: t.tipoTrabajo?.nombre ?? "-",
           telefono: t.telefono || "-",
           direccion: t.direccion || "-",
           cvUrl: t.cvUrl || "",
-          tipoTrabajo: t.tipoTrabajo,
         }));
         setTrabajadores(conCamposCompletos);
       } catch (err: any) {
@@ -86,7 +85,7 @@ const Trabajadores = () => {
   const handleEliminar = async (id?: number) => {
     if (!id) return;
     try {
-      await API.delete(`/trabajadores/${id}`); // ✅ corregido aquí
+      await API.delete(`/trabajadores/${id}`);
       setTrabajadores((prev) => prev.filter((t) => t.id !== id));
       toast({ title: "Trabajador eliminado", status: "success" });
     } catch (err: any) {
@@ -123,11 +122,10 @@ const Trabajadores = () => {
               id: Number(nuevo.id),
               nombre: nuevo.nombre,
               email: nuevo.email,
-              area: nuevo.tipoTrabajo?.nombre ?? nuevo.area ?? "-",
+              tipoTrabajo: nuevo.tipoTrabajo?.nombre ?? "-",
               telefono: nuevo.telefono || "-",
               direccion: nuevo.direccion || "-",
               cvUrl: nuevo.cvUrl || "",
-              tipoTrabajo: nuevo.tipoTrabajo,
             };
             setTrabajadores((prev) => [...prev, nuevoConCampos]);
           }}
@@ -147,7 +145,7 @@ const Trabajadores = () => {
             <Tr>
               <Th>Nombre</Th>
               <Th>Email</Th>
-              <Th>Área</Th>
+              <Th>Tipo de Trabajo</Th>
               <Th>Teléfono</Th>
               <Th>Dirección</Th>
               <Th>Hoja de Vida</Th>
@@ -166,7 +164,7 @@ const Trabajadores = () => {
                 <Tr key={t.id}>
                   <Td>{t.nombre}</Td>
                   <Td>{t.email}</Td>
-                  <Td>{t.area || "-"}</Td>
+                  <Td>{t.tipoTrabajo || "-"}</Td>
                   <Td>{t.telefono}</Td>
                   <Td>{t.direccion}</Td>
                   <Td>
