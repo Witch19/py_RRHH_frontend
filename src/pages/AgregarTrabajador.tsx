@@ -139,21 +139,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 value={tipoTrabajoId}
                 onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {opcionesTipoTrabajo.map((tt) => (
-                  <option key={tt.id} value={tt.id}>
-                    {tt.nombre}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Tipo de Trabajador</FormLabel>
-              <Select
-                placeholder="Seleccione tipo"
-                value={tipoTrabajador}
-                onChange={(e) => setTipoTrabajador(e.target.value)}
-              >
                 {opcionesTipoTrabajador.map((tt) => (
                   <option key={tt.key} value={tt.key}>
                     {tt.label}
