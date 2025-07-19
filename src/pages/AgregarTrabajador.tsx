@@ -1,7 +1,18 @@
 import {
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
-  ModalBody, ModalCloseButton, Button, useDisclosure, FormControl,
-  FormLabel, Input, useToast, Select
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Input,
+  useToast,
+  Select,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
@@ -11,11 +22,7 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-interface TipoTrabajoOption {
-  id: number;
-  nombre: string;
-}
-
+// Enum frontend para tipoTrabajador
 const opcionesTipoTrabajador = [
   { key: "ADMINISTRATIVO", label: "Administrativo" },
   { key: "OPERARIO", label: "Operario" },
@@ -34,21 +41,26 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
+  const [tipoTrabajo, setTipoTrabajo] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
-  const [opcionesTipoTrabajo, setOpcionesTipoTrabajo] = useState<TipoTrabajoOption[]>([]);
+
+  //const [ setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
 
   useEffect(() => {
-    API.get("/tipo-trabajo/enum")
-      .then((res) => setOpcionesTipoTrabajo(res.data))
-      .catch((err: any) => {
+    const fetchTipos = async () => {
+      try {
+        //const { data } = await API.get("/tipo-trabajo/enum");
+        //setTipoTrabajos(data); // [{ key, value }]
+      } catch (err: any) {
         toast({
-          title: "Error al cargar tipos de trabajo",
+          title: "Error al cargar áreas",
           description: err.response?.data?.message || err.message,
           status: "error",
         });
-      });
-  }, []);
+      }
+    };
+    fetchTipos();
+  }, [toast]);
 
   const resetForm = () => {
     setNombre("");
@@ -56,17 +68,12 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
-    setTipoTrabajoId("");
+    setTipoTrabajo("");
     setTipoTrabajador("");
     setCv(null);
   };
 
   const handleSubmit = async () => {
-    if (!tipoTrabajoId) {
-      toast({ title: "Debe seleccionar un área de trabajo", status: "warning" });
-      return;
-    }
-
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("apellido", apellido);
@@ -74,7 +81,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", tipoTrabajoId);
+    if (tipoTrabajo) formData.append("tipoTrabajo", tipoTrabajo);
     if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
@@ -122,6 +129,21 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
               <Input value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
 
+            <FormControl mt={4} isRequired>
+              <FormLabel>Área de trabajo</FormLabel>
+              <Select
+                placeholder="Seleccione tipo"
+                value={tipoTrabajador}
+                onChange={(e) => setTipoTrabajador(e.target.value)}
+              >
+                {opcionesTipoTrabajador.map((tt) => (
+                  <option key={tt.key} value={tt.key}>
+                    {tt.label}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
             <FormControl mt={4}>
               <FormLabel>Teléfono</FormLabel>
               <Input value={telefono} onChange={(e) => setTelefono(e.target.value)} />
@@ -130,21 +152,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             <FormControl mt={4}>
               <FormLabel>Dirección</FormLabel>
               <Input value={direccion} onChange={(e) => setDireccion(e.target.value)} />
-            </FormControl>
-
-            <FormControl isRequired mt={4}>
-              <FormLabel>Área de Trabajo</FormLabel>
-              <Select
-                placeholder="Seleccione área"
-                value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(e.target.value)}
-              >
-                {opcionesTipoTrabajador.map((tt) => (
-                  <option key={tt.key} value={tt.key}>
-                    {tt.label}
-                  </option>
-                ))}
-              </Select>
             </FormControl>
 
             <FormControl mt={4}>
