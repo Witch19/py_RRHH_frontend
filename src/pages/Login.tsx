@@ -14,6 +14,7 @@ import {
   Link,
   Heading,
   Icon,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { FaUser, FaLock, FaCircle } from "react-icons/fa";
@@ -53,7 +54,7 @@ const Login = () => {
       if (user && token) {
         login(
           {
-            id: user._id || user.id, // corregido: usa _id o id según el backend
+            id: user._id || user.id,
             email: user.email,
             username: user.username,
             role: user.role,
@@ -87,27 +88,28 @@ const Login = () => {
       minH="100vh"
       align="center"
       justify="center"
-      bgGradient={gradient}
+      bgGradient="linear(to-br, #1A3A5E, #2CA6A4)"
       px={4}
     >
       <Box
         bg="whiteAlpha.200"
-        backdropFilter="blur(10px)"
+        backdropFilter="blur(15px)"
         borderRadius="2xl"
         p={8}
         w="full"
         maxW="sm"
         textAlign="center"
-        boxShadow="2xl"
+        boxShadow="dark-lg"
+        color="white"
       >
         <Box mb={6}>
           <Icon as={FaCircle} boxSize={8} color="white" />
-          <Heading size="md" color="white" mt={2}>
+          <Heading size="md" mt={2}>
             Technology
           </Heading>
         </Box>
 
-        <Heading size="lg" color="white" mb={6}>
+        <Heading size="lg" mb={6}>
           Welcome
         </Heading>
 
@@ -116,7 +118,7 @@ const Login = () => {
             <FormControl isRequired>
               <InputGroup>
                 <InputLeftElement>
-                  <FaUser color="gray" />
+                  <FaUser color="#1A3A5E" />
                 </InputLeftElement>
                 <Input
                   type="email"
@@ -124,6 +126,8 @@ const Login = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Username"
                   bg="white"
+                  color="gray.800"
+                  _placeholder={{ color: "gray.400" }}
                 />
               </InputGroup>
             </FormControl>
@@ -131,7 +135,7 @@ const Login = () => {
             <FormControl isRequired>
               <InputGroup>
                 <InputLeftElement>
-                  <FaLock color="gray" />
+                  <FaLock color="#1A3A5E" />
                 </InputLeftElement>
                 <Input
                   type={showPassword ? "text" : "password"}
@@ -139,6 +143,8 @@ const Login = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   bg="white"
+                  color="gray.800"
+                  _placeholder={{ color: "gray.400" }}
                 />
                 <InputRightElement>
                   <IconButton
@@ -158,20 +164,26 @@ const Login = () => {
               </Link>
             </Flex>
 
-            <Button type="submit" colorScheme="purple" w="full" borderRadius="full">
+            <Button
+              type="submit"
+              bg="purple.500"
+              color="white"
+              _hover={{ bg: "purple.600" }}
+              w="full"
+              borderRadius="full"
+            >
               Login
             </Button>
           </VStack>
         </form>
 
-        <Text mt={4} color="white" fontSize="sm">
+        <Text mt={4} fontSize="sm">
           Don’t have an account?{" "}
           <Link color="blue.200" href="/register" fontWeight="bold">
             Sign Up
           </Link>
         </Text>
 
-        {/* Cambiador de colores */}
         <Flex justify="center" gap={4} mt={6}>
           <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
           <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />

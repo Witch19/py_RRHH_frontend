@@ -35,8 +35,10 @@ const Trabajadores = () => {
 
   if (!isAdmin) {
     return (
-      <Center minH="100vh">
-        <Heading fontSize="2xl" color="white">Acceso restringido</Heading>
+      <Center minH="100vh" bgGradient={gradient}>
+        <Heading fontSize="2xl" color="white">
+          Acceso restringido
+        </Heading>
       </Center>
     );
   }
@@ -65,7 +67,6 @@ const Trabajadores = () => {
           cvUrl: t.cvUrl || "",
           tipoTrabajo: t.tipoTrabajo,
         }));
-
         setTrabajadores(conCamposCompletos);
       } catch (err: any) {
         toast({
@@ -106,37 +107,42 @@ const Trabajadores = () => {
 
   if (loading) {
     return (
-      <Center minH="200px">
+      <Center minH="300px" bgGradient={gradient}>
         <Spinner size="lg" color="white" />
       </Center>
     );
   }
 
   return (
-    <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
+    <Box p={6} bgGradient={gradient} minH="100vh" color="white">
       <HStack mb={4} justify="space-between">
         <Heading>Lista de Trabajadores</Heading>
-        {isAdmin && (
-          <AgregarTrabajador
-            onAdd={(nuevo: any) => {
-              const nuevoConCampos: TrabajadorModal = {
-                id: Number(nuevo.id),
-                nombre: nuevo.nombre,
-                email: nuevo.email,
-                area: nuevo.tipoTrabajo ?? nuevo.area ?? "-",
-                telefono: nuevo.telefono || "-",
-                direccion: nuevo.direccion || "-",
-                cvUrl: nuevo.cvUrl || "",
-                tipoTrabajo: nuevo.tipoTrabajo,
-              };
-              setTrabajadores((prev) => [...prev, nuevoConCampos]);
-            }}
-          />
-        )}
+        <AgregarTrabajador
+          onAdd={(nuevo: any) => {
+            const nuevoConCampos: TrabajadorModal = {
+              id: Number(nuevo.id),
+              nombre: nuevo.nombre,
+              email: nuevo.email,
+              area: nuevo.tipoTrabajo ?? nuevo.area ?? "-",
+              telefono: nuevo.telefono || "-",
+              direccion: nuevo.direccion || "-",
+              cvUrl: nuevo.cvUrl || "",
+              tipoTrabajo: nuevo.tipoTrabajo,
+            };
+            setTrabajadores((prev) => [...prev, nuevoConCampos]);
+          }}
+        />
       </HStack>
 
-      <Box overflowY="auto" maxHeight="700px" borderRadius="md" border="1px solid #ccc">
-        <Table variant="simple" bg="white" color="gray.800" minWidth="800px">
+      <Box
+        overflowY="auto"
+        maxHeight="70vh"
+        borderRadius="lg"
+        border="1px solid #ccc"
+        bg="white"
+        color="gray.800"
+      >
+        <Table variant="simple" minWidth="800px">
           <Thead position="sticky" top={0} zIndex="docked" bg="gray.100">
             <Tr>
               <Th>Nombre</Th>
@@ -145,10 +151,9 @@ const Trabajadores = () => {
               <Th>Teléfono</Th>
               <Th>Dirección</Th>
               <Th>Hoja de Vida</Th>
-              {isAdmin && <Th>Acciones</Th>}
+              <Th>Acciones</Th>
             </Tr>
           </Thead>
-
           <Tbody>
             {trabajadores.length === 0 ? (
               <Tr>
@@ -177,29 +182,27 @@ const Trabajadores = () => {
                       "No adjunto"
                     )}
                   </Td>
-                  {isAdmin && (
-                    <Td>
-                      <HStack spacing={2}>
-                        <Tooltip label="Editar">
-                          <IconButton
-                            aria-label="Editar"
-                            icon={<EditIcon />}
-                            size="sm"
-                            onClick={() => openEditar(t)}
-                          />
-                        </Tooltip>
-                        <Tooltip label="Eliminar">
-                          <IconButton
-                            aria-label="Eliminar"
-                            icon={<DeleteIcon />}
-                            size="sm"
-                            colorScheme="red"
-                            onClick={() => handleEliminar(t.id)}
-                          />
-                        </Tooltip>
-                      </HStack>
-                    </Td>
-                  )}
+                  <Td>
+                    <HStack spacing={2}>
+                      <Tooltip label="Editar">
+                        <IconButton
+                          aria-label="Editar"
+                          icon={<EditIcon />}
+                          size="sm"
+                          onClick={() => openEditar(t)}
+                        />
+                      </Tooltip>
+                      <Tooltip label="Eliminar">
+                        <IconButton
+                          aria-label="Eliminar"
+                          icon={<DeleteIcon />}
+                          size="sm"
+                          colorScheme="red"
+                          onClick={() => handleEliminar(t.id)}
+                        />
+                      </Tooltip>
+                    </HStack>
+                  </Td>
                 </Tr>
               ))
             )}
@@ -207,7 +210,7 @@ const Trabajadores = () => {
         </Table>
       </Box>
 
-      {isAdmin && trabajadorActual && (
+      {trabajadorActual && (
         <EditarTrabajador
           isOpen={isEditing}
           onClose={closeEditar}

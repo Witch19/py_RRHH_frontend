@@ -19,7 +19,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
-import logoImg from "../assets/Logo.png";   // ⬅️ Importa tu logo
+import logoImg from "../assets/Logo.png";
+
 const Register = () => {
   const [form, setForm] = useState({
     firstName: "",
@@ -60,9 +61,6 @@ const Register = () => {
         role: form.role,
       });
 
-      console.log("✅ Respuesta del backend:", res.data);
-
-      // Capturar mensaje y token si existen
       const mensaje =
         typeof res.data === "string"
           ? res.data
@@ -103,20 +101,20 @@ const Register = () => {
       minH="100vh"
       align="center"
       justify="center"
-      bgGradient={gradient}
+      bgGradient="linear(to-br, #1A3A5E, #2CA6A4)"
       px={4}
     >
       <Box
         bg="whiteAlpha.200"
-        backdropFilter="blur(10px)"
+        backdropFilter="blur(15px)"
         borderRadius="2xl"
         p={8}
         w="full"
         maxW="sm"
         textAlign="center"
-        boxShadow="2xl"
+        boxShadow="dark-lg"
+        color="white"
       >
-        {/* Logo en círculo */}
         <Avatar
           src={logoImg}
           size="xl"
@@ -126,7 +124,7 @@ const Register = () => {
           mb={6}
         />
 
-        <Heading size="lg" color="white" mb={6}>
+        <Heading size="lg" mb={6}>
           Sign Up
         </Heading>
 
@@ -139,6 +137,8 @@ const Register = () => {
                 value={form.firstName}
                 onChange={handleChange}
                 bg="white"
+                color="gray.800"
+                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -149,6 +149,8 @@ const Register = () => {
                 value={form.lastName}
                 onChange={handleChange}
                 bg="white"
+                color="gray.800"
+                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -160,6 +162,8 @@ const Register = () => {
                 value={form.email}
                 onChange={handleChange}
                 bg="white"
+                color="gray.800"
+                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -170,6 +174,7 @@ const Register = () => {
                 value={form.role}
                 onChange={handleChange}
                 bg="white"
+                color="gray.800"
               >
                 <option value="trabajador">Trabajador</option>
                 <option value="supervisor">Supervisor</option>
@@ -184,6 +189,8 @@ const Register = () => {
                 value={form.password}
                 onChange={handleChange}
                 bg="white"
+                color="gray.800"
+                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -195,6 +202,8 @@ const Register = () => {
                 value={form.confirmPassword}
                 onChange={handleChange}
                 bg="white"
+                color="gray.800"
+                _placeholder={{ color: "gray.400" }}
               />
             </FormControl>
 
@@ -204,7 +213,9 @@ const Register = () => {
 
             <Button
               type="submit"
-              colorScheme="purple"
+              bg="purple.500"
+              color="white"
+              _hover={{ bg: "purple.600" }}
               w="full"
               borderRadius="full"
             >
@@ -213,7 +224,7 @@ const Register = () => {
           </VStack>
         </form>
 
-        <Text mt={4} color="white" fontSize="sm">
+        <Text mt={4} fontSize="sm">
           Already have an account?{" "}
           <Link color="blue.200" href="/" fontWeight="bold">
             Login
@@ -221,24 +232,9 @@ const Register = () => {
         </Text>
 
         <Flex justify="center" gap={4} mt={6}>
-          <Icon
-            as={FaCircle}
-            color="gray.300"
-            onClick={() => setTheme("gray")}
-            cursor="pointer"
-          />
-          <Icon
-            as={FaCircle}
-            color="orange.400"
-            onClick={() => setTheme("orange")}
-            cursor="pointer"
-          />
-          <Icon
-            as={FaCircle}
-            color="teal.400"
-            onClick={() => setTheme("teal")}
-            cursor="pointer"
-          />
+          <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
+          <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
+          <Icon as={FaCircle} color="teal.400" onClick={() => setTheme("teal")} cursor="pointer" />
         </Flex>
       </Box>
     </Flex>
