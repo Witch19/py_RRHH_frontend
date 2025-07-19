@@ -34,7 +34,7 @@ const Dashboard = () => {
     { key: "perfil", label: "Editar Perfil" },
   ];
 
-  const { gradient, setTheme } = useThemeColor();
+  const { gradient, setTheme } = useThemeColor(); // ✅ ya funciona correctamente
   const toast = useToast();
   const token = localStorage.getItem("token") || "";
 
@@ -89,7 +89,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Flex minH="100vh" bgGradient="linear(to-br, #1A3A5E, #2CA6A4)" overflow="hidden">
+    <Flex minH="100vh" bgGradient={gradient} overflow="hidden">
       {/* Sidebar */}
       <Box
         bg="whiteAlpha.200"

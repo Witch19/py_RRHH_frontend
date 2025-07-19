@@ -33,7 +33,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const toast = useToast();
-  const { gradient, setTheme } = useThemeColor();
+  const { setTheme } = useThemeColor();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

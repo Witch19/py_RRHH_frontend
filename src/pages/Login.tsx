@@ -14,7 +14,6 @@ import {
   Link,
   Heading,
   Icon,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { FaUser, FaLock, FaCircle } from "react-icons/fa";
@@ -31,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { login } = useAuth();
-  const { gradient, setTheme } = useThemeColor();
+  const { setTheme } = useThemeColor();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
