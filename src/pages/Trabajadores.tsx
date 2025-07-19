@@ -164,7 +164,7 @@ const Trabajadores = () => {
                 <Tr key={t.id}>
                   <Td>{t.nombre}</Td>
                   <Td>{t.email}</Td>
-                  <Td>{t.tipoTrabajo || "-"}</Td>
+                  <Td>{t.tipoTrabajo?.nombre || "-"}</Td>
                   <Td>{t.telefono}</Td>
                   <Td>{t.direccion}</Td>
                   <Td>
