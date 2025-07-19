@@ -31,15 +31,15 @@ const Home = () => {
         bg="rgba(0,0,0,0.4)"
       >
         <HStack spacing={4}>
-          <Image src="/logo.png" alt="Logo" boxSize="40px" />
-          <Heading size="md" color="white">Net-Work</Heading>
+          <Image src="/Logo.png" alt="Logo" boxSize="40px" />
+          <Heading size="md" color="white">Neuratech </Heading>
         </HStack>
         <HStack spacing={4} color="white">
           <Link to="/">Home</Link>
-          <Link to="/event">The Event</Link>
           <Link to="/about">About</Link>
-          <Link to="/past">Past events</Link>
-          <Link to="/contact">Contact Us</Link>
+          <Link to="/Login">Login</Link>
+          <Link to="/Register">Registro</Link>
+          <Link to="/contact">Trabaja con nosotros</Link>
           <IconButton
             aria-label="theme toggle"
             icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
