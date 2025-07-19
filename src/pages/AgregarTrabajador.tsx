@@ -37,17 +37,16 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   >([]);
 
   useEffect(() => {
-  API.get("/tipo-trabajo/enum")
-    .then((res) => setOpcionesTipoTrabajo(res.data))
-    .catch((err: any) => {
-      toast({
-        title: "Error al cargar tipos de trabajo",
-        description: err.response?.data?.message || err.message,
-        status: "error",
+    API.get("/tipo-trabajo/enum")
+      .then((res) => setOpcionesTipoTrabajo(res.data))
+      .catch((err: any) => {
+        toast({
+          title: "Error al cargar tipos de trabajo",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        });
       });
-    });
-}, []);
-
+  }, []);
 
   const resetForm = () => {
     setNombre("");
