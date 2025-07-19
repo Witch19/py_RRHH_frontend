@@ -1,4 +1,3 @@
-// src/pages/Login.tsx
 import {
   Box,
   Button,
@@ -12,14 +11,14 @@ import {
   Text,
   Flex,
   useToast,
+  Link,
   Heading,
   Icon,
-  Link,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { FaUser, FaLock, FaCircle } from "react-icons/fa";
 import { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 import { useThemeColor } from "../context/ThemeContext";
@@ -31,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { login } = useAuth();
-  const { setTheme } = useThemeColor();
+  const { gradient, setTheme } = useThemeColor();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +53,7 @@ const Login = () => {
       if (user && token) {
         login(
           {
-            id: user._id || user.id,
+            id: user._id || user.id, // corregido: usa _id o id según el backend
             email: user.email,
             username: user.username,
             role: user.role,
@@ -68,7 +67,6 @@ const Login = () => {
           duration: 2000,
           isClosable: true,
         });
-
         navigate("/dashboard");
       } else {
         throw new Error("Respuesta del servidor inválida");
@@ -89,28 +87,27 @@ const Login = () => {
       minH="100vh"
       align="center"
       justify="center"
-      bgGradient="linear(to-br, #1A3A5E, #2CA6A4)"
+      bgGradient={gradient}
       px={4}
     >
       <Box
         bg="whiteAlpha.200"
-        backdropFilter="blur(15px)"
+        backdropFilter="blur(10px)"
         borderRadius="2xl"
         p={8}
         w="full"
         maxW="sm"
         textAlign="center"
-        boxShadow="dark-lg"
-        color="white"
+        boxShadow="2xl"
       >
         <Box mb={6}>
           <Icon as={FaCircle} boxSize={8} color="white" />
-          <Heading size="md" mt={2}>
+          <Heading size="md" color="white" mt={2}>
             Technology
           </Heading>
         </Box>
 
-        <Heading size="lg" mb={6}>
+        <Heading size="lg" color="white" mb={6}>
           Welcome
         </Heading>
 
@@ -119,16 +116,14 @@ const Login = () => {
             <FormControl isRequired>
               <InputGroup>
                 <InputLeftElement>
-                  <FaUser color="#1A3A5E" />
+                  <FaUser color="gray" />
                 </InputLeftElement>
                 <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Correo electrónico"
+                  placeholder="Username"
                   bg="white"
-                  color="gray.800"
-                  _placeholder={{ color: "gray.400" }}
                 />
               </InputGroup>
             </FormControl>
@@ -136,16 +131,14 @@ const Login = () => {
             <FormControl isRequired>
               <InputGroup>
                 <InputLeftElement>
-                  <FaLock color="#1A3A5E" />
+                  <FaLock color="gray" />
                 </InputLeftElement>
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Contraseña"
+                  placeholder="Password"
                   bg="white"
-                  color="gray.800"
-                  _placeholder={{ color: "gray.400" }}
                 />
                 <InputRightElement>
                   <IconButton
@@ -160,31 +153,25 @@ const Login = () => {
             </FormControl>
 
             <Flex w="full" justify="flex-end">
-              <Text fontSize="sm" color="white" cursor="pointer">
-                ¿Olvidaste tu contraseña?
-              </Text>
+              <Link color="white" fontSize="sm">
+                Forgot Password?
+              </Link>
             </Flex>
 
-            <Button
-              type="submit"
-              bg="purple.500"
-              color="white"
-              _hover={{ bg: "purple.600" }}
-              w="full"
-              borderRadius="full"
-            >
-              Iniciar sesión
+            <Button type="submit" colorScheme="purple" w="full" borderRadius="full">
+              Login
             </Button>
           </VStack>
         </form>
 
-        <Text mt={4} fontSize="sm">
-          ¿No tienes una cuenta?{" "}
-          <Link as={RouterLink} to="/register" color="blue.200" fontWeight="bold">
-            Regístrate
+        <Text mt={4} color="white" fontSize="sm">
+          Don’t have an account?{" "}
+          <Link color="blue.200" href="/register" fontWeight="bold">
+            Sign Up
           </Link>
         </Text>
 
+        {/* Cambiador de colores */}
         <Flex justify="center" gap={4} mt={6}>
           <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
           <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
