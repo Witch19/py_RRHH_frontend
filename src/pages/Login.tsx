@@ -1,3 +1,4 @@
+// src/pages/Login.tsx
 import {
   Box,
   Button,
@@ -11,14 +12,14 @@ import {
   Text,
   Flex,
   useToast,
-  Link,
   Heading,
   Icon,
+  Link,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { FaUser, FaLock, FaCircle } from "react-icons/fa";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 import { useThemeColor } from "../context/ThemeContext";
@@ -67,6 +68,7 @@ const Login = () => {
           duration: 2000,
           isClosable: true,
         });
+
         navigate("/dashboard");
       } else {
         throw new Error("Respuesta del servidor inválida");
@@ -123,7 +125,7 @@ const Login = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Username"
+                  placeholder="Correo electrónico"
                   bg="white"
                   color="gray.800"
                   _placeholder={{ color: "gray.400" }}
@@ -140,7 +142,7 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
+                  placeholder="Contraseña"
                   bg="white"
                   color="gray.800"
                   _placeholder={{ color: "gray.400" }}
@@ -158,9 +160,9 @@ const Login = () => {
             </FormControl>
 
             <Flex w="full" justify="flex-end">
-              <Link color="white" fontSize="sm">
-                Forgot Password?
-              </Link>
+              <Text fontSize="sm" color="white" cursor="pointer">
+                ¿Olvidaste tu contraseña?
+              </Text>
             </Flex>
 
             <Button
@@ -171,15 +173,15 @@ const Login = () => {
               w="full"
               borderRadius="full"
             >
-              Login
+              Iniciar sesión
             </Button>
           </VStack>
         </form>
 
         <Text mt={4} fontSize="sm">
-          Don’t have an account?{" "}
-          <Link color="blue.200" href="/register" fontWeight="bold">
-            Sign Up
+          ¿No tienes una cuenta?{" "}
+          <Link as={RouterLink} to="/register" color="blue.200" fontWeight="bold">
+            Regístrate
           </Link>
         </Text>
 
