@@ -61,7 +61,7 @@ const Trabajadores = () => {
           id: Number(t._id ?? t.id ?? ""),
           nombre: t.nombre,
           email: t.email ?? t.correo ?? "-",
-          area: t.tipoTrabajo ?? t.area ?? "-",
+          area: t.tipoTrabajo?.nombre ?? t.area ?? "-",
           telefono: t.telefono || "-",
           direccion: t.direccion || "-",
           cvUrl: t.cvUrl || "",
@@ -86,7 +86,7 @@ const Trabajadores = () => {
   const handleEliminar = async (id?: number) => {
     if (!id) return;
     try {
-      await API.delete(`/trabajador/${id}`);
+      await API.delete(`/trabajadores/${id}`); // ✅ corregido aquí
       setTrabajadores((prev) => prev.filter((t) => t.id !== id));
       toast({ title: "Trabajador eliminado", status: "success" });
     } catch (err: any) {
@@ -123,7 +123,7 @@ const Trabajadores = () => {
               id: Number(nuevo.id),
               nombre: nuevo.nombre,
               email: nuevo.email,
-              area: nuevo.tipoTrabajo ?? nuevo.area ?? "-",
+              area: nuevo.tipoTrabajo?.nombre ?? nuevo.area ?? "-",
               telefono: nuevo.telefono || "-",
               direccion: nuevo.direccion || "-",
               cvUrl: nuevo.cvUrl || "",

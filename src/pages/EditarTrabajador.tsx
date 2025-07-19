@@ -26,7 +26,7 @@ export interface TrabajadorModal {
   telefono?: string;
   direccion?: string;
   cvUrl?: string;
-  tipoTrabajo?: string;
+  tipoTrabajo?: { id: number; nombre: string } | string;
 }
 
 interface Props {
@@ -47,7 +47,7 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
     email: "",
     telefono: "",
     direccion: "",
-    tipoTrabajo: "",
+    tipoTrabajoId: "",
   });
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [tiposTrabajo, setTiposTrabajo] = useState<{ key: string; value: string }[]>([]);
@@ -60,11 +60,14 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
     if (trabajador) {
       setForm({
         nombre: trabajador.nombre,
-        apellido: "", // Si lo tienes, agrégalo
+        apellido: "", // Puedes poblar si lo tienes
         email: trabajador.email,
         telefono: trabajador.telefono || "",
         direccion: trabajador.direccion || "",
-        tipoTrabajo: trabajador.tipoTrabajo || "",
+        tipoTrabajoId:
+          typeof trabajador.tipoTrabajo === "object"
+            ? String(trabajador.tipoTrabajo.id)
+            : "",
       });
     }
   }, [trabajador]);
@@ -80,11 +83,14 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
         const data = new FormData();
         Object.entries(form).forEach(([k, v]) => data.append(k, v));
         data.append("file", cvFile);
-        response = await API.patch(`/trabajador/${trabajador.id}`, data, {
+        response = await API.patch(`/trabajadores/${trabajador.id}`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        response = await API.patch(`/trabajador/${trabajador.id}`, form);
+        response = await API.patch(`/trabajadores/${trabajador.id}`, {
+          ...form,
+          tipoTrabajoId: parseInt(form.tipoTrabajoId),
+        });
       }
 
       onUpdate(response.data);
@@ -134,8 +140,8 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
           <FormControl isRequired mt={3}>
             <FormLabel>Área de trabajo</FormLabel>
             <Select
-              name="tipoTrabajo"
-              value={form.tipoTrabajo}
+              name="tipoTrabajoId"
+              value={form.tipoTrabajoId}
               onChange={handleChange}
               placeholder="Seleccione un área"
             >
