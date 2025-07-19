@@ -4,7 +4,7 @@ import {
   IconButton, SimpleGrid, useColorMode
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import ModalAgregarAspirante from "../components/ModalAgregarAspirante";
 
@@ -31,13 +31,13 @@ const Home = () => {
       >
         <HStack spacing={4}>
           <Image src="/Logo.png" alt="Logo" boxSize="40px" />
-          <Heading size="md" color="white">Neuratech </Heading>
+          <Heading size="md" color="white">Neuratech</Heading>
         </HStack>
-        <HStack spacing={4} color="white">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/Login">Login</Link>
-          <Link to="/Register">Registro</Link>
+        <HStack spacing={4}>
+          <Button as={RouterLink} to="/" variant="ghost" color="white">Home</Button>
+          <Button as={RouterLink} to="/about" variant="ghost" color="white">About</Button>
+          <Button as={RouterLink} to="/login" variant="ghost" color="white">Login</Button>
+          <Button as={RouterLink} to="/register" variant="ghost" color="white">Registro</Button>
           <ModalAgregarAspirante />
           <IconButton
             aria-label="theme toggle"
@@ -75,9 +75,11 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <MotionHeading size="2xl" color="white" mb={4}>Work Life Balance – Reality or Myth?</MotionHeading>
+            <MotionHeading size="2xl" color="white" mb={4}>
+              Work Life Balance – Reality or Myth?
+            </MotionHeading>
             <Box borderBottom="2px solid #00FFB3" w="80px" mx="auto" mb={4} />
-            <Button colorScheme="blue">Buy Tickets</Button>
+            <Button colorScheme="blue" as={RouterLink} to="/register">Postúlate</Button>
           </MotionBox>
         </Flex>
       </Box>
@@ -85,8 +87,10 @@ const Home = () => {
       {/* ABOUT THE EVENT */}
       <Flex bg="white" py={20} px={8} align="center">
         <Box flex="1" pr={8}>
-          <Text textTransform="uppercase" color="blue.500" letterSpacing="wide" mb={2}>About the event</Text>
-          <Heading size="xl" mb={4}>Work Life Balance – Reality or Myth?</Heading>
+          <Text textTransform="uppercase" color="blue.500" letterSpacing="wide" mb={2}>
+            About the event
+          </Text>
+          <Heading size="xl" mb={4}>Work Life Balance – Reality or Myth?</Heading>
           <Text color="gray.600">
             I'm a paragraph. Click here to add your own text and edit me…
           </Text>
@@ -109,10 +113,12 @@ const Home = () => {
       {/* ABOUT NET-WORK */}
       <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
         <Box flex="1" pr={8}>
-          <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>Net‑Work</Text>
+          <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>
+            Net‑Work
+          </Text>
           <Heading size="xl" mb={4}>About Net‑Work</Heading>
           <Text color="gray.300" mb={4}>
-            I'm a paragraph. … Tell a story and let your users know a little more about you.
+            I'm a paragraph… Tell a story and let your users know a little more about you.
           </Text>
           <Text color="gray.300">
             This is a great space to write long text about your company and your services…
@@ -202,7 +208,7 @@ const Home = () => {
           >
             We can’t wait to see you at our next event.
           </MotionHeading>
-          <Button colorScheme="blue">RSVP</Button>
+          <Button colorScheme="blue" as={RouterLink} to="/register">RSVP</Button>
         </Box>
       </Box>
     </Box>
