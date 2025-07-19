@@ -1,140 +1,212 @@
 // src/pages/Home.tsx
 import {
   Box, Button, Heading, Text, Flex, Spacer, Image, HStack,
-  IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody,
-  ModalFooter, ModalCloseButton, FormControl, FormLabel, Input, Select,
-  Textarea, useDisclosure, useToast, useColorMode,
-  SimpleGrid
+  IconButton, SimpleGrid, useDisclosure
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import API from "../api/authService";
-import { useState, useEffect } from "react";
+import { useColorMode } from "@chakra-ui/color-mode";
+import { motion } from "framer-motion";
+
+const MotionBox = motion(Box);
+const MotionHeading = motion(Heading);
+const MotionText = motion(Text);
+const MotionImage = motion(Image);
 
 const Home = () => {
-  const toast = useToast();
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen: openPost, onOpen: onOpenPost, onClose: onClosePost } = useDisclosure();
-  const { isOpen: openMaqui, onOpen: onOpenMaqui, onClose: onCloseMaqui } = useDisclosure();
-
-  const [opciones, setOpciones] = useState<{ key: string; value: string }[]>([]);
-  const [form, setForm] = useState({ nombre: "", email: "", tipo: "", mensaje: "", cv: null as File | null });
-  const [empresa, setEmpresa] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-
-  useEffect(() => {
-    API.get("/tipo-trabajo/enum").then(res => setOpciones(res.data)).catch(() => toast({ title: "Error áreas", status: "error" }));
-  }, []);
-
-  const handlePost = async () => {
-    if (!form.nombre || !form.email || !form.tipo) return toast({ title: "Campos faltantes", status: "warning" });
-
-    const fd = new FormData();
-    Object.entries(form).forEach(([k, v]) => v && fd.append(k, v as any));
-    try {
-      await API.post("/aspirante", fd);
-      toast({ title: "Enviado", status: "success" });
-      setForm({ nombre: "", email: "", tipo: "", mensaje: "", cv: null });
-      onClosePost();
-    } catch (err: any) {
-      toast({ title: "Error", description: err?.response?.data?.message || err.message, status: "error" });
-    }
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box bg="#0B0F1A" color="white" minH="100vh">
+    <Box fontFamily="sans-serif">
       {/* NAVBAR */}
-      <Flex as="nav" px={8} py={4} align="center" position="absolute" top={0} w="100%" zIndex={20} bg="rgba(11,15,26,0.7)">
-        <HStack spacing={4}><Image boxSize="40px" src="/Logo.png"/><Heading size="md">Mi Empresa</Heading></HStack>
-        <Spacer />
-        <HStack spacing={3}>
-          <IconButton icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />} onClick={toggleColorMode} variant="ghost" color="white" aria-label={""}/>
-          <Link to="/login"><Button variant="outline" colorScheme="teal" size="sm">Login</Button></Link>
-          <Link to="/register"><Button colorScheme="teal" size="sm">Registro</Button></Link>
+      <Flex
+        as="nav"
+        pt={4}
+        px={8}
+        position="absolute"
+        w="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        zIndex={20}
+        bg="rgba(0,0,0,0.4)"
+      >
+        <HStack spacing={4}>
+          <Image src="/logo.png" alt="Logo" boxSize="40px" />
+          <Heading size="md" color="white">Net-Work</Heading>
+        </HStack>
+        <HStack spacing={4} color="white">
+          <Link to="/">Home</Link>
+          <Link to="/event">The Event</Link>
+          <Link to="/about">About</Link>
+          <Link to="/past">Past events</Link>
+          <Link to="/contact">Contact Us</Link>
+          <IconButton
+            aria-label="theme toggle"
+            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            onClick={toggleColorMode}
+            color="white"
+            variant="ghost"
+          />
         </HStack>
       </Flex>
 
       {/* HERO */}
-      <Box h="100vh" bgImage="url('/hero-bg.jpg')" bgSize="cover" bgPos="center" position="relative" display="flex" alignItems="center" justifyContent="center">
-        <Box position="absolute" inset={0} bg="rgba(0,0,0,0.6)" />
-        <Box textAlign="center" zIndex={1} px={6}>
-          <Heading fontSize={["3xl","5xl"]} mb={4} letterSpacing="wide">Soluciones en Ingeniería & Tecnología</Heading>
-          <Text fontSize={["md","xl"]} mb={6}>Impulsamos el futuro con talento humano y automatización inteligente.</Text>
-          <Button size="lg" bgGradient="linear(to-r, teal.400, cyan.400)" _hover={{ bgGradient: "teal.500-cyan.500" }} onClick={onOpenPost}>
-            Trabaja con Nosotros
-          </Button>
-        </Box>
+      <Box
+        h="90vh"
+        bgImage="url('/hero-people.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        position="relative"
+      >
+        <Box position="absolute" inset={0} bg="rgba(0, 0, 50, 0.6)" />
+        <Flex
+          direction="column"
+          position="relative"
+          alignItems="center"
+          justifyContent="center"
+          h="100%"
+          px={6}
+          textAlign="center"
+        >
+          <MotionBox
+            border="2px solid #00FFB3"
+            px={6}
+            py={4}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <MotionHeading size="2xl" color="white" mb={4}>Work Life Balance – Reality or Myth?</MotionHeading>
+            <Box borderBottom="2px solid #00FFB3" w="80px" mx="auto" mb={4} />
+            <Button colorScheme="blue" onClick={onOpen}>Buy Tickets</Button>
+          </MotionBox>
+        </Flex>
       </Box>
 
-      {/* TRABAJA */}
-      <Box bg="#11162A" py={20} px={8}>
-        <Heading textAlign="center" mb={10}>¿Te gustaría unirte a nuestro equipo?</Heading>
-        <SimpleGrid columns={[1,2]} spacing={8} maxW="5xl" mx="auto">
+      {/* ABOUT THE EVENT */}
+      <Flex bg="white" py={20} px={8} align="center">
+        <Box flex="1" pr={8}>
+          <Text textTransform="uppercase" color="blue.500" letterSpacing="wide" mb={2}>About the event</Text>
+          <Heading size="xl" mb={4}>Work Life Balance – Reality or Myth?</Heading>
+          <Text color="gray.600">
+            I'm a paragraph. Click here to add your own text and edit me…
+          </Text>
+        </Box>
+        <Box>
+          <MotionImage
+            src="/icon-event.png"
+            alt="event icon"
+            boxSize="300px"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.6 }}
+          />
+        </Box>
+      </Flex>
+
+      {/* INTERMEDIATE IMAGE */}
+      <Image src="/crowd.jpg" alt="Crowd at event" w="100%" />
+
+      {/* ABOUT NET-WORK */}
+      <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
+        <Box flex="1" pr={8}>
+          <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>Net‑Work</Text>
+          <Heading size="xl" mb={4}>About Net‑Work</Heading>
+          <Text color="gray.300" mb={4}>
+            I'm a paragraph. … Tell a story and let your users know a little more about you.
+          </Text>
+          <Text color="gray.300">
+            This is a great space to write long text about your company and your services…
+          </Text>
+        </Box>
+        <Box>
+          <Image src="/icon-about.png" alt="about icon" boxSize="300px" />
+        </Box>
+      </Flex>
+
+      {/* ORGANIZERS */}
+      <Box py={16} px={8} textAlign="center">
+        <Heading mb={8}>Organizers</Heading>
+        <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
           {[
-            { title: "📄 Postularme", desc:"Envía tu hoja de vida", action:onOpenPost },
-            { title: "🛠 Solicitar Maquinaria", desc:"Cotiza equipos", action:onOpenMaqui }
-          ].map((opt,i)=>(
-            <Box key={i} bg="whiteAlpha.100" p={8} borderRadius="xl" cursor="pointer" _hover={{ bg:"whiteAlpha.200", transform:"scale(1.02)" }} onClick={opt.action}>
-              <Heading size="md" mb={3}>{opt.title}</Heading>
-              <Text>{opt.desc}</Text>
-            </Box>
+            { name: "Maria Sassoon", src: "/org1.jpg" },
+            { name: "Tony Selby", src: "/org2.jpg" },
+            { name: "Rachel Harbourne", src: "/org3.jpg" },
+          ].map((o, i) => (
+            <MotionBox
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Image src={o.src} alt={o.name} borderRadius="md" />
+              <Text mt={4} fontWeight="bold">{o.name}</Text>
+              <Text color="gray.500">Co‑organiser</Text>
+            </MotionBox>
           ))}
         </SimpleGrid>
       </Box>
 
-      {/* SOBRE */}
-      <Box bg="teal.700" py={16} textAlign="center">
-        <Heading mb={4}>Sobre Nosotros</Heading>
-        <Text maxW="4xl" mx="auto" fontSize="lg">
-          Somos una empresa dedicada a soluciones innovadoras en ingeniería, tecnología y talento humano.
-        </Text>
+      {/* PAST EVENTS */}
+      <Box bg="teal.400" py={16} px={8} textAlign="center">
+        <Heading mb={8} color="white">Past Events</Heading>
+        <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
+          {["past1.jpg", "past2.jpg", "past3.jpg", "past4.jpg", "past5.jpg", "past6.jpg"].map((src, i) => (
+            <MotionBox
+              key={i}
+              bg="white"
+              borderRadius="md"
+              overflow="hidden"
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Image src={`/${src}`} alt="" />
+              <Text p={4} fontSize="md">Título del evento pasado #{i + 1}</Text>
+            </MotionBox>
+          ))}
+        </SimpleGrid>
       </Box>
 
-      {/* MODALES */}
-      <Modal isOpen={openPost} onClose={onClosePost}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Formulario de Postulación</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl isRequired><FormLabel>Nombre</FormLabel><Input value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} /></FormControl>
-            <FormControl isRequired mt={4}><FormLabel>Email</FormLabel><Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></FormControl>
-            <FormControl isRequired mt={4}>
-              <FormLabel>Área de interés</FormLabel>
-              <Select placeholder="Selecciona un área" value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value })}>
-                {opciones.map((opt) => <option key={opt.key} value={opt.key}>{opt.value}</option>)}
-              </Select>
-            </FormControl>
-            <FormControl mt={4}><FormLabel>Mensaje</FormLabel><Textarea value={form.mensaje} onChange={(e) => setForm({ ...form, mensaje: e.target.value })} /></FormControl>
-            <FormControl mt={4}><FormLabel>Subir CV (PDF)</FormLabel><Input type="file" accept="application/pdf" onChange={(e) => setForm({ ...form, cv: e.target.files?.[0] || null })} /></FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClosePost} mr={3}>Cancelar</Button>
-            <Button colorScheme="teal" onClick={handlePost}>Enviar</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {/* SPONSORS */}
+      <Box py={16} px={8} textAlign="center">
+        <Heading mb={8}>Sponsors</Heading>
+        <HStack spacing={12} justify="center">
+          {["sponsor1.png", "sponsor2.png", "sponsor3.png", "sponsor4.png", "sponsor5.png"].map((src, i) => (
+            <MotionImage
+              key={i}
+              src={`/${src}`}
+              alt=""
+              boxSize="80px"
+              objectFit="contain"
+              whileHover={{ scale: 1.2 }}
+            />
+          ))}
+        </HStack>
+      </Box>
 
-      <Modal isOpen={openMaqui} onClose={onCloseMaqui}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Solicitud de Maquinaria</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl isRequired><FormLabel>Empresa</FormLabel><Input value={empresa} onChange={(e) => setEmpresa(e.target.value)} /></FormControl>
-            <FormControl isRequired mt={4}><FormLabel>Descripción</FormLabel><Textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} /></FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onCloseMaqui} mr={3}>Cancelar</Button>
-            <Button colorScheme="orange" onClick={() => {
-              toast({ title: "Solicitud enviada", status: "info" });
-              setEmpresa(""); setDescripcion(""); onCloseMaqui();
-            }}>
-              Enviar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      {/* RSVP CTA */}
+      <Box
+        bgImage="url('/rsvp-bg.jpg')"
+        bgSize="cover"
+        bgPos="center"
+        position="relative"
+        py={32}
+      >
+        <Box position="absolute" inset={0} bg="rgba(0, 0, 50, 0.6)" />
+        <Box position="relative" textAlign="center" zIndex={1} px={6}>
+          <MotionHeading
+            size="lg"
+            mb={4}
+            color="white"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            We can’t wait to see you at our next event.
+          </MotionHeading>
+          <Button colorScheme="blue" onClick={onOpen}>RSVP</Button>
+        </Box>
+      </Box>
     </Box>
   );
 };
