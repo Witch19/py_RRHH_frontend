@@ -83,7 +83,7 @@ const Home = () => {
     <Box bg={bgColor} color={textColor} minH="100vh">
       {/* NAVBAR */}
       <Flex bg="teal.700" p={4} alignItems="center" color="white">
-        <Image src="/logo192.png" alt="Logo" boxSize="40px" mr={4} />
+        <Image src="/Logo.png" alt="Logo" boxSize="40px" mr={4} />
         <Heading size="md">Mi Empresa</Heading>
         <Spacer />
         <HStack spacing={4}>
