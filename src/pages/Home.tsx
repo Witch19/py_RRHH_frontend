@@ -129,9 +129,9 @@ const Home = () => {
         <Heading mb={8}>Organizers</Heading>
         <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
           {[
-            { name: "Maria Sassoon", src: "/org1.jpg" },
-            { name: "Tony Selby", src: "/org2.jpg" },
-            { name: "Rachel Harbourne", src: "/org3.jpg" },
+            { name: "Maria Sassoon", src: "/org1.png" },
+            { name: "Tony Selby", src: "/org2.png" },
+            { name: "Rachel Harbourne", src: "/org3.png" },
           ].map((o, i) => (
             <MotionBox
               key={i}
