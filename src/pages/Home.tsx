@@ -170,7 +170,7 @@ const Home = () => {
       <Box py={16} px={8} textAlign="center">
         <Heading mb={8}>Sponsors</Heading>
         <HStack spacing={12} justify="center">
-          {["sponsor1.png", "sponsor2.png", "sponsor3.png", "sponsor4.png", "sponsor5.png"].map((src, i) => (
+          {["/sponsor1.png", "/sponsor2.png", "/sponsor3.png", "/sponsor4.png", "/sponsor5.png"].map((src, i) => (
             <MotionImage
               key={i}
               src={`/${src}`}
