@@ -48,16 +48,14 @@ const Home = () => {
         <HStack spacing={4}><Image boxSize="40px" src="/Logo.png"/><Heading size="md">Mi Empresa</Heading></HStack>
         <Spacer />
         <HStack spacing={3}>
-          <IconButton icon={colorMode==="light"?<MoonIcon/>:<SunIcon/>} onClick={toggleColorMode} variant="ghost" color="white"/>
+          <IconButton icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />} onClick={toggleColorMode} variant="ghost" color="white" aria-label={""}/>
           <Link to="/login"><Button variant="outline" colorScheme="teal" size="sm">Login</Button></Link>
           <Link to="/register"><Button colorScheme="teal" size="sm">Registro</Button></Link>
         </HStack>
       </Flex>
 
       {/* HERO */}
-      <Box
-        h="100vh" bgImage="url('/hero-bg.jpg')" bgSize="cover" bgPos="center" position="relative" display="flex" align="center" justify="center"
-      >
+      <Box h="100vh" bgImage="url('/hero-bg.jpg')" bgSize="cover" bgPos="center" position="relative" display="flex" alignItems="center" justifyContent="center">
         <Box position="absolute" inset={0} bg="rgba(0,0,0,0.6)" />
         <Box textAlign="center" zIndex={1} px={6}>
           <Heading fontSize={["3xl","5xl"]} mb={4} letterSpacing="wide">Soluciones en Ingeniería & Tecnología</Heading>
