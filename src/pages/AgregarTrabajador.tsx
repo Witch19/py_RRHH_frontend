@@ -1,18 +1,7 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Input,
-  useToast,
-  Select,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
+  ModalBody, ModalCloseButton, Button, useDisclosure, FormControl,
+  FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
@@ -22,7 +11,6 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-// Enum frontend para tipoTrabajador
 const opcionesTipoTrabajador = [
   { key: "ADMINISTRATIVO", label: "Administrativo" },
   { key: "OPERARIO", label: "Operario" },
@@ -41,16 +29,15 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajo, setTipoTrabajo] = useState("");
+  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
-
-  //const [ setTipoTrabajos] = useState<{ key: string; value: string }[]>([]);
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]); // listado desde backend
 
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        //const { data } = await API.get("/tipo-trabajo/enum");
-        //setTipoTrabajos(data); // [{ key, value }]
+        const { data } = await API.get("/tipo-trabajo");
+        setTipoTrabajos(data);
       } catch (err: any) {
         toast({
           title: "Error al cargar áreas",
@@ -68,7 +55,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
-    setTipoTrabajo("");
+    setTipoTrabajoId("");
     setTipoTrabajador("");
     setCv(null);
   };
@@ -81,7 +68,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    if (tipoTrabajo) formData.append("tipoTrabajo", tipoTrabajo);
+    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId); // 👈 CORRECTO
     if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
@@ -129,8 +116,23 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
               <Input value={email} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
 
-            <FormControl mt={4} isRequired>
+            <FormControl isRequired mt={4}>
               <FormLabel>Área de trabajo</FormLabel>
+              <Select
+                placeholder="Seleccione un área"
+                value={tipoTrabajoId}
+                onChange={(e) => setTipoTrabajoId(e.target.value)}
+              >
+                {tipoTrabajos.map((tt) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Tipo de trabajador (categoría)</FormLabel>
               <Select
                 placeholder="Seleccione tipo"
                 value={tipoTrabajador}
