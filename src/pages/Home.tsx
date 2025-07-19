@@ -4,28 +4,18 @@ import {
   useToast, Select, Flex, Spacer, Image, HStack, Text,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody,
   ModalFooter, ModalCloseButton, SimpleGrid, useDisclosure,
-  IconButton, useColorMode, useColorModeValue,
+  IconButton, useColorMode,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from "../api/authService";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/swiper-bundle.css";
 
 const Home = () => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenMaquinaria,
-    onOpen: onOpenMaquinaria,
-    onClose: onCloseMaquinaria,
-  } = useDisclosure();
+  const { isOpen: isOpenMaquinaria, onOpen: onOpenMaquinaria, onClose: onCloseMaquinaria } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
-
-  const bgColor = useColorModeValue("gray.100", "gray.800");
-  const cardBg = useColorModeValue("white", "gray.700");
-  const textColor = useColorModeValue("gray.800", "gray.100");
 
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
@@ -33,7 +23,6 @@ const Home = () => {
   const [mensaje, setMensaje] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [opciones, setOpciones] = useState<{ key: string; value: string }[]>([]);
-
   const [empresa, setEmpresa] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
@@ -80,61 +69,81 @@ const Home = () => {
   };
 
   return (
-    <Box bg={bgColor} color={textColor} minH="100vh">
+    <Box bg="#0d102e" color="white" minH="100vh">
       {/* NAVBAR */}
-      <Flex bg="teal.700" p={4} alignItems="center" color="white">
-        <Image src="/Logo.png" alt="Logo" boxSize="40px" mr={4} />
-        <Heading size="md">Mi Empresa</Heading>
-        <Spacer />
-        <HStack spacing={4}>
+      <Flex px={6} py={4} alignItems="center" justifyContent="space-between" bg="rgba(0,0,0,0.7)" position="absolute" w="100%" zIndex={10}>
+        <HStack spacing={4} align="center">
+          <Image src="/Logo.png" alt="Logo" boxSize="40px" />
+          <Heading size="md">Mi Empresa</Heading>
+        </HStack>
+        <HStack spacing={3}>
           <IconButton
             aria-label="Toggle theme"
             icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             onClick={toggleColorMode}
             variant="ghost"
+            color="white"
           />
           <Link to="/login">
             <Button colorScheme="teal" variant="outline">Login</Button>
           </Link>
           <Link to="/register">
-            <Button colorScheme="teal" variant="solid">Registro</Button>
+            <Button colorScheme="teal">Registro</Button>
           </Link>
         </HStack>
       </Flex>
 
-      {/* CARRUSEL */}
-      <Box maxW="100%" h="400px" overflow="hidden">
-        <Swiper autoplay={{ delay: 3000 }} loop>
-          <SwiperSlide><Image src="/img1.jpg" w="100%" h="400px" objectFit="cover" alt="Empresa 1" /></SwiperSlide>
-          <SwiperSlide><Image src="/img2.jpg" w="100%" h="400px" objectFit="cover" alt="Empresa 2" /></SwiperSlide>
-          <SwiperSlide><Image src="/img3.jpg" w="100%" h="400px" objectFit="cover" alt="Empresa 3" /></SwiperSlide>
-        </Swiper>
+      {/* HERO SECTION */}
+      <Box
+        bgImage="url('/hero-bg.jpg')"
+        bgSize="cover"
+        bgPosition="center"
+        bgRepeat="no-repeat"
+        h="100vh"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        px={6}
+      >
+        <Box bg="rgba(0, 0, 0, 0.6)" p={10} borderRadius="2xl">
+          <Heading fontSize="4xl" mb={4}>Soluciones de Ingeniería & Tecnología</Heading>
+          <Text fontSize="lg" mb={6}>
+            Impulsamos el futuro con talento humano y automatización inteligente.
+          </Text>
+          <Button colorScheme="teal" size="lg" onClick={onOpen}>
+            Trabaja con Nosotros
+          </Button>
+        </Box>
       </Box>
 
       {/* TRABAJA CON NOSOTROS */}
-      <Box p={8} bg={bgColor}>
-        <Heading size="lg" textAlign="center" mb={6}>Trabaja con Nosotros</Heading>
-        <SimpleGrid columns={[1, 2]} spacing={6} maxW="4xl" mx="auto">
-          <Box
-            bg={cardBg} borderRadius="xl" p={6} boxShadow="md" textAlign="center" cursor="pointer"
-            _hover={{ transform: "scale(1.03)", boxShadow: "xl" }}
-            onClick={onOpen}
-          >
-            <Heading size="md" mb={2}>📄 Postularme</Heading>
+      <Box py={20} bg="#111436" px={8}>
+        <Heading size="lg" textAlign="center" mb={10}>¿Quieres ser parte de nuestro equipo?</Heading>
+        <SimpleGrid columns={[1, 2]} spacing={8} maxW="5xl" mx="auto">
+          <Box bg="whiteAlpha.100" p={8} borderRadius="xl" _hover={{ transform: "scale(1.03)", bg: "whiteAlpha.200" }} onClick={onOpen}>
+            <Heading size="md" mb={3}>📄 Postularme</Heading>
             <Text>Envía tu hoja de vida para oportunidades laborales.</Text>
           </Box>
-          <Box
-            bg={cardBg} borderRadius="xl" p={6} boxShadow="md" textAlign="center" cursor="pointer"
-            _hover={{ transform: "scale(1.03)", boxShadow: "xl" }}
-            onClick={onOpenMaquinaria}
-          >
-            <Heading size="md" mb={2}>🛠️ Solicitar Maquinaria</Heading>
+          <Box bg="whiteAlpha.100" p={8} borderRadius="xl" _hover={{ transform: "scale(1.03)", bg: "whiteAlpha.200" }} onClick={onOpenMaquinaria}>
+            <Heading size="md" mb={3}>🛠️ Solicitar Maquinaria</Heading>
             <Text>Solicita cotización para maquinaria o equipos.</Text>
           </Box>
         </SimpleGrid>
       </Box>
 
-      {/* MODAL ASPIRANTE */}
+      {/* SOBRE NOSOTROS */}
+      <Box bg="teal.700" py={16} px={8} textAlign="center">
+        <Heading size="md" mb={4}>Sobre Nosotros</Heading>
+        <Text fontSize="lg" maxW="4xl" mx="auto">
+          Somos una empresa dedicada a brindar soluciones innovadoras en ingeniería,
+          tecnología y talento humano. Buscamos personas apasionadas, comprometidas y
+          con visión para el futuro.
+        </Text>
+      </Box>
+
+      {/* MODALES */}
+      {/* Postulación */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -162,7 +171,7 @@ const Home = () => {
         </ModalContent>
       </Modal>
 
-      {/* MODAL MAQUINARIA */}
+      {/* Solicitud de maquinaria */}
       <Modal isOpen={isOpenMaquinaria} onClose={onCloseMaquinaria}>
         <ModalOverlay />
         <ModalContent>
@@ -183,18 +192,6 @@ const Home = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      {/* INFORMACIÓN DE LA EMPRESA */}
-      <Box bg="teal.700" color="white" py={12} px={8}>
-        <Box maxW="4xl" mx="auto" textAlign="center">
-          <Heading size="md" mb={4}>Sobre Nosotros</Heading>
-          <Text fontSize="lg">
-            Somos una empresa dedicada a brindar soluciones innovadoras en ingeniería,
-            tecnología y talento humano. Buscamos personas apasionadas, comprometidas y
-            con visión para el futuro.
-          </Text>
-        </Box>
-      </Box>
     </Box>
   );
 };
