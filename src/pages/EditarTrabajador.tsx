@@ -17,16 +17,17 @@ import { useEffect, useState } from "react";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 
-/* ---------- Tipo que usamos en la vista principal ---------- */
 export interface TrabajadorModal {
   id: number;
   nombre: string;
   email: string;
-  area?: string;
   telefono?: string;
   direccion?: string;
   cvUrl?: string;
-  tipoTrabajo?: { id: number; nombre: string } | string;
+  tipoTrabajo?: {
+    id: number;
+    nombre: string;
+  };
 }
 
 interface Props {
@@ -43,31 +44,36 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
 
   const [form, setForm] = useState({
     nombre: "",
-    apellido: "",
     email: "",
     telefono: "",
     direccion: "",
     tipoTrabajoId: "",
   });
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [tiposTrabajo, setTiposTrabajo] = useState<{ key: string; value: string }[]>([]);
+  const [tiposTrabajo, setTiposTrabajo] = useState<
+    { key: string; value: string }[]
+  >([]);
 
   useEffect(() => {
-    API.get("/tipo-trabajo/enum").then((res) => setTiposTrabajo(res.data));
+    API.get("/tipo-trabajo/enum")
+      .then((res) => setTiposTrabajo(res.data))
+      .catch((err) =>
+        toast({
+          title: "Error al cargar tipos de trabajo",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        })
+      );
   }, []);
 
   useEffect(() => {
     if (trabajador) {
       setForm({
-        nombre: trabajador.nombre,
-        apellido: "", // Puedes poblar si lo tienes
-        email: trabajador.email,
+        nombre: trabajador.nombre || "",
+        email: trabajador.email || "",
         telefono: trabajador.telefono || "",
         direccion: trabajador.direccion || "",
-        tipoTrabajoId:
-          typeof trabajador.tipoTrabajo === "object"
-            ? String(trabajador.tipoTrabajo.id)
-            : "",
+        tipoTrabajoId: trabajador.tipoTrabajo?.id?.toString() || "",
       });
     }
   }, [trabajador]);
@@ -78,19 +84,15 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
   const handleSave = async () => {
     try {
       let response;
-
       if (isAdmin && cvFile) {
         const data = new FormData();
         Object.entries(form).forEach(([k, v]) => data.append(k, v));
         data.append("file", cvFile);
-        response = await API.patch(`/trabajadores/${trabajador.id}`, data, {
+        response = await API.patch(`/trabajador/${trabajador.id}`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        response = await API.patch(`/trabajadores/${trabajador.id}`, {
-          ...form,
-          tipoTrabajoId: parseInt(form.tipoTrabajoId),
-        });
+        response = await API.patch(`/trabajador/${trabajador.id}`, form);
       }
 
       onUpdate(response.data);
@@ -115,11 +117,6 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
           <FormControl isRequired>
             <FormLabel>Nombre</FormLabel>
             <Input name="nombre" value={form.nombre} onChange={handleChange} />
-          </FormControl>
-
-          <FormControl isRequired mt={3}>
-            <FormLabel>Apellido</FormLabel>
-            <Input name="apellido" value={form.apellido} onChange={handleChange} />
           </FormControl>
 
           <FormControl isRequired mt={3}>

@@ -33,16 +33,6 @@ const Trabajadores = () => {
   const isAdmin = user?.role?.toUpperCase() === "ADMIN";
   const { gradient } = useThemeColor();
 
-  if (!isAdmin) {
-    return (
-      <Center minH="100vh" bgGradient={gradient}>
-        <Heading fontSize="2xl" color="white">
-          Acceso restringido
-        </Heading>
-      </Center>
-    );
-  }
-
   const openEditar = (trabajador: TrabajadorModal) => {
     setTrabajadorActual(trabajador);
     setIsEditing(true);
@@ -58,10 +48,10 @@ const Trabajadores = () => {
       try {
         const { data } = await API.get("/trabajadores");
         const conCamposCompletos: TrabajadorModal[] = data.map((t: any) => ({
-          id: Number(t._id ?? t.id ?? ""),
+          id: Number(t.id),
           nombre: t.nombre,
-          email: t.email ?? t.correo ?? "-",
-          tipoTrabajo: t.tipoTrabajo?.nombre ?? "-",
+          email: t.email ?? "-",
+          tipoTrabajo: t.tipoTrabajo ?? null,
           telefono: t.telefono || "-",
           direccion: t.direccion || "-",
           cvUrl: t.cvUrl || "",
@@ -72,8 +62,6 @@ const Trabajadores = () => {
           title: "Error al cargar trabajadores",
           description: err.response?.data?.message || err.message,
           status: "error",
-          duration: 4000,
-          isClosable: true,
         });
       } finally {
         setLoading(false);
@@ -104,6 +92,16 @@ const Trabajadores = () => {
     toast({ title: "Trabajador actualizado", status: "success" });
   };
 
+  if (!isAdmin) {
+    return (
+      <Center minH="100vh" bgGradient={gradient}>
+        <Heading fontSize="2xl" color="white">
+          Acceso restringido
+        </Heading>
+      </Center>
+    );
+  }
+
   if (loading) {
     return (
       <Center minH="300px" bgGradient={gradient}>
@@ -122,7 +120,7 @@ const Trabajadores = () => {
               id: Number(nuevo.id),
               nombre: nuevo.nombre,
               email: nuevo.email,
-              tipoTrabajo: nuevo.tipoTrabajo?.nombre ?? "-",
+              tipoTrabajo: nuevo.tipoTrabajo,
               telefono: nuevo.telefono || "-",
               direccion: nuevo.direccion || "-",
               cvUrl: nuevo.cvUrl || "",
@@ -145,7 +143,7 @@ const Trabajadores = () => {
             <Tr>
               <Th>Nombre</Th>
               <Th>Email</Th>
-              <Th>Tipo de Trabajo</Th>
+              <Th>Área</Th>
               <Th>Teléfono</Th>
               <Th>Dirección</Th>
               <Th>Hoja de Vida</Th>
