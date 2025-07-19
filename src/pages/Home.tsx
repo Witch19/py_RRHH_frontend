@@ -1,178 +1,123 @@
 // src/pages/Home.tsx
 import {
-  Box, Button, Heading, Input, Textarea, FormControl, FormLabel,
-  useToast, Select, Flex, Image, HStack, Text,
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody,
-  ModalFooter, ModalCloseButton, SimpleGrid, useDisclosure,
-  IconButton, useColorMode,
+  Box, Button, Heading, Text, Flex, Spacer, Image, HStack,
+  IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody,
+  ModalFooter, ModalCloseButton, FormControl, FormLabel, Input, Select,
+  Textarea, useDisclosure, useToast, useColorMode,
+  SimpleGrid
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from "../api/authService";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   const toast = useToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isOpen: isOpenMaquinaria, onOpen: onOpenMaquinaria, onClose: onCloseMaquinaria } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen: openPost, onOpen: onOpenPost, onClose: onClosePost } = useDisclosure();
+  const { isOpen: openMaqui, onOpen: onOpenMaqui, onClose: onCloseMaqui } = useDisclosure();
 
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [tipoTrabajo, setTipoTrabajo] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  const [cv, setCv] = useState<File | null>(null);
   const [opciones, setOpciones] = useState<{ key: string; value: string }[]>([]);
+  const [form, setForm] = useState({ nombre: "", email: "", tipo: "", mensaje: "", cv: null as File | null });
   const [empresa, setEmpresa] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
   useEffect(() => {
-    const fetchEnum = async () => {
-      try {
-        const { data } = await API.get("/tipo-trabajo/enum");
-        setOpciones(data);
-      } catch (error) {
-        toast({ title: "Error al cargar áreas", status: "error" });
-      }
-    };
-    fetchEnum();
-  }, [toast]);
+    API.get("/tipo-trabajo/enum").then(res => setOpciones(res.data)).catch(() => toast({ title: "Error áreas", status: "error" }));
+  }, []);
 
-  const handleSubmit = async () => {
-    if (!nombre || !email || !tipoTrabajo) {
-      toast({ title: "Faltan campos requeridos", status: "warning" });
-      return;
-    }
+  const handlePost = async () => {
+    if (!form.nombre || !form.email || !form.tipo) return toast({ title: "Campos faltantes", status: "warning" });
 
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("email", email);
-    formData.append("tipoTrabajo", tipoTrabajo);
-    if (mensaje) formData.append("mensaje", mensaje);
-    if (cv) formData.append("file", cv);
-
+    const fd = new FormData();
+    Object.entries(form).forEach(([k, v]) => v && fd.append(k, v as any));
     try {
-      await API.post("/aspirante", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      toast({ title: "Solicitud enviada", status: "success" });
-      onClose();
-      setNombre(""); setEmail(""); setTipoTrabajo("");
-      setMensaje(""); setCv(null);
+      await API.post("/aspirante", fd);
+      toast({ title: "Enviado", status: "success" });
+      setForm({ nombre: "", email: "", tipo: "", mensaje: "", cv: null });
+      onClosePost();
     } catch (err: any) {
-      toast({
-        title: "Error al enviar solicitud",
-        description: err.response?.data?.message || err.message,
-        status: "error",
-      });
+      toast({ title: "Error", description: err?.response?.data?.message || err.message, status: "error" });
     }
   };
 
   return (
-    <Box bg="#0d102e" color="white" minH="100vh">
+    <Box bg="#0B0F1A" color="white" minH="100vh">
       {/* NAVBAR */}
-      <Flex px={6} py={4} alignItems="center" justifyContent="space-between" bg="rgba(0,0,0,0.7)" position="absolute" w="100%" zIndex={10}>
-        <HStack spacing={4} align="center">
-          <Image src="/Logo.png" alt="Logo" boxSize="40px" />
-          <Heading size="md">Mi Empresa</Heading>
-        </HStack>
+      <Flex as="nav" px={8} py={4} align="center" position="absolute" top={0} w="100%" zIndex={20} bg="rgba(11,15,26,0.7)">
+        <HStack spacing={4}><Image boxSize="40px" src="/Logo.png"/><Heading size="md">Mi Empresa</Heading></HStack>
+        <Spacer />
         <HStack spacing={3}>
-          <IconButton
-            aria-label="Toggle theme"
-            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            onClick={toggleColorMode}
-            variant="ghost"
-            color="white"
-          />
-          <Link to="/login">
-            <Button colorScheme="teal" variant="outline">Login</Button>
-          </Link>
-          <Link to="/register">
-            <Button colorScheme="teal">Registro</Button>
-          </Link>
+          <IconButton icon={colorMode==="light"?<MoonIcon/>:<SunIcon/>} onClick={toggleColorMode} variant="ghost" color="white"/>
+          <Link to="/login"><Button variant="outline" colorScheme="teal" size="sm">Login</Button></Link>
+          <Link to="/register"><Button colorScheme="teal" size="sm">Registro</Button></Link>
         </HStack>
       </Flex>
 
-      {/* HERO SECTION */}
+      {/* HERO */}
       <Box
-        bgImage="url('/hero-bg.jpg')"
-        bgSize="cover"
-        bgPosition="center"
-        bgRepeat="no-repeat"
-        h="100vh"
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        textAlign="center"
-        px={6}
+        h="100vh" bgImage="url('/hero-bg.jpg')" bgSize="cover" bgPos="center" position="relative" display="flex" align="center" justify="center"
       >
-        <Box bg="rgba(0, 0, 0, 0.6)" p={10} borderRadius="2xl">
-          <Heading fontSize="4xl" mb={4}>Soluciones de Ingeniería & Tecnología</Heading>
-          <Text fontSize="lg" mb={6}>
-            Impulsamos el futuro con talento humano y automatización inteligente.
-          </Text>
-          <Button colorScheme="teal" size="lg" onClick={onOpen}>
+        <Box position="absolute" inset={0} bg="rgba(0,0,0,0.6)" />
+        <Box textAlign="center" zIndex={1} px={6}>
+          <Heading fontSize={["3xl","5xl"]} mb={4} letterSpacing="wide">Soluciones en Ingeniería & Tecnología</Heading>
+          <Text fontSize={["md","xl"]} mb={6}>Impulsamos el futuro con talento humano y automatización inteligente.</Text>
+          <Button size="lg" bgGradient="linear(to-r, teal.400, cyan.400)" _hover={{ bgGradient: "teal.500-cyan.500" }} onClick={onOpenPost}>
             Trabaja con Nosotros
           </Button>
         </Box>
       </Box>
 
-      {/* TRABAJA CON NOSOTROS */}
-      <Box py={20} bg="#111436" px={8}>
-        <Heading size="lg" textAlign="center" mb={10}>¿Quieres ser parte de nuestro equipo?</Heading>
-        <SimpleGrid columns={[1, 2]} spacing={8} maxW="5xl" mx="auto">
-          <Box bg="whiteAlpha.100" p={8} borderRadius="xl" _hover={{ transform: "scale(1.03)", bg: "whiteAlpha.200" }} onClick={onOpen}>
-            <Heading size="md" mb={3}>📄 Postularme</Heading>
-            <Text>Envía tu hoja de vida para oportunidades laborales.</Text>
-          </Box>
-          <Box bg="whiteAlpha.100" p={8} borderRadius="xl" _hover={{ transform: "scale(1.03)", bg: "whiteAlpha.200" }} onClick={onOpenMaquinaria}>
-            <Heading size="md" mb={3}>🛠️ Solicitar Maquinaria</Heading>
-            <Text>Solicita cotización para maquinaria o equipos.</Text>
-          </Box>
+      {/* TRABAJA */}
+      <Box bg="#11162A" py={20} px={8}>
+        <Heading textAlign="center" mb={10}>¿Te gustaría unirte a nuestro equipo?</Heading>
+        <SimpleGrid columns={[1,2]} spacing={8} maxW="5xl" mx="auto">
+          {[
+            { title: "📄 Postularme", desc:"Envía tu hoja de vida", action:onOpenPost },
+            { title: "🛠 Solicitar Maquinaria", desc:"Cotiza equipos", action:onOpenMaqui }
+          ].map((opt,i)=>(
+            <Box key={i} bg="whiteAlpha.100" p={8} borderRadius="xl" cursor="pointer" _hover={{ bg:"whiteAlpha.200", transform:"scale(1.02)" }} onClick={opt.action}>
+              <Heading size="md" mb={3}>{opt.title}</Heading>
+              <Text>{opt.desc}</Text>
+            </Box>
+          ))}
         </SimpleGrid>
       </Box>
 
-      {/* SOBRE NOSOTROS */}
-      <Box bg="teal.700" py={16} px={8} textAlign="center">
-        <Heading size="md" mb={4}>Sobre Nosotros</Heading>
-        <Text fontSize="lg" maxW="4xl" mx="auto">
-          Somos una empresa dedicada a brindar soluciones innovadoras en ingeniería,
-          tecnología y talento humano. Buscamos personas apasionadas, comprometidas y
-          con visión para el futuro.
+      {/* SOBRE */}
+      <Box bg="teal.700" py={16} textAlign="center">
+        <Heading mb={4}>Sobre Nosotros</Heading>
+        <Text maxW="4xl" mx="auto" fontSize="lg">
+          Somos una empresa dedicada a soluciones innovadoras en ingeniería, tecnología y talento humano.
         </Text>
       </Box>
 
       {/* MODALES */}
-      {/* Postulación */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={openPost} onClose={onClosePost}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Formulario de Postulación</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <FormControl isRequired><FormLabel>Nombre</FormLabel><Input value={nombre} onChange={(e) => setNombre(e.target.value)} /></FormControl>
-            <FormControl isRequired mt={4}><FormLabel>Email</FormLabel><Input value={email} onChange={(e) => setEmail(e.target.value)} /></FormControl>
+            <FormControl isRequired><FormLabel>Nombre</FormLabel><Input value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} /></FormControl>
+            <FormControl isRequired mt={4}><FormLabel>Email</FormLabel><Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></FormControl>
             <FormControl isRequired mt={4}>
               <FormLabel>Área de interés</FormLabel>
-              <Select placeholder="Selecciona un área" value={tipoTrabajo} onChange={(e) => setTipoTrabajo(e.target.value)}>
+              <Select placeholder="Selecciona un área" value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value })}>
                 {opciones.map((opt) => <option key={opt.key} value={opt.key}>{opt.value}</option>)}
               </Select>
             </FormControl>
-            <FormControl mt={4}><FormLabel>Mensaje</FormLabel><Textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} /></FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Subir CV (PDF)</FormLabel>
-              <Input type="file" accept="application/pdf" onChange={(e) => setCv(e.target.files?.[0] || null)} />
-            </FormControl>
+            <FormControl mt={4}><FormLabel>Mensaje</FormLabel><Textarea value={form.mensaje} onChange={(e) => setForm({ ...form, mensaje: e.target.value })} /></FormControl>
+            <FormControl mt={4}><FormLabel>Subir CV (PDF)</FormLabel><Input type="file" accept="application/pdf" onChange={(e) => setForm({ ...form, cv: e.target.files?.[0] || null })} /></FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onClose} mr={3}>Cancelar</Button>
-            <Button colorScheme="teal" onClick={handleSubmit}>Enviar</Button>
+            <Button onClick={onClosePost} mr={3}>Cancelar</Button>
+            <Button colorScheme="teal" onClick={handlePost}>Enviar</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* Solicitud de maquinaria */}
-      <Modal isOpen={isOpenMaquinaria} onClose={onCloseMaquinaria}>
+      <Modal isOpen={openMaqui} onClose={onCloseMaqui}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Solicitud de Maquinaria</ModalHeader>
@@ -182,10 +127,10 @@ const Home = () => {
             <FormControl isRequired mt={4}><FormLabel>Descripción</FormLabel><Textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} /></FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onCloseMaquinaria} mr={3}>Cancelar</Button>
+            <Button onClick={onCloseMaqui} mr={3}>Cancelar</Button>
             <Button colorScheme="orange" onClick={() => {
               toast({ title: "Solicitud enviada", status: "info" });
-              setEmpresa(""); setDescripcion(""); onCloseMaquinaria();
+              setEmpresa(""); setDescripcion(""); onCloseMaqui();
             }}>
               Enviar
             </Button>
