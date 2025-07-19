@@ -39,10 +39,10 @@ const Home = () => {
           <Button as={Link} to="/about" variant="ghost" color="white">
             About
           </Button>
-          <Button as={Link} to="/login" variant="ghost" color="white">
+          <Button as={Link} to="/Login" variant="ghost" color="white">
             Login
           </Button>
-          <Button as={Link} to="/register" variant="ghost" color="white">
+          <Button as={Link} to="/Register" variant="ghost" color="white">
             Registro
           </Button>
           <ModalAgregarAspirante />
