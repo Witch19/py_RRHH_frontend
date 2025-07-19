@@ -1,12 +1,12 @@
 // src/pages/Home.tsx
 import {
   Box, Button, Heading, Text, Flex, Image, HStack,
-  IconButton, SimpleGrid, useDisclosure
+  IconButton, SimpleGrid, useColorMode
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { useColorMode } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import ModalAgregarAspirante from "../components/ModalAgregarAspirante";
 
 const MotionBox = motion(Box);
 const MotionHeading = motion(Heading);
@@ -14,7 +14,6 @@ const MotionImage = motion(Image);
 
 const Home = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { onOpen, } = useDisclosure();
 
   return (
     <Box fontFamily="sans-serif">
@@ -39,7 +38,7 @@ const Home = () => {
           <Link to="/about">About</Link>
           <Link to="/Login">Login</Link>
           <Link to="/Register">Registro</Link>
-          <Link to="/contact">Trabaja con nosotros</Link>
+          <ModalAgregarAspirante />
           <IconButton
             aria-label="theme toggle"
             icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
@@ -78,7 +77,7 @@ const Home = () => {
           >
             <MotionHeading size="2xl" color="white" mb={4}>Work Life Balance – Reality or Myth?</MotionHeading>
             <Box borderBottom="2px solid #00FFB3" w="80px" mx="auto" mb={4} />
-            <Button colorScheme="blue" onClick={onOpen}>Buy Tickets</Button>
+            <Button colorScheme="blue">Buy Tickets</Button>
           </MotionBox>
         </Flex>
       </Box>
@@ -203,7 +202,7 @@ const Home = () => {
           >
             We can’t wait to see you at our next event.
           </MotionHeading>
-          <Button colorScheme="blue" onClick={onOpen}>RSVP</Button>
+          <Button colorScheme="blue">RSVP</Button>
         </Box>
       </Box>
     </Box>
