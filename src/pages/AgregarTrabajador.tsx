@@ -11,6 +11,11 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
+interface TipoTrabajoOption {
+  id: number;
+  nombre: string;
+}
+
 const opcionesTipoTrabajador = [
   { key: "ADMINISTRATIVO", label: "Administrativo" },
   { key: "OPERARIO", label: "Operario" },
@@ -31,10 +36,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
-
-  const [opcionesTipoTrabajo, setOpcionesTipoTrabajo] = useState<
-    { key: string; value: string }[]
-  >([]);
+  const [opcionesTipoTrabajo, setOpcionesTipoTrabajo] = useState<TipoTrabajoOption[]>([]);
 
   useEffect(() => {
     API.get("/tipo-trabajo/enum")
@@ -137,9 +139,9 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 value={tipoTrabajoId}
                 onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {opcionesTipoTrabajo.map((area) => (
-                  <option key={area.key} value={area.key}>
-                    {area.value}
+                {opcionesTipoTrabajo.map((tt) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
                   </option>
                 ))}
               </Select>
