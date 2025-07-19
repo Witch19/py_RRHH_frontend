@@ -1,21 +1,20 @@
 // src/pages/Home.tsx
 import {
-  Box, Button, Heading, Text, Flex, Spacer, Image, HStack,
+  Box, Button, Heading, Text, Flex, Image, HStack,
   IconButton, SimpleGrid, useDisclosure
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
-import { useColorMode } from "@chakra-ui/color-mode";
+import { useColorMode } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 const MotionBox = motion(Box);
 const MotionHeading = motion(Heading);
-const MotionText = motion(Text);
 const MotionImage = motion(Image);
 
 const Home = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen, } = useDisclosure();
 
   return (
     <Box fontFamily="sans-serif">
