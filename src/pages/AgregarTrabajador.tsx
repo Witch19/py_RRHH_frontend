@@ -11,8 +11,8 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-// Lista de opciones desde el enum
-const tipoTrabajoOpciones = [
+// Opciones del enum tipoTrabajador
+const tipoTrabajadorOpciones = [
   "SEGURIDAD INDUSTRIAL",
   "MANTENIMIENTO",
   "INGENIERIA",
@@ -33,7 +33,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
 
   const resetForm = () => {
@@ -42,7 +41,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
-    setTipoTrabajoId("");
     setTipoTrabajador("");
     setCv(null);
   };
@@ -55,8 +53,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", tipoTrabajoId); // obligatorio
-    formData.append("tipoTrabajador", tipoTrabajador); // rol (ADMIN/TRABAJADOR)
+    formData.append("tipoTrabajador", tipoTrabajador); // ← Aquí va el área como string del enum
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -107,26 +104,14 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
               <FormLabel>Área de trabajo</FormLabel>
               <Select
                 placeholder="Seleccione un área"
-                value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(e.target.value)}
+                value={tipoTrabajador}
+                onChange={(e) => setTipoTrabajador(e.target.value)}
               >
-                {tipoTrabajoOpciones.map((area) => (
+                {tipoTrabajadorOpciones.map((area) => (
                   <option key={area} value={area}>
                     {area}
                   </option>
                 ))}
-              </Select>
-            </FormControl>
-
-            <FormControl isRequired mt={4}>
-              <FormLabel>Rol del Trabajador</FormLabel>
-              <Select
-                placeholder="Seleccione un rol"
-                value={tipoTrabajador}
-                onChange={(e) => setTipoTrabajador(e.target.value)}
-              >
-                <option value="ADMIN">ADMIN</option>
-                <option value="TRABAJADOR">TRABAJADOR</option>
               </Select>
             </FormControl>
 
