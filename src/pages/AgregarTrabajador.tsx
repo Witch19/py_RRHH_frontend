@@ -33,7 +33,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        const { data } = await API.get("/trabajador");
+        const { data } = await API.get("/tipoTrabajador/enum");
         console.log("Opciones cargadas:", data); 
         setTipoTrabajoOpciones(data);
       } catch (err) {
