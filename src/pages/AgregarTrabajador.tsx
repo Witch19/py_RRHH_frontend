@@ -11,6 +11,18 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
+// Lista de opciones desde el enum
+const tipoTrabajoOpciones = [
+  "SEGURIDAD INDUSTRIAL",
+  "MANTENIMIENTO",
+  "INGENIERIA",
+  "RECURSOS HUMANOS",
+  "MARKETING",
+  "OPERARIO",
+  "TI",
+  "OTROS",
+];
+
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -21,6 +33,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
+  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
 
   const resetForm = () => {
@@ -29,6 +42,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
+    setTipoTrabajoId("");
     setTipoTrabajador("");
     setCv(null);
   };
@@ -41,7 +55,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
+    formData.append("tipoTrabajoId", tipoTrabajoId); // obligatorio
+    formData.append("tipoTrabajador", tipoTrabajador); // rol (ADMIN/TRABAJADOR)
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -86,6 +101,21 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             <FormControl isRequired mt={4}>
               <FormLabel>Email</FormLabel>
               <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            </FormControl>
+
+            <FormControl isRequired mt={4}>
+              <FormLabel>Área de trabajo</FormLabel>
+              <Select
+                placeholder="Seleccione un área"
+                value={tipoTrabajoId}
+                onChange={(e) => setTipoTrabajoId(e.target.value)}
+              >
+                {tipoTrabajoOpciones.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl isRequired mt={4}>
