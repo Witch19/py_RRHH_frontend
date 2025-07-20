@@ -105,7 +105,7 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
           direccion,
           tipoTrabajoId,
         };
-        response = await API.patch(`/trabajador/${trabajador.id}`, payload);
+        response = await API.patch(`/trabajadores/${trabajador.id}`, payload);
       }
 
       onUpdate(response.data);

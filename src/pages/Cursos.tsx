@@ -83,7 +83,7 @@ const Cursos = () => {
   const { gradient } = useThemeColor();
   const toast = useToast();
   const { user } = useAuth();
-  const isAdmin = (user?.role || '').toString().toLowerCase() === 'ADMIN';
+  const isAdmin = (user?.role || '').toString().toLowerCase() === 'admin';
 
   const {
     isOpen: isEditOpen,
@@ -107,22 +107,13 @@ const Cursos = () => {
           API.get('/cursos-trabajadores'),
         ]);
 
-        console.log("👀 Relaciones recibidas del backend:", relaciones);
-        console.log("📧 Email del usuario actual:", user?.email);
-
         const propios: CursoInscrito[] = relaciones
           .filter((r: any) => r.trabajador?.email === user?.email)
-          .map(
-            (r: any) =>
-              ({
-                ...r.curso,
-                relacionId: r.id,
-              }) as CursoInscrito,
-          );
+          .map((r: any) => ({ ...r.curso, relacionId: r.id }) as CursoInscrito);
 
         const inscritosIds = new Set(propios.map((c) => String(c.id)));
         const disponibles = (cursosData as Curso[]).filter(
-          (c) => !inscritosIds.has(String(c.id)),
+          (c) => !inscritosIds.has(String(c.id))
         );
 
         setCursos(disponibles);
@@ -150,7 +141,6 @@ const Cursos = () => {
       const fecha = new Date().toISOString().split('T')[0];
       const trabajadorId = user?.trabajadorId;
 
-
       const nuevasInscripciones: CursoInscrito[] = [];
       for (const cursoId of selectedIds) {
         const { data } = await API.post('/cursos-trabajadores/inscribir', {
@@ -160,10 +150,7 @@ const Cursos = () => {
         });
 
         const cursoCreado: Curso = data.curso;
-        nuevasInscripciones.push({
-          ...cursoCreado,
-          relacionId: data.id,
-        });
+        nuevasInscripciones.push({ ...cursoCreado, relacionId: data.id });
       }
 
       setCursos((prev) => prev.filter((c) => !selectedIds.has(c.id!)));
@@ -327,7 +314,7 @@ const Cursos = () => {
                               try {
                                 await API.delete(`/curso/${curso.id}`);
                                 setCursos((prev) =>
-                                  prev.filter((c) => c.id !== curso.id),
+                                  prev.filter((c) => c.id !== curso.id)
                                 );
                                 toast({
                                   title: 'Curso eliminado',
@@ -367,7 +354,7 @@ const Cursos = () => {
                   <Th>Nombre</Th>
                   <Th>Descripción</Th>
                   <Th>Duración</Th>
-                  <Th></Th>
+                  {!isAdmin && <Th></Th>}
                 </Tr>
               </Thead>
               <Tbody>
@@ -383,16 +370,18 @@ const Cursos = () => {
                       <Td>{curso.nombre}</Td>
                       <Td>{curso.descripcion}</Td>
                       <Td>{curso.duracion}</Td>
-                      <Td textAlign="right">
-                        <IconButton
-                          icon={<CloseIcon />}
-                          aria-label="Retirarse"
-                          size="xs"
-                          colorScheme="red"
-                          variant="ghost"
-                          onClick={() => handleRetirarse(curso.relacionId, curso)}
-                        />
-                      </Td>
+                      {!isAdmin && (
+                        <Td textAlign="right">
+                          <IconButton
+                            icon={<CloseIcon />}
+                            aria-label="Retirarse"
+                            size="xs"
+                            colorScheme="red"
+                            variant="ghost"
+                            onClick={() => handleRetirarse(curso.relacionId, curso)}
+                          />
+                        </Td>
+                      )}
                     </Tr>
                   ))
                 )}
@@ -426,7 +415,7 @@ const Cursos = () => {
           curso={editingCurso}
           onUpdate={(updated) =>
             setCursos((prev) =>
-              prev.map((c) => (c.id === updated.id ? updated : c)),
+              prev.map((c) => (c.id === updated.id ? updated : c))
             )
           }
           onDelete={(id) =>
