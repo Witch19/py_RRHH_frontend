@@ -11,6 +11,11 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
+interface TipoTrabajo {
+  id: number;
+  nombre: string;
+}
+
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -22,25 +27,20 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajoId, setTipoTrabajoId] = useState("");
-  const [tipoTrabajador] = useState("TRABAJADOR"); // ← directamente sin opción de editar
-  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
+  const [tipoTrabajoOpciones, setTipoTrabajoOpciones] = useState<TipoTrabajo[]>([]);
 
-  // Cargar tipos de trabajo desde el backend
+  // Cargar áreas de trabajo desde el backend
   useEffect(() => {
     const fetchTipos = async () => {
       try {
         const { data } = await API.get("/tipo-trabajo");
-        setTipoTrabajos(data);
-      } catch (err: any) {
-        toast({
-          title: "Error al cargar áreas",
-          description: err.response?.data?.message || err.message,
-          status: "error",
-        });
+        setTipoTrabajoOpciones(data);
+      } catch (err) {
+        toast({ title: "Error cargando áreas", status: "error" });
       }
     };
     fetchTipos();
-  }, [toast]);
+  }, []);
 
   const resetForm = () => {
     setNombre("");
@@ -60,9 +60,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-
-    formData.append("tipoTrabajoId", tipoTrabajoId); // ← debe ser ID numérico
-    formData.append("tipoTrabajador", tipoTrabajador); // ← fijo como "TRABAJADOR"
+    formData.append("tipoTrabajoId", tipoTrabajoId);
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -116,17 +114,12 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 value={tipoTrabajoId}
                 onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {tipoTrabajos.map((tt) => (
+                {tipoTrabajoOpciones.map((tt) => (
                   <option key={tt.id} value={tt.id}>
                     {tt.nombre}
                   </option>
                 ))}
               </Select>
-            </FormControl>
-
-            <FormControl isRequired mt={4}>
-              <FormLabel>Rol del Trabajador</FormLabel>
-              <Input value="TRABAJADOR" isReadOnly />
             </FormControl>
 
             <FormControl mt={4}>
