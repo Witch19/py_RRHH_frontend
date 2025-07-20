@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
-import { useAuth } from "../auth/AuthContext";
+import { useAuth } from "../auth/AuthContext"; // ✅ tu contexto
 import logoImg from "../assets/Logo.png";
 
 const Register = () => {
@@ -39,7 +39,7 @@ const Register = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { setTheme } = useThemeColor();
-  const { login } = useAuth();
+  const { login } = useAuth(); // ✅ usamos el login del contexto
 
   useEffect(() => {
     const fetchTipos = async () => {
@@ -85,7 +85,7 @@ const Register = () => {
         role: form.role.toUpperCase(),
         telefono: form.telefono,
         direccion: form.direccion,
-        tipoTrabajoId: form.tipoTrabajoId ? Number(form.tipoTrabajoId) : undefined,
+        tipoTrabajoId: Number(form.tipoTrabajoId),
       });
 
       // 2. Login automático
@@ -97,7 +97,7 @@ const Register = () => {
       const { token, user } = res.data;
 
       if (token) {
-        login(user, token);
+        login(user, token); // ✅ actualiza el contexto y guarda token
       }
 
       toast({
@@ -180,7 +180,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <Input
                 placeholder="Teléfono"
                 name="telefono"
@@ -191,7 +191,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <Input
                 placeholder="Dirección"
                 name="direccion"
@@ -202,7 +202,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl>
+            <FormControl isRequired>
               <Select
                 placeholder="Área de trabajo"
                 name="tipoTrabajoId"
