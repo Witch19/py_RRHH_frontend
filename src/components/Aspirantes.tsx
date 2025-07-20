@@ -1,26 +1,14 @@
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  Textarea,
-  Button,
-  useToast,
-  useDisclosure,
+  Box,
   Table,
   Thead,
   Tbody,
   Tr,
   Th,
   Td,
-  Divider,
+  Text,
+  useToast,
+  useDisclosure,
   IconButton,
   AlertDialog,
   AlertDialogOverlay,
@@ -28,16 +16,13 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Button,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 import { DeleteIcon } from "@chakra-ui/icons";
-
-interface TipoTrabajo {
-  id: number;
-  nombre: string;
-}
 
 interface Aspirante {
   _id: string;
@@ -51,81 +36,20 @@ interface Aspirante {
 }
 
 const ModalAgregarAspirante = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
 
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
-  const [tipoTrabajos, setTipoTrabajos] = useState<TipoTrabajo[]>([]);
   const [aspirantes, setAspirantes] = useState<Aspirante[]>([]);
-
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const cancelRef = useRef(null);
   const [aspiranteAEliminar, setAspiranteAEliminar] = useState<string | null>(null);
-
-  useEffect(() => {
-    API.get("/tipo-trabajo").then((res) => setTipoTrabajos(res.data));
-  }, []);
 
   useEffect(() => {
     if (isAdmin) {
       API.get("/aspirante").then((res) => setAspirantes(res.data));
     }
   }, [isAdmin]);
-
-  const handleSubmit = async () => {
-    if (!nombre || !email || !tipoTrabajoId || !cv) {
-      toast({
-        title: "Todos los campos obligatorios deben estar completos.",
-        status: "error",
-        isClosable: true,
-      });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("email", email);
-    formData.append("mensaje", mensaje);
-    formData.append("tipoTrabajoId", tipoTrabajoId);
-    formData.append("file", cv);
-
-    try {
-      await API.post("/aspirante", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast({
-        title: "Postulación enviada correctamente.",
-        status: "success",
-        isClosable: true,
-      });
-      setNombre("");
-      setEmail("");
-      setMensaje("");
-      setCv(null);
-      setTipoTrabajoId("");
-      onClose();
-
-      if (isAdmin) {
-        const res = await API.get("/aspirante");
-        setAspirantes(res.data);
-      }
-    } catch (error: any) {
-      toast({
-        title: "Error al enviar",
-        description: error.response?.data?.message || "Intenta nuevamente.",
-        status: "error",
-        isClosable: true,
-      });
-    }
-  };
 
   const confirmarEliminar = (id: string) => {
     setAspiranteAEliminar(id);
@@ -136,9 +60,7 @@ const ModalAgregarAspirante = () => {
     if (!aspiranteAEliminar) return;
     try {
       await API.delete(`/aspirante/${aspiranteAEliminar}`);
-      setAspirantes((prev) =>
-        prev.filter((a) => a._id !== aspiranteAEliminar)
-      );
+      setAspirantes((prev) => prev.filter((a) => a._id !== aspiranteAEliminar));
       toast({
         title: "Aspirante eliminado",
         status: "success",
@@ -157,45 +79,44 @@ const ModalAgregarAspirante = () => {
   };
 
   return (
-    <>
-      <Button onClick={onOpen} colorScheme="blue">
-        Postularme
-      </Button>
-
-      {isAdmin && aspirantes.length > 0 && (
-        <>
-          <Divider my={6} />
-          <Table variant="striped" colorScheme="gray">
-            <Thead>
+    <Box mt={8}>
+      {isAdmin && aspirantes.length > 0 ? (
+        <Box
+          borderRadius="lg"
+          overflowX="auto"
+          boxShadow="md"
+          bg={useColorModeValue("white", "gray.800")}
+        >
+          <Table variant="simple" colorScheme="teal">
+            <Thead bg={useColorModeValue("gray.100", "gray.700")}>
               <Tr>
-                <Th>Nombre</Th>
-                <Th>Email</Th>
-                <Th>Área</Th>
-                <Th>Mensaje</Th>
-                <Th>CV</Th>
-                <Th>Acciones</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>NOMBRE</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>EMAIL</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>ÁREA</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>MENSAJE</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>CV</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>ACCIONES</Th>
               </Tr>
             </Thead>
             <Tbody>
               {aspirantes.map((a) => (
                 <Tr key={a._id}>
-                  <Td>{a.nombre}</Td>
-                  <Td>{a.email}</Td>
-                  <Td>{a.tipoTrabajo?.nombre || "N/A"}</Td>
-                  <Td>{a.mensaje || "Sin mensaje"}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.nombre}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.email}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.tipoTrabajo?.nombre}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.mensaje}</Td>
                   <Td>
                     {a.cvUrl ? (
                       <a
-                        href={`${
-                          import.meta.env.VITE_BACKEND_URL
-                        }/uploads/cv/${a.cvUrl}`}
+                        href={`${import.meta.env.VITE_BACKEND_URL}/uploads/cv/${a.cvUrl}`}
                         target="_blank"
                         rel="noopener noreferrer"
+                        style={{ color: "#3182ce", fontWeight: "bold" }}
                       >
                         Ver CV
                       </a>
                     ) : (
-                      "Sin archivo"
+                      <Text color="gray.400">Sin archivo</Text>
                     )}
                   </Td>
                   <Td>
@@ -212,74 +133,14 @@ const ModalAgregarAspirante = () => {
               ))}
             </Tbody>
           </Table>
-        </>
+        </Box>
+      ) : (
+        <Text mt={4} color="gray.500" fontWeight="medium" textAlign="center">
+          No hay postulaciones registradas.
+        </Text>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Postulación de Aspirante</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl isRequired>
-              <FormLabel>Nombre</FormLabel>
-              <Input
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-              />
-            </FormControl>
-            <FormControl isRequired mt={4}>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </FormControl>
-            <FormControl isRequired mt={4}>
-              <FormLabel>Tipo de Trabajo</FormLabel>
-              <Select
-                placeholder="Seleccione un área"
-                value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(e.target.value)}
-              >
-                {tipoTrabajos.map((tt) => (
-                  <option key={tt.id} value={tt.id}>
-                    {tt.nombre}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Mensaje (opcional)</FormLabel>
-              <Textarea
-                value={mensaje}
-                onChange={(e) => setMensaje(e.target.value)}
-              />
-            </FormControl>
-            <FormControl isRequired mt={4}>
-              <FormLabel>Subir CV (PDF)</FormLabel>
-              <Input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) setCv(file);
-                }}
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
-              Enviar
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
+      {/* Confirmación de eliminación */}
       <AlertDialog
         isOpen={isAlertOpen}
         leastDestructiveRef={cancelRef}
@@ -305,7 +166,7 @@ const ModalAgregarAspirante = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </>
+    </Box>
   );
 };
 
