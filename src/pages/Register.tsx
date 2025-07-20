@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
-import { useAuth } from "../auth/AuthContext"; // ✅ tu contexto
+import { useAuth } from "../auth/AuthContext";
 import logoImg from "../assets/Logo.png";
 
 const Register = () => {
@@ -39,7 +39,7 @@ const Register = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { setTheme } = useThemeColor();
-  const { login } = useAuth(); // ✅ usamos el login del contexto
+  const { login } = useAuth();
 
   useEffect(() => {
     const fetchTipos = async () => {
@@ -77,18 +77,21 @@ const Register = () => {
     }
 
     try {
-      // 1. Registro
-      await API.post("/auth/register", {
+      const payload: any = {
         username: `${form.firstName} ${form.lastName}`,
         email: form.email,
         password: form.password,
         role: form.role.toUpperCase(),
         telefono: form.telefono,
         direccion: form.direccion,
-        tipoTrabajoId: Number(form.tipoTrabajoId),
-      });
+      };
 
-      // 2. Login automático
+      if (form.tipoTrabajoId) {
+        payload.tipoTrabajoId = Number(form.tipoTrabajoId);
+      }
+
+      await API.post("/auth/register", payload);
+
       const res = await API.post("/auth/login", {
         email: form.email,
         password: form.password,
@@ -97,7 +100,7 @@ const Register = () => {
       const { token, user } = res.data;
 
       if (token) {
-        login(user, token); // ✅ actualiza el contexto y guarda token
+        login(user, token);
       }
 
       toast({
