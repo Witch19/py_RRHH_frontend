@@ -1,19 +1,25 @@
 import {
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
-  ModalBody, ModalCloseButton, Button, useDisclosure, FormControl,
-  FormLabel, Input, useToast, Select
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  useDisclosure,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  useToast,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api/authService";
 
 interface Props {
   onAdd: (trabajador: any) => void;
-}
-
-interface TipoTrabajo {
-  id: number;
-  nombre: string;
 }
 
 const AgregarTrabajador = ({ onAdd }: Props) => {
@@ -26,32 +32,24 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
-  const [tipoTrabajoOpciones, setTipoTrabajoOpciones] = useState<TipoTrabajo[]>([]);
+  const [tipoTrabajoId, setTipoTrabajoId] = useState<number>();
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
 
-  // Cargar áreas de trabajo desde el backend
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        const { data } = await API.get("/tipo-trabajo/enum");
-        console.log("Opciones cargadas:", data); 
-        setTipoTrabajoOpciones(data);
-      } catch (err) {
-        toast({ title: "Error cargando áreas", status: "error" });
+        const { data } = await API.get("/tipo-trabajo");
+        setTipoTrabajos(data);
+      } catch (err: any) {
+        toast({
+          title: "Error al cargar áreas",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        });
       }
     };
     fetchTipos();
-  }, []);
-
-  const resetForm = () => {
-    setNombre("");
-    setApellido("");
-    setEmail("");
-    setTelefono("");
-    setDireccion("");
-    setTipoTrabajoId("");
-    setCv(null);
-  };
+  }, [toast]);
 
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -61,17 +59,23 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", tipoTrabajoId);
+    if (tipoTrabajoId) formData.append("tipoTrabajoId", String(tipoTrabajoId));
 
     try {
-      const { data } = await API.post("/trabajadores", formData, {
+      const { data } = await API.post("/trabajador", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       onAdd(data);
       toast({ title: "Trabajador agregado", status: "success" });
       onClose();
-      resetForm();
+      setNombre("");
+      setApellido("");
+      setEmail("");
+      setTelefono("");
+      setDireccion("");
+      setCv(null);
+      setTipoTrabajoId(undefined);
     } catch (err: any) {
       toast({
         title: "Error al guardar",
@@ -109,13 +113,13 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             </FormControl>
 
             <FormControl isRequired mt={4}>
-              <FormLabel>Área de trabajo</FormLabel>
+              <FormLabel>Área</FormLabel>
               <Select
-                placeholder="Seleccione un área"
+                placeholder="Selecciona área"
                 value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(e.target.value)}
+                onChange={(e) => setTipoTrabajoId(Number(e.target.value))}
               >
-                {tipoTrabajoOpciones.map((tt) => (
+                {tipoTrabajos.map((tt) => (
                   <option key={tt.id} value={tt.id}>
                     {tt.nombre}
                   </option>
@@ -135,11 +139,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
 
             <FormControl mt={4}>
               <FormLabel>Hoja de Vida (PDF)</FormLabel>
-              <Input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => setCv(e.target.files?.[0] || null)}
-              />
+              <Input type="file" accept="application/pdf" onChange={(e) => setCv(e.target.files?.[0] || null)} />
             </FormControl>
           </ModalBody>
 
