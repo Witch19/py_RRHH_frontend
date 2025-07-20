@@ -51,33 +51,32 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   };
 
   const handleSubmit = async () => {
-  const formData = new FormData();
-  formData.append("nombre", nombre);
-  formData.append("apellido", apellido);
-  formData.append("email", email);
-  if (telefono) formData.append("telefono", telefono);
-  if (direccion) formData.append("direccion", direccion);
-  if (cv) formData.append("file", cv);
-  formData.append("tipoTrabajoId", String(Number(tipoTrabajoId))); // ✅ conversión segura
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("apellido", apellido);
+    formData.append("email", email);
+    if (telefono) formData.append("telefono", telefono);
+    if (direccion) formData.append("direccion", direccion);
+    if (cv) formData.append("file", cv);
+    formData.append("tipoTrabajoId", String(Number(tipoTrabajoId))); // ✅ conversión a número
 
-  try {
-    const { data } = await API.post("/trabajadores", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    try {
+      const { data } = await API.post("/trabajadores", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-    onAdd(data);
-    toast({ title: "Trabajador agregado", status: "success" });
-    onClose();
-    resetForm();
-  } catch (err: any) {
-    toast({
-      title: "Error al guardar",
-      description: err.response?.data?.message || err.message,
-      status: "error",
-    });
-  }
-};
-
+      onAdd(data);
+      toast({ title: "Trabajador agregado", status: "success" });
+      onClose();
+      resetForm();
+    } catch (err: any) {
+      toast({
+        title: "Error al guardar",
+        description: err.response?.data?.message || err.message,
+        status: "error",
+      });
+    }
+  };
 
   return (
     <>
