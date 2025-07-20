@@ -4,7 +4,7 @@ import {
   FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import API from "../api/authService";
 
 interface Props {
@@ -21,25 +21,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
-  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
-
-  useEffect(() => {
-    const fetchTipos = async () => {
-      try {
-        const { data } = await API.get("/tipo-trabajo/enum");
-        setTipoTrabajos(data);
-      } catch (err: any) {
-        toast({
-          title: "Error al cargar áreas",
-          description: err.response?.data?.message || err.message,
-          status: "error",
-        });
-      }
-    };
-    fetchTipos();
-  }, [toast]);
 
   const resetForm = () => {
     setNombre("");
@@ -47,7 +29,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
-    setTipoTrabajoId("");
     setTipoTrabajador("");
     setCv(null);
   };
@@ -60,7 +41,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId);
     if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
@@ -106,21 +86,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             <FormControl isRequired mt={4}>
               <FormLabel>Email</FormLabel>
               <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-            </FormControl>
-
-            <FormControl isRequired mt={4}>
-              <FormLabel>Área de trabajo</FormLabel>
-              <Select
-                placeholder="Seleccione un área"
-                value={tipoTrabajoId}
-                onChange={(e) => setTipoTrabajoId(e.target.value)}
-              >
-                {tipoTrabajos.map((tt) => (
-                  <option key={tt.id} value={tt.id}>
-                    {tt.nombre}
-                  </option>
-                ))}
-              </Select>
             </FormControl>
 
             <FormControl isRequired mt={4}>
