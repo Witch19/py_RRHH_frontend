@@ -23,7 +23,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
-  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]); // listado desde backend
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchTipos = async () => {
@@ -60,7 +60,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId); // 👈 CORRECTO
+    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId);
     if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
@@ -120,6 +120,18 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                     {tt.nombre}
                   </option>
                 ))}
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired mt={4}>
+              <FormLabel>Rol del Trabajador</FormLabel>
+              <Select
+                placeholder="Seleccione un rol"
+                value={tipoTrabajador}
+                onChange={(e) => setTipoTrabajador(e.target.value)}
+              >
+                <option value="ADMIN">ADMIN</option>
+                <option value="TRABAJADOR">TRABAJADOR</option>
               </Select>
             </FormControl>
 
