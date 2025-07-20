@@ -47,7 +47,7 @@ const Login = () => {
     }
 
     try {
-      const res = await API.post("/auth/login", { email, password });
+      const res = await API.post("auth/login", { email, password });
       const { user, token } = res.data;
 
       if (user && token) {
@@ -166,7 +166,7 @@ const Login = () => {
 
         <Text mt={4} color="white" fontSize="sm">
           Don’t have an account?{" "}
-          <Link color="blue.200" href="/register" fontWeight="bold">
+          <Link color="blue.200" href="register" fontWeight="bold">
             Sign Up
           </Link>
         </Text>
