@@ -1,18 +1,18 @@
+// AgregarTrabajador.tsx
 import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
   ModalBody, ModalCloseButton, Button, useDisclosure, FormControl,
   FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/authService";
 
 interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-// Lista de opciones desde el enum
-const tipoTrabajoOpciones = [
+const tipoTrabajadorOpciones = [
   "SEGURIDAD INDUSTRIAL",
   "MANTENIMIENTO",
   "INGENIERIA",
@@ -35,6 +35,23 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [tipoTrabajador, setTipoTrabajador] = useState("");
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTipos = async () => {
+      try {
+        const { data } = await API.get("/tipo-trabajo");
+        setTipoTrabajos(data);
+      } catch (err: any) {
+        toast({
+          title: "Error al cargar áreas",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        });
+      }
+    };
+    fetchTipos();
+  }, [toast]);
 
   const resetForm = () => {
     setNombre("");
@@ -55,8 +72,9 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", tipoTrabajoId); // obligatorio
-    formData.append("tipoTrabajador", tipoTrabajador); // rol (ADMIN/TRABAJADOR)
+
+    formData.append("tipoTrabajoId", String(Number(tipoTrabajoId))); // <- debe ser un número
+    formData.append("tipoTrabajador", tipoTrabajador); // <- enum string correcto
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -110,9 +128,24 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 value={tipoTrabajoId}
                 onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {tipoTrabajoOpciones.map((area) => (
-                  <option key={area} value={area}>
-                    {area}
+                {tipoTrabajos.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.nombre}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired mt={4}>
+              <FormLabel>Área (interna)</FormLabel>
+              <Select
+                placeholder="Seleccione el tipo de trabajador"
+                value={tipoTrabajador}
+                onChange={(e) => setTipoTrabajador(e.target.value)}
+              >
+                {tipoTrabajadorOpciones.map((tipo) => (
+                  <option key={tipo} value={tipo}>
+                    {tipo}
                   </option>
                 ))}
               </Select>
