@@ -11,7 +11,7 @@ interface Props {
   onAdd: (trabajador: any) => void;
 }
 
-// Opciones del enum tipoTrabajador
+// Lista del enum tipoTrabajador (rol interno)
 const tipoTrabajadorOpciones = [
   "SEGURIDAD INDUSTRIAL",
   "MANTENIMIENTO",
@@ -72,8 +72,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", String(Number(tipoTrabajoId))); // ← convertir a número
-    formData.append("tipoTrabajador", tipoTrabajador); // ← enum como string
+    formData.append("tipoTrabajoId", String(Number(tipoTrabajoId)));
+    formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -121,7 +121,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             </FormControl>
 
             <FormControl isRequired mt={4}>
-              <FormLabel>Área de trabajo</FormLabel>
+              <FormLabel>Área</FormLabel>
               <Select
                 placeholder="Seleccione un área"
                 value={tipoTrabajoId}
@@ -136,15 +136,15 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
             </FormControl>
 
             <FormControl isRequired mt={4}>
-              <FormLabel>Rol del Trabajador</FormLabel>
+              <FormLabel>Rol interno</FormLabel>
               <Select
-                placeholder="Seleccione un rol"
+                placeholder="Seleccione el tipo de trabajador"
                 value={tipoTrabajador}
                 onChange={(e) => setTipoTrabajador(e.target.value)}
               >
-                {tipoTrabajadorOpciones.map((rol) => (
-                  <option key={rol} value={rol}>
-                    {rol}
+                {tipoTrabajadorOpciones.map((opcion) => (
+                  <option key={opcion} value={opcion}>
+                    {opcion}
                   </option>
                 ))}
               </Select>
