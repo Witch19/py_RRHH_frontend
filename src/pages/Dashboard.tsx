@@ -36,7 +36,7 @@ const Dashboard = () => {
     { key: "perfil", label: "Editar Perfil" },
   ];
 
-  const { gradient, setTheme } = useThemeColor();
+  const {  setTheme } = useThemeColor();
   const toast = useToast();
   const token = localStorage.getItem("token") || "";
 
@@ -73,7 +73,7 @@ const Dashboard = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      login(data.user, token); // Asegúrate que `data` tenga `role` incluido
+      login(data.user, token);
       toast({
         title: "Perfil actualizado",
         status: "success",
@@ -94,7 +94,8 @@ const Dashboard = () => {
   };
 
   return (
-    <Flex minH="100vh" bgGradient={gradient} overflow="hidden">
+    <Flex minH="100vh" bg="#5b5772" overflow="hidden">
+      {/* Menú lateral */}
       <Box
         bg="whiteAlpha.200"
         backdropFilter="blur(10px)"
@@ -136,12 +137,13 @@ const Dashboard = () => {
         </VStack>
       </Box>
 
+      {/* Contenido principal */}
       <Box flex="1" display="flex" flexDirection="column" overflow="hidden">
         <Flex
           bg="whiteAlpha.100"
           backdropFilter="blur(6px)"
           p={4}
-          justifyContent="flex-end"
+          justifyContent="space-between"
           alignItems="center"
           borderBottom="1px solid"
           borderColor="whiteAlpha.300"
@@ -150,6 +152,9 @@ const Dashboard = () => {
           <Text fontWeight="medium">
             Hola, {user ? user.username ?? user.email ?? "Invitado" : "Invitado"}
           </Text>
+          <Button size="sm" colorScheme="red" onClick={logout}>
+            Cerrar sesión
+          </Button>
         </Flex>
 
         <Box p={6} flex="1" overflowY="auto" color="white">
