@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
-import { useAuth } from "../auth/AuthContext"; // ✅ tu contexto
+import { useAuth } from "../auth/AuthContext";
 import logoImg from "../assets/Logo.png";
 
 const Register = () => {
@@ -39,7 +39,7 @@ const Register = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { setTheme } = useThemeColor();
-  const { login } = useAuth(); // ✅ usamos el login del contexto
+  const { login } = useAuth();
 
   useEffect(() => {
     const fetchTipos = async () => {
@@ -85,7 +85,7 @@ const Register = () => {
         role: form.role.toUpperCase(),
         telefono: form.telefono,
         direccion: form.direccion,
-        tipoTrabajoId: Number(form.tipoTrabajoId),
+        tipoTrabajoId: form.tipoTrabajoId ? Number(form.tipoTrabajoId) : undefined,
       });
 
       // 2. Login automático
@@ -97,7 +97,7 @@ const Register = () => {
       const { token, user } = res.data;
 
       if (token) {
-        login(user, token); // ✅ actualiza el contexto y guarda token
+        login(user, token);
       }
 
       toast({
@@ -180,7 +180,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl>
               <Input
                 placeholder="Teléfono"
                 name="telefono"
@@ -191,7 +191,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl>
               <Input
                 placeholder="Dirección"
                 name="direccion"
@@ -200,6 +200,23 @@ const Register = () => {
                 bg="white"
                 color="gray.800"
               />
+            </FormControl>
+
+            <FormControl>
+              <Select
+                placeholder="Área de trabajo"
+                name="tipoTrabajoId"
+                value={form.tipoTrabajoId}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              >
+                {tipoTrabajos.map((tt: any) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl isRequired>
@@ -211,6 +228,7 @@ const Register = () => {
                 color="gray.800"
               >
                 <option value="TRABAJADOR">Trabajador</option>
+                <option value="ADMIN">Admin</option>
               </Select>
             </FormControl>
 
