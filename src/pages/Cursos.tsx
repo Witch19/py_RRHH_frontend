@@ -38,7 +38,6 @@ import {
   CloseIcon,
 } from '@chakra-ui/icons';
 import { FaGraduationCap } from 'react-icons/fa';
-import { useThemeColor } from '../context/ThemeContext';
 import { useAuth } from '../auth/AuthContext';
 import AgregarCurso, { type Curso } from '../components/AgregarCursos';
 import EditarCursos from '../components/EditarCursos';
@@ -79,8 +78,6 @@ const Cursos = () => {
   const [inscritos, setInscritos] = useState<CursoInscrito[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(true);
-
-  const { gradient } = useThemeColor();
   const toast = useToast();
   const { user } = useAuth();
   const isAdmin = (user?.role || '').toString().toLowerCase() === 'admin';
@@ -185,14 +182,14 @@ const Cursos = () => {
 
   if (loading)
     return (
-      <Center minH="200px">
+      <Center minH="200px" bg="#5b5772">
         <Spinner size="lg" color="white" />
       </Center>
     );
 
   return (
     <>
-      <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
+      <Box p={6} bg="#5b5772" borderRadius="lg" boxShadow="lg" color="white" minH="100vh">
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
           <Heading mb={0}>Lista de Cursos</Heading>
 
