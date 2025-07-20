@@ -30,6 +30,11 @@ export interface TrabajadorModal {
   };
 }
 
+interface TipoTrabajo {
+  id: number;
+  nombre: string;
+}
+
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -42,64 +47,65 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
   const { user } = useAuth();
   const isAdmin = user?.role?.toUpperCase() === "ADMIN";
 
-  const [form, setForm] = useState({
-    nombre: "",
-    email: "",
-    telefono: "",
-    direccion: "",
-    tipoTrabajoId: "",
-  });
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [tipoTrabajoOpciones, setTiposTrabajo] = useState<
-    { id: string; nombre: string }[]
-  >([]);
+  const [tipoTrabajoOpciones, setTipoTrabajoOpciones] = useState<TipoTrabajo[]>([]);
 
+  // Cargar opciones de área
   useEffect(() => {
     API.get("/tipo-trabajo/enum")
-      .then((res) =>
-        setTiposTrabajo(
-          res.data.map((tt: any) => ({
-            id: tt.key,
-            nombre: tt.value,
-          }))
-        )
-      )
+      .then((res) => {
+        setTipoTrabajoOpciones(res.data);
+      })
       .catch((err) =>
         toast({
-          title: "Error al cargar tipos de trabajo",
+          title: "Error al cargar áreas",
           description: err.response?.data?.message || err.message,
           status: "error",
         })
       );
   }, []);
 
+  // Cargar datos del trabajador seleccionado
   useEffect(() => {
     if (trabajador) {
-      setForm({
-        nombre: trabajador.nombre || "",
-        email: trabajador.email || "",
-        telefono: trabajador.telefono || "",
-        direccion: trabajador.direccion || "",
-        tipoTrabajoId: trabajador.tipoTrabajo?.id?.toString() || "",
-      });
+      setNombre(trabajador.nombre || "");
+      setEmail(trabajador.email || "");
+      setTelefono(trabajador.telefono || "");
+      setDireccion(trabajador.direccion || "");
+      setTipoTrabajoId(trabajador.tipoTrabajo?.id?.toString() || "");
     }
   }, [trabajador]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSave = async () => {
+  const handleSubmit = async () => {
     try {
       let response;
+
       if (isAdmin && cvFile) {
         const data = new FormData();
-        Object.entries(form).forEach(([k, v]) => data.append(k, v));
+        data.append("nombre", nombre);
+        data.append("email", email);
+        if (telefono) data.append("telefono", telefono);
+        if (direccion) data.append("direccion", direccion);
+        data.append("tipoTrabajoId", tipoTrabajoId);
         data.append("file", cvFile);
+
         response = await API.patch(`/trabajador/${trabajador.id}`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
-        response = await API.patch(`/trabajador/${trabajador.id}`, form);
+        const payload = {
+          nombre,
+          email,
+          telefono,
+          direccion,
+          tipoTrabajoId,
+        };
+        response = await API.patch(`/trabajador/${trabajador.id}`, payload);
       }
 
       onUpdate(response.data);
@@ -123,31 +129,20 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
         <ModalBody>
           <FormControl isRequired>
             <FormLabel>Nombre</FormLabel>
-            <Input name="nombre" value={form.nombre} onChange={handleChange} />
+            <Input value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </FormControl>
 
-          <FormControl isRequired mt={3}>
+          <FormControl isRequired mt={4}>
             <FormLabel>Email</FormLabel>
-            <Input name="email" value={form.email} onChange={handleChange} />
+            <Input value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormControl>
 
-          <FormControl mt={3}>
-            <FormLabel>Teléfono</FormLabel>
-            <Input name="telefono" value={form.telefono} onChange={handleChange} />
-          </FormControl>
-
-          <FormControl mt={3}>
-            <FormLabel>Dirección</FormLabel>
-            <Input name="direccion" value={form.direccion} onChange={handleChange} />
-          </FormControl>
-
-          <FormControl isRequired mt={3}>
+          <FormControl isRequired mt={4}>
             <FormLabel>Área de trabajo</FormLabel>
             <Select
-              name="tipoTrabajoId"
-              value={form.tipoTrabajoId}
-              onChange={handleChange}
               placeholder="Seleccione un área"
+              value={tipoTrabajoId}
+              onChange={(e) => setTipoTrabajoId(e.target.value)}
             >
               {tipoTrabajoOpciones.map((tt) => (
                 <option key={tt.id} value={tt.id}>
@@ -157,8 +152,18 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
             </Select>
           </FormControl>
 
+          <FormControl mt={4}>
+            <FormLabel>Teléfono</FormLabel>
+            <Input value={telefono} onChange={(e) => setTelefono(e.target.value)} />
+          </FormControl>
+
+          <FormControl mt={4}>
+            <FormLabel>Dirección</FormLabel>
+            <Input value={direccion} onChange={(e) => setDireccion(e.target.value)} />
+          </FormControl>
+
           {isAdmin && (
-            <FormControl mt={3}>
+            <FormControl mt={4}>
               <FormLabel>Hoja de Vida (PDF)</FormLabel>
               <Input
                 type="file"
@@ -170,10 +175,10 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
         </ModalBody>
 
         <ModalFooter>
-          <Button variant="ghost" onClick={onClose}>
+          <Button onClick={onClose} mr={3}>
             Cancelar
           </Button>
-          <Button colorScheme="blue" ml={3} onClick={handleSave}>
+          <Button colorScheme="blue" onClick={handleSubmit}>
             Actualizar
           </Button>
         </ModalFooter>
