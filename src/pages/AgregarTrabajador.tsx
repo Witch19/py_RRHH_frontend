@@ -4,24 +4,12 @@ import {
   FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/authService";
 
 interface Props {
   onAdd: (trabajador: any) => void;
 }
-
-// Lista de opciones desde el enum
-const tipoTrabajoOpciones = [
-  "SEGURIDAD INDUSTRIAL",
-  "MANTENIMIENTO",
-  "INGENIERIA",
-  "RECURSOS HUMANOS",
-  "MARKETING",
-  "OPERARIO",
-  "TI",
-  "OTROS",
-];
 
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,7 +22,25 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajoId, setTipoTrabajoId] = useState("");
-  const [tipoTrabajador, setTipoTrabajador] = useState("");
+  const [tipoTrabajador] = useState("TRABAJADOR"); // ← directamente sin opción de editar
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
+
+  // Cargar tipos de trabajo desde el backend
+  useEffect(() => {
+    const fetchTipos = async () => {
+      try {
+        const { data } = await API.get("/tipo-trabajo");
+        setTipoTrabajos(data);
+      } catch (err: any) {
+        toast({
+          title: "Error al cargar áreas",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        });
+      }
+    };
+    fetchTipos();
+  }, [toast]);
 
   const resetForm = () => {
     setNombre("");
@@ -43,7 +49,6 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setTelefono("");
     setDireccion("");
     setTipoTrabajoId("");
-    setTipoTrabajador("");
     setCv(null);
   };
 
@@ -55,8 +60,9 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajoId", tipoTrabajoId); // obligatorio
-    formData.append("tipoTrabajador", tipoTrabajador); // rol (ADMIN/TRABAJADOR)
+
+    formData.append("tipoTrabajoId", tipoTrabajoId); // ← debe ser ID numérico
+    formData.append("tipoTrabajador", tipoTrabajador); // ← fijo como "TRABAJADOR"
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -110,9 +116,9 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 value={tipoTrabajoId}
                 onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {tipoTrabajoOpciones.map((area) => (
-                  <option key={area} value={area}>
-                    {area}
+                {tipoTrabajos.map((tt) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
                   </option>
                 ))}
               </Select>
@@ -120,14 +126,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
 
             <FormControl isRequired mt={4}>
               <FormLabel>Rol del Trabajador</FormLabel>
-              <Select
-                placeholder="Seleccione un rol"
-                value={tipoTrabajador}
-                onChange={(e) => setTipoTrabajador(e.target.value)}
-              >
-                <option value="ADMIN">ADMIN</option>
-                <option value="TRABAJADOR">TRABAJADOR</option>
-              </Select>
+              <Input value="TRABAJADOR" isReadOnly />
             </FormControl>
 
             <FormControl mt={4}>
