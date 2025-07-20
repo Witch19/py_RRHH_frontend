@@ -128,7 +128,7 @@ const Register = () => {
       minH="100vh"
       align="center"
       justify="center"
-      bgGradient="linear(to-br, #1A3A5E, #2CA6A4)"
+      bg="#5C5C77" // ← fondo morado como en la segunda imagen
       px={4}
     >
       <Box
@@ -265,9 +265,9 @@ const Register = () => {
 
             <Button
               type="submit"
-              bg="purple.500"
+              bg="blue.500"
               color="white"
-              _hover={{ bg: "purple.600" }}
+              _hover={{ bg: "blue.600" }}
               w="full"
               borderRadius="full"
             >
