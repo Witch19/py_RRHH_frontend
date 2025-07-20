@@ -30,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const { login } = useAuth();
-  const { gradient, setTheme } = useThemeColor();
+  const { setTheme } = useThemeColor();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ const Login = () => {
       if (user && token) {
         login(
           {
-            id: user._id || user.id, // corregido: usa _id o id según el backend
+            id: user._id || user.id,
             email: user.email,
             username: user.username,
             role: user.role,
@@ -87,7 +87,7 @@ const Login = () => {
       minH="100vh"
       align="center"
       justify="center"
-      bgGradient={gradient}
+      bg="#5C5C77"
       px={4}
     >
       <Box
@@ -171,7 +171,6 @@ const Login = () => {
           </Link>
         </Text>
 
-        {/* Cambiador de colores */}
         <Flex justify="center" gap={4} mt={6}>
           <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
           <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
