@@ -22,7 +22,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipoTrabajoId, setTipoTrabajoId] = useState("");
-  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
+  const [tipoTrabajador, setTipoTrabajador] = useState("");
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]); // listado desde backend
 
   useEffect(() => {
     const fetchTipos = async () => {
@@ -47,6 +48,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setTelefono("");
     setDireccion("");
     setTipoTrabajoId("");
+    setTipoTrabajador("");
     setCv(null);
   };
 
@@ -58,7 +60,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId);
+    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId); // 👈 CORRECTO
+    if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
       const { data } = await API.post("/trabajadores", formData, {

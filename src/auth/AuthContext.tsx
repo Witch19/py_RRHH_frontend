@@ -1,17 +1,17 @@
 import type { ReactNode } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState,useEffect} from "react";
 
 
 /* ---------- Tipo de usuario ---------- */
 // src/auth/AuthContext.tsx
 export interface User {
-  id: string;
+  id: string;              
   username: string;
   email: string;
   role: string;
-  trabajadorId?: number;
+  trabajadorId?: number;     
 }
 
 
@@ -46,24 +46,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   /* ---------- Métodos ---------- */
-  const login = (user: any, token: string) => {
-    const cleanUser: User = {
-      id: user._id || user.id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      trabajadorId: user.trabajadorId,
-    };
-    setUser(cleanUser);
-    localStorage.setItem("token", token);
-  };
-
+ const login = (user: User, token: string) => {
+  setUser(user);
+  localStorage.setItem("token", token);
+};
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/");
+    navigate("/");                                     
   };
 
   return (

@@ -50,7 +50,9 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
     tipoTrabajoId: "",
   });
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [tiposTrabajo, setTiposTrabajo] = useState<{ id: number; nombre: string }[]>([]);
+  const [tiposTrabajo, setTiposTrabajo] = useState<
+    { key: string; value: string }[]
+  >([]);
 
   useEffect(() => {
     API.get("/tipo-trabajo/enum")
@@ -141,8 +143,8 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
               placeholder="Seleccione un área"
             >
               {tiposTrabajo.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.nombre}
+                <option key={t.key} value={t.key}>
+                  {t.value}
                 </option>
               ))}
             </Select>
