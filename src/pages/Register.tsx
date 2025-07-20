@@ -231,8 +231,7 @@ const Register = () => {
                 bg="white"
                 color="gray.800"
               >
-                <option value="TRABAJADOR">Trabajador</option>
-                <option value="ADMIN">Admin</option>
+                <option value="TRABAJADOR">TRABAJADOR</option>
               </Select>
             </FormControl>
 

@@ -18,7 +18,7 @@ import { useAuth } from "../auth/AuthContext";
 import Trabajadores from "./Trabajadores";
 import Cursos from "./Cursos";
 import Solicitudes from "./Solicitudes";
-import Aspirantes from "../components/Aspirantes"; // ✅ nuevo componente importado
+import Aspirantes from "../components/Aspirantes";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
 
@@ -32,7 +32,7 @@ const Dashboard = () => {
     ...(isAdmin ? [{ key: "trabajadores", label: "Trabajadores" }] : []),
     { key: "cursos", label: "Cursos" },
     { key: "solicitudes", label: "Solicitudes" },
-    ...(isAdmin ? [{ key: "aspirantes", label: "Aspirantes" }] : []), // ✅ solo admin
+    ...(isAdmin ? [{ key: "aspirantes", label: "Aspirantes" }] : []),
     { key: "perfil", label: "Editar Perfil" },
   ];
 
@@ -65,12 +65,15 @@ const Dashboard = () => {
   const handleUpdateProfile = async () => {
     setLoading(true);
     try {
+      const updateData = { username, email };
+
       const { data } = await API.put(
         "/auth/profile",
-        { username, email },
+        updateData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      login(data.user, token);
+
+      login(data.user, token); // Asegúrate que `data` tenga `role` incluido
       toast({
         title: "Perfil actualizado",
         status: "success",
@@ -92,7 +95,6 @@ const Dashboard = () => {
 
   return (
     <Flex minH="100vh" bgGradient={gradient} overflow="hidden">
-      {/* Sidebar */}
       <Box
         bg="whiteAlpha.200"
         backdropFilter="blur(10px)"
@@ -134,9 +136,7 @@ const Dashboard = () => {
         </VStack>
       </Box>
 
-      {/* Contenido */}
       <Box flex="1" display="flex" flexDirection="column" overflow="hidden">
-        {/* Header */}
         <Flex
           bg="whiteAlpha.100"
           backdropFilter="blur(6px)"
@@ -152,12 +152,11 @@ const Dashboard = () => {
           </Text>
         </Flex>
 
-        {/* Sección de contenido dinámico */}
         <Box p={6} flex="1" overflowY="auto" color="white">
           {activeMenu === "trabajadores" && isAdmin && <Trabajadores />}
           {activeMenu === "cursos" && <Cursos />}
           {activeMenu === "solicitudes" && <Solicitudes />}
-          {activeMenu === "aspirantes" && isAdmin && <Aspirantes />} {/* ✅ solo admin */}
+          {activeMenu === "aspirantes" && isAdmin && <Aspirantes />}
           {activeMenu === "perfil" &&
             (profileLoading ? (
               <Spinner color="white" />

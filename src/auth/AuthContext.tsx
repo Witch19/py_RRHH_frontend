@@ -46,10 +46,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   /* ---------- Métodos ---------- */
- const login = (user: User, token: string) => {
-  setUser(user);
+ const login = (userData: any, token: string) => {
+  const safeUser: User = {
+    id: userData.id,
+    username: userData.username,
+    email: userData.email,
+    role: userData.role,
+    trabajadorId: userData.trabajadorId,
+  };
+
+  setUser(safeUser);
   localStorage.setItem("token", token);
 };
+
 
   const logout = () => {
     setUser(null);
