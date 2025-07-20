@@ -94,7 +94,7 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
         data.append("tipoTrabajoId", tipoTrabajoId);
         data.append("file", cvFile);
 
-        response = await API.patch(`/trabajador/${trabajador.id}`, data, {
+        response = await API.patch(`/trabajadores/${trabajador.id}`, data, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } else {
