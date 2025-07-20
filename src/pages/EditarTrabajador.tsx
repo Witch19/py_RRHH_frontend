@@ -50,13 +50,20 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
     tipoTrabajoId: "",
   });
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [tiposTrabajo, setTiposTrabajo] = useState<
-    { key: string; value: string }[]
+  const [tipoTrabajoOpciones, setTiposTrabajo] = useState<
+    { id: string; nombre: string }[]
   >([]);
 
   useEffect(() => {
     API.get("/tipo-trabajo/enum")
-      .then((res) => setTiposTrabajo(res.data))
+      .then((res) =>
+        setTiposTrabajo(
+          res.data.map((tt: any) => ({
+            id: tt.key,
+            nombre: tt.value,
+          }))
+        )
+      )
       .catch((err) =>
         toast({
           title: "Error al cargar tipos de trabajo",
@@ -142,9 +149,9 @@ const EditarTrabajador = ({ isOpen, onClose, trabajador, onUpdate }: Props) => {
               onChange={handleChange}
               placeholder="Seleccione un área"
             >
-              {tiposTrabajo.map((t) => (
-                <option key={t.key} value={t.key}>
-                  {t.value}
+              {tipoTrabajoOpciones.map((tt) => (
+                <option key={tt.id} value={tt.id}>
+                  {tt.nombre}
                 </option>
               ))}
             </Select>
