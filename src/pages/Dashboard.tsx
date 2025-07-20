@@ -18,6 +18,7 @@ import { useAuth } from "../auth/AuthContext";
 import Trabajadores from "./Trabajadores";
 import Cursos from "./Cursos";
 import Solicitudes from "./Solicitudes";
+import Aspirantes from "../components/Aspirantes"; // ✅ nuevo componente importado
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
 
@@ -31,10 +32,11 @@ const Dashboard = () => {
     ...(isAdmin ? [{ key: "trabajadores", label: "Trabajadores" }] : []),
     { key: "cursos", label: "Cursos" },
     { key: "solicitudes", label: "Solicitudes" },
+    ...(isAdmin ? [{ key: "aspirantes", label: "Aspirantes" }] : []), // ✅ solo admin
     { key: "perfil", label: "Editar Perfil" },
   ];
 
-  const { gradient, setTheme } = useThemeColor(); // ✅ ya funciona correctamente
+  const { gradient, setTheme } = useThemeColor();
   const toast = useToast();
   const token = localStorage.getItem("token") || "";
 
@@ -152,9 +154,10 @@ const Dashboard = () => {
 
         {/* Sección de contenido dinámico */}
         <Box p={6} flex="1" overflowY="auto" color="white">
-          {activeMenu === "trabajadores" && <Trabajadores />}
+          {activeMenu === "trabajadores" && isAdmin && <Trabajadores />}
           {activeMenu === "cursos" && <Cursos />}
           {activeMenu === "solicitudes" && <Solicitudes />}
+          {activeMenu === "aspirantes" && isAdmin && <Aspirantes />} {/* ✅ solo admin */}
           {activeMenu === "perfil" &&
             (profileLoading ? (
               <Spinner color="white" />
