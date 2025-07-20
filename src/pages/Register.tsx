@@ -77,7 +77,7 @@ const Register = () => {
     }
 
     try {
-      // 1. Registro
+      // Registro
       await API.post("/auth/register", {
         username: `${form.firstName} ${form.lastName}`,
         email: form.email,
@@ -85,10 +85,12 @@ const Register = () => {
         role: form.role.toUpperCase(),
         telefono: form.telefono,
         direccion: form.direccion,
-        tipoTrabajoId: form.tipoTrabajoId ? Number(form.tipoTrabajoId) : undefined,
+        tipoTrabajoId: form.tipoTrabajoId
+          ? Number(form.tipoTrabajoId)
+          : undefined,
       });
 
-      // 2. Login automático
+      // Login automático
       const res = await API.post("/auth/login", {
         email: form.email,
         password: form.password,
@@ -98,16 +100,14 @@ const Register = () => {
 
       if (token) {
         login(user, token);
+        toast({
+          title: `Bienvenido, ${user.username}`,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+        navigate("/");
       }
-
-      toast({
-        title: `Bienvenido, ${user.username}`,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
-
-      navigate("/");
     } catch (err: any) {
       toast({
         title: "Error al registrarse",
@@ -139,7 +139,6 @@ const Register = () => {
         color="white"
       >
         <Avatar src={logoImg} size="xl" mx="auto" mb={6} />
-
         <Heading size="lg" mb={6}>
           Sign Up
         </Heading>
@@ -281,9 +280,24 @@ const Register = () => {
         </Text>
 
         <Flex justify="center" gap={4} mt={6}>
-          <Icon as={FaCircle} color="gray.300" onClick={() => setTheme("gray")} cursor="pointer" />
-          <Icon as={FaCircle} color="orange.400" onClick={() => setTheme("orange")} cursor="pointer" />
-          <Icon as={FaCircle} color="teal.400" onClick={() => setTheme("teal")} cursor="pointer" />
+          <Icon
+            as={FaCircle}
+            color="gray.300"
+            onClick={() => setTheme("gray")}
+            cursor="pointer"
+          />
+          <Icon
+            as={FaCircle}
+            color="orange.400"
+            onClick={() => setTheme("orange")}
+            cursor="pointer"
+          />
+          <Icon
+            as={FaCircle}
+            color="teal.400"
+            onClick={() => setTheme("teal")}
+            cursor="pointer"
+          />
         </Flex>
       </Box>
     </Flex>
