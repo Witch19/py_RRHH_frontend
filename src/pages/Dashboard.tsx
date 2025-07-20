@@ -36,7 +36,7 @@ const Dashboard = () => {
     { key: "perfil", label: "Editar Perfil" },
   ];
 
-  const {  setTheme } = useThemeColor();
+  const { setTheme } = useThemeColor();
   const toast = useToast();
   const token = localStorage.getItem("token") || "";
 
@@ -67,11 +67,9 @@ const Dashboard = () => {
     try {
       const updateData = { username, email };
 
-      const { data } = await API.put(
-        "/auth/profile",
-        updateData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const { data } = await API.put("/auth/profile", updateData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       login(data.user, token);
       toast({
@@ -114,8 +112,10 @@ const Dashboard = () => {
             {menuItems.map((item) => (
               <Button
                 key={item.key}
-                variant={activeMenu === item.key ? "solid" : "ghost"}
-                colorScheme="purple"
+                variant="ghost"
+                bg={activeMenu === item.key ? "white" : "transparent"}
+                color={activeMenu === item.key ? "black" : "white"}
+                _hover={{ bg: "whiteAlpha.300" }}
                 justifyContent="flex-start"
                 onClick={() => setActiveMenu(item.key)}
               >
@@ -157,7 +157,7 @@ const Dashboard = () => {
           </Button>
         </Flex>
 
-        <Box p={6} flex="1" overflowY="auto" color="white">
+        <Box p={6} flex="1" overflowY="auto" color="white" bg="#5b5772">
           {activeMenu === "trabajadores" && isAdmin && <Trabajadores />}
           {activeMenu === "cursos" && <Cursos />}
           {activeMenu === "solicitudes" && <Solicitudes />}
