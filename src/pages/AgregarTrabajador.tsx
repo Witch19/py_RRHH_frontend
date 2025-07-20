@@ -4,24 +4,12 @@ import {
   FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api/authService";
 
 interface Props {
   onAdd: (trabajador: any) => void;
 }
-
-// Opciones del enum tipoTrabajador
-const tipoTrabajadorOpciones = [
-  "SEGURIDAD INDUSTRIAL",
-  "MANTENIMIENTO",
-  "INGENIERIA",
-  "RECURSOS HUMANOS",
-  "MARKETING",
-  "OPERARIO",
-  "TI",
-  "OTROS",
-];
 
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,7 +21,24 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   const [telefono, setTelefono] = useState("");
   const [direccion, setDireccion] = useState("");
   const [cv, setCv] = useState<File | null>(null);
-  const [tipoTrabajador, setTipoTrabajador] = useState("");
+  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
+  const [tipoTrabajos, setTipoTrabajos] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTipos = async () => {
+      try {
+        const { data } = await API.get("/tipo-trabajo");
+        setTipoTrabajos(data);
+      } catch (err: any) {
+        toast({
+          title: "Error al cargar áreas",
+          description: err.response?.data?.message || err.message,
+          status: "error",
+        });
+      }
+    };
+    fetchTipos();
+  }, [toast]);
 
   const resetForm = () => {
     setNombre("");
@@ -41,37 +46,38 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     setEmail("");
     setTelefono("");
     setDireccion("");
-    setTipoTrabajador("");
+    setTipoTrabajoId("");
     setCv(null);
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("apellido", apellido);
-    formData.append("email", email);
-    if (telefono) formData.append("telefono", telefono);
-    if (direccion) formData.append("direccion", direccion);
-    if (cv) formData.append("file", cv);
-    formData.append("tipoTrabajador", tipoTrabajador); // ← Aquí va el área como string del enum
+  const formData = new FormData();
+  formData.append("nombre", nombre);
+  formData.append("apellido", apellido);
+  formData.append("email", email);
+  if (telefono) formData.append("telefono", telefono);
+  if (direccion) formData.append("direccion", direccion);
+  if (cv) formData.append("file", cv);
+  formData.append("tipoTrabajoId", String(Number(tipoTrabajoId))); // ✅ conversión segura
 
-    try {
-      const { data } = await API.post("/trabajadores", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+  try {
+    const { data } = await API.post("/trabajadores", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
-      onAdd(data);
-      toast({ title: "Trabajador agregado", status: "success" });
-      onClose();
-      resetForm();
-    } catch (err: any) {
-      toast({
-        title: "Error al guardar",
-        description: err.response?.data?.message || err.message,
-        status: "error",
-      });
-    }
-  };
+    onAdd(data);
+    toast({ title: "Trabajador agregado", status: "success" });
+    onClose();
+    resetForm();
+  } catch (err: any) {
+    toast({
+      title: "Error al guardar",
+      description: err.response?.data?.message || err.message,
+      status: "error",
+    });
+  }
+};
+
 
   return (
     <>
@@ -104,12 +110,12 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
               <FormLabel>Área de trabajo</FormLabel>
               <Select
                 placeholder="Seleccione un área"
-                value={tipoTrabajador}
-                onChange={(e) => setTipoTrabajador(e.target.value)}
+                value={tipoTrabajoId}
+                onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {tipoTrabajadorOpciones.map((area) => (
-                  <option key={area} value={area}>
-                    {area}
+                {tipoTrabajos.map((tt) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
                   </option>
                 ))}
               </Select>
