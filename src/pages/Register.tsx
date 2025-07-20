@@ -204,23 +204,6 @@ const Register = () => {
 
             <FormControl isRequired>
               <Select
-                placeholder="Área de trabajo"
-                name="tipoTrabajoId"
-                value={form.tipoTrabajoId}
-                onChange={handleChange}
-                bg="white"
-                color="gray.800"
-              >
-                {tipoTrabajos.map((tt: any) => (
-                  <option key={tt.id} value={tt.id}>
-                    {tt.nombre}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl isRequired>
-              <Select
                 name="role"
                 value={form.role}
                 onChange={handleChange}
@@ -228,7 +211,6 @@ const Register = () => {
                 color="gray.800"
               >
                 <option value="TRABAJADOR">Trabajador</option>
-                <option value="ADMIN">Admin</option>
               </Select>
             </FormControl>
 
