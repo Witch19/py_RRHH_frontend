@@ -1,27 +1,15 @@
-// AgregarTrabajador.tsx
 import {
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
   ModalBody, ModalCloseButton, Button, useDisclosure, FormControl,
   FormLabel, Input, useToast, Select
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api/authService";
 
 interface Props {
   onAdd: (trabajador: any) => void;
 }
-
-const tipoTrabajadorOpciones = [
-  "SEGURIDAD INDUSTRIAL",
-  "MANTENIMIENTO",
-  "INGENIERIA",
-  "RECURSOS HUMANOS",
-  "MARKETING",
-  "OPERARIO",
-  "TI",
-  "OTROS",
-];
 
 const AgregarTrabajador = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,7 +28,7 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        const { data } = await API.get("/tipo-trabajo");
+        const { data } = await API.get("/tipo-trabajo/enum");
         setTipoTrabajos(data);
       } catch (err: any) {
         toast({
@@ -72,9 +60,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
     if (telefono) formData.append("telefono", telefono);
     if (direccion) formData.append("direccion", direccion);
     if (cv) formData.append("file", cv);
-
-    formData.append("tipoTrabajoId", String(Number(tipoTrabajoId))); // <- debe ser un número
-    formData.append("tipoTrabajador", tipoTrabajador); // <- enum string correcto
+    if (tipoTrabajoId) formData.append("tipoTrabajoId", tipoTrabajoId);
+    if (tipoTrabajador) formData.append("tipoTrabajador", tipoTrabajador);
 
     try {
       const { data } = await API.post("/trabajadores", formData, {
@@ -128,26 +115,23 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
                 value={tipoTrabajoId}
                 onChange={(e) => setTipoTrabajoId(e.target.value)}
               >
-                {tipoTrabajos.map((area) => (
-                  <option key={area.id} value={area.id}>
-                    {area.nombre}
+                {tipoTrabajos.map((tt) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
                   </option>
                 ))}
               </Select>
             </FormControl>
 
             <FormControl isRequired mt={4}>
-              <FormLabel>Área (interna)</FormLabel>
+              <FormLabel>Rol del Trabajador</FormLabel>
               <Select
-                placeholder="Seleccione el tipo de trabajador"
+                placeholder="Seleccione un rol"
                 value={tipoTrabajador}
                 onChange={(e) => setTipoTrabajador(e.target.value)}
               >
-                {tipoTrabajadorOpciones.map((tipo) => (
-                  <option key={tipo} value={tipo}>
-                    {tipo}
-                  </option>
-                ))}
+                <option value="ADMIN">ADMIN</option>
+                <option value="TRABAJADOR">TRABAJADOR</option>
               </Select>
             </FormControl>
 
