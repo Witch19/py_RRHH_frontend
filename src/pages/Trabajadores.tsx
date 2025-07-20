@@ -46,7 +46,7 @@ const Trabajadores = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await API.get("/trabajadores");
+        const { data } = await API.get("/trabajador");
         const conCamposCompletos: TrabajadorModal[] = data.map((t: any) => ({
           id: Number(t.id),
           nombre: t.nombre,
