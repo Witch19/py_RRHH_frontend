@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useAuth } from "../auth/AuthContext";
-import { useThemeColor } from "../context/ThemeContext";
 import AgregarTrabajador from "./AgregarTrabajador";
 import EditarTrabajador from "./EditarTrabajador";
 import type { TrabajadorModal } from "./EditarTrabajador";
@@ -31,7 +30,6 @@ const Trabajadores = () => {
   const toast = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role?.toUpperCase() === "ADMIN";
-  const { gradient } = useThemeColor();
 
   const openEditar = (trabajador: TrabajadorModal) => {
     setTrabajadorActual(trabajador);
@@ -94,7 +92,7 @@ const Trabajadores = () => {
 
   if (!isAdmin) {
     return (
-      <Center minH="100vh" bgGradient={gradient}>
+      <Center minH="100vh" bg="#5b5772">
         <Heading fontSize="2xl" color="white">
           Acceso restringido
         </Heading>
@@ -104,14 +102,14 @@ const Trabajadores = () => {
 
   if (loading) {
     return (
-      <Center minH="300px" bgGradient={gradient}>
+      <Center minH="300px" bg="#5b5772">
         <Spinner size="lg" color="white" />
       </Center>
     );
   }
 
   return (
-    <Box p={6} bgGradient={gradient} minH="100vh" color="white">
+    <Box p={6} bg="#5b5772" minH="100vh" color="white">
       <HStack mb={4} justify="space-between">
         <Heading>Lista de Trabajadores</Heading>
         <AgregarTrabajador
