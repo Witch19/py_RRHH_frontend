@@ -33,7 +33,8 @@ const AgregarTrabajador = ({ onAdd }: Props) => {
   useEffect(() => {
     const fetchTipos = async () => {
       try {
-        const { data } = await API.get("/tipo-trabajo");
+        const { data } = await API.get("/trabajador");
+        console.log("Opciones cargadas:", data); 
         setTipoTrabajoOpciones(data);
       } catch (err) {
         toast({ title: "Error cargando áreas", status: "error" });
