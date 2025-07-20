@@ -24,8 +24,8 @@ import logoImg from "../assets/Logo.png";
 
 const Register = () => {
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
+    nombre: "",
+    apellido: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -78,7 +78,8 @@ const Register = () => {
 
     try {
       const payload: any = {
-        username: `${form.firstName} ${form.lastName}`,
+        nombre: form.nombre,
+        apellido: form.apellido,
         email: form.email,
         password: form.password,
         role: form.role.toUpperCase(),
@@ -151,9 +152,9 @@ const Register = () => {
           <VStack spacing={4}>
             <FormControl isRequired>
               <Input
-                placeholder="First Name"
-                name="firstName"
-                value={form.firstName}
+                placeholder="Nombre"
+                name="nombre"
+                value={form.nombre}
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
@@ -162,9 +163,9 @@ const Register = () => {
 
             <FormControl isRequired>
               <Input
-                placeholder="Last Name"
-                name="lastName"
-                value={form.lastName}
+                placeholder="Apellido"
+                name="apellido"
+                value={form.apellido}
                 onChange={handleChange}
                 bg="white"
                 color="gray.800"
@@ -174,7 +175,7 @@ const Register = () => {
             <FormControl isRequired>
               <Input
                 type="email"
-                placeholder="Your Email"
+                placeholder="Correo electrónico"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
@@ -183,7 +184,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl>
               <Input
                 placeholder="Teléfono"
                 name="telefono"
@@ -194,7 +195,7 @@ const Register = () => {
               />
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl>
               <Input
                 placeholder="Dirección"
                 name="direccion"
@@ -238,7 +239,7 @@ const Register = () => {
             <FormControl isRequired>
               <Input
                 type="password"
-                placeholder="Password"
+                placeholder="Contraseña"
                 name="password"
                 value={form.password}
                 onChange={handleChange}
@@ -250,7 +251,7 @@ const Register = () => {
             <FormControl isRequired>
               <Input
                 type="password"
-                placeholder="Confirm Password"
+                placeholder="Confirmar contraseña"
                 name="confirmPassword"
                 value={form.confirmPassword}
                 onChange={handleChange}
@@ -260,7 +261,7 @@ const Register = () => {
             </FormControl>
 
             <Checkbox color="white" alignSelf="start" isRequired>
-              I agree to the Terms of Service and Privacy Policy
+              Acepto los Términos de servicio y Política de privacidad
             </Checkbox>
 
             <Button
@@ -271,15 +272,15 @@ const Register = () => {
               w="full"
               borderRadius="full"
             >
-              Register
+              Registrarse
             </Button>
           </VStack>
         </form>
 
         <Text mt={4} fontSize="sm">
-          Already have an account?{" "}
+          ¿Ya tienes una cuenta?{" "}
           <Link color="blue.200" href="/login" fontWeight="bold">
-            Login
+            Inicia sesión
           </Link>
         </Text>
 
