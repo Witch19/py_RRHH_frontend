@@ -16,7 +16,6 @@ import {
 import { useEffect, useState } from "react";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import API from "../api/authService";
-//import { useAuth } from "../auth/AuthContext";
 import ModalUsuario from "../components/ModalUsuario";
 
 interface Usuario {
@@ -36,7 +35,6 @@ const Usuarios = () => {
   const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  //const { user } = useAuth();
 
   const fetchUsuarios = async () => {
     try {
@@ -109,46 +107,56 @@ const Usuarios = () => {
         </Button>
       </Box>
 
-      <Table variant="simple" colorScheme="whiteAlpha">
-        <Thead>
-          <Tr>
-            <Th color="white">Nombre</Th>
-            <Th color="white">Email</Th>
-            <Th color="white">Teléfono</Th>
-            <Th color="white">Área</Th>
-            <Th color="white">Rol</Th>
-            <Th color="white">Acciones</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {usuarios.map((u) => (
-            <Tr key={u._id}>
-              <Td>{u.username}</Td>
-              <Td>{u.email}</Td>
-              <Td>{u.telefono || "—"}</Td>
-              <Td>{u.tipoTrabajo?.nombre || "—"}</Td>
-              <Td>{u.role}</Td>
-              <Td>
-                <IconButton
-                  icon={<EditIcon />}
-                  size="sm"
-                  mr={2}
-                  colorScheme="gray"
-                  aria-label="Editar"
-                  onClick={() => handleEditar(u)}
-                />
-                <IconButton
-                  icon={<DeleteIcon />}
-                  size="sm"
-                  colorScheme="red"
-                  aria-label="Eliminar"
-                  onClick={() => handleEliminar(u._id)}
-                />
-              </Td>
+      {/* 🔽 Cuadro blanco con scroll para la tabla */}
+      <Box
+        bg="white"
+        rounded="md"
+        p={4}
+        maxH="500px"
+        overflowY="auto"
+        boxShadow="md"
+      >
+        <Table variant="simple" colorScheme="gray">
+          <Thead bg="gray.100">
+            <Tr>
+              <Th>Nombre</Th>
+              <Th>Email</Th>
+              <Th>Teléfono</Th>
+              <Th>Área</Th>
+              <Th>Rol</Th>
+              <Th>Acciones</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {usuarios.map((u) => (
+              <Tr key={u._id}>
+                <Td>{u.username}</Td>
+                <Td>{u.email}</Td>
+                <Td>{u.telefono || "—"}</Td>
+                <Td>{u.tipoTrabajo?.nombre || "—"}</Td>
+                <Td>{u.role}</Td>
+                <Td>
+                  <IconButton
+                    icon={<EditIcon />}
+                    size="sm"
+                    mr={2}
+                    colorScheme="gray"
+                    aria-label="Editar"
+                    onClick={() => handleEditar(u)}
+                  />
+                  <IconButton
+                    icon={<DeleteIcon />}
+                    size="sm"
+                    colorScheme="red"
+                    aria-label="Eliminar"
+                    onClick={() => handleEliminar(u._id)}
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
 
       {/* Modal para editar o añadir */}
       <ModalUsuario
