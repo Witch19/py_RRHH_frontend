@@ -71,7 +71,12 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      login(data.user, token);
+      // ✅ Asegurar que trabajadorId se conserve tras la actualización
+      login(
+        { ...data.user, trabajadorId: user?.trabajadorId },
+        token
+      );
+
       toast({
         title: "Perfil actualizado",
         status: "success",

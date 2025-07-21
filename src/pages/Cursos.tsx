@@ -106,7 +106,6 @@ const Cursos = () => {
 
         const propios: CursoInscrito[] = relaciones
           .filter((r: any) => r.trabajador?.id === user?.trabajadorId)
-
           .map((r: any) => ({ ...r.curso, relacionId: r.id }) as CursoInscrito);
 
         const inscritosIds = new Set(propios.map((c) => String(c.id)));
@@ -127,7 +126,7 @@ const Cursos = () => {
         setLoading(false);
       }
     })();
-  }, [toast, user?.email]);
+  }, [toast, user?.trabajadorId]); // ✅ Dependencia corregida
 
   const handleInscribir = async () => {
     if (selectedIds.size === 0) {
