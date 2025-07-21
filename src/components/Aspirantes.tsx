@@ -8,7 +8,6 @@ import {
   Td,
   Text,
   useToast,
-  IconButton,
   AlertDialog,
   AlertDialogOverlay,
   AlertDialogContent,
@@ -119,14 +118,15 @@ const ModalAgregarAspirante = () => {
                     )}
                   </Td>
                   <Td>
-                    <IconButton
-                      aria-label="Eliminar"
-                      icon={<DeleteIcon />}
-                      colorScheme="red"
-                      variant="ghost"
-                      size="sm"
+                    <Button
                       onClick={() => confirmarEliminar(a._id)}
-                    />
+                      colorScheme="red"
+                      size="sm"
+                      borderRadius="lg"
+                      leftIcon={<DeleteIcon />}
+                    >
+                      {/* Puedes dejar vacío para solo ícono */}
+                    </Button>
                   </Td>
                 </Tr>
               ))}
@@ -151,8 +151,7 @@ const ModalAgregarAspirante = () => {
               Eliminar Aspirante
             </AlertDialogHeader>
             <AlertDialogBody>
-              ¿Estás seguro de que deseas eliminar este aspirante? Esta acción
-              no se puede deshacer.
+              ¿Estás seguro de que deseas eliminar este aspirante? Esta acción no se puede deshacer.
             </AlertDialogBody>
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={() => setIsAlertOpen(false)}>
