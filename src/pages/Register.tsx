@@ -4,19 +4,20 @@ import {
   Checkbox,
   Flex,
   FormControl,
-  FormLabel,
   Input,
   VStack,
   Heading,
   Text,
   Link,
-  Select,
   useToast,
+  Select,
+  Avatar,
 } from "@chakra-ui/react";
+//import { FaCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
-//import { useThemeColor } from "../context/ThemeContext";
+import logoImg from "../assets/Logo.png";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -34,7 +35,6 @@ const Register = () => {
   const [tipoTrabajos, setTipoTrabajos] = useState([]);
   const navigate = useNavigate();
   const toast = useToast();
-  //const { gradient } = useThemeColor();
 
   useEffect(() => {
     const fetchTipoTrabajos = async () => {
@@ -42,11 +42,17 @@ const Register = () => {
         const res = await API.get("/tipo-trabajo");
         setTipoTrabajos(res.data);
       } catch (error) {
-        console.error("Error cargando tipo de trabajos:", error);
+        toast({
+          title: "Error al cargar áreas",
+          description: "Verifica conexión con el backend",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     };
     fetchTipoTrabajos();
-  }, []);
+  }, [toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,6 +78,7 @@ const Register = () => {
       };
 
       await API.post("/auth/register", dataToSend);
+
       toast({
         title: "Usuario registrado correctamente",
         status: "success",
@@ -79,11 +86,10 @@ const Register = () => {
         isClosable: true,
       });
       navigate("/login");
-    } catch (error) {
-      console.error("Error al registrar usuario:", error);
+    } catch (error: any) {
       toast({
         title: "Error al registrarse",
-        description: "No se pudo registrar el usuario",
+        description: error.response?.data?.message || "Error interno del servidor",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -91,141 +97,172 @@ const Register = () => {
     }
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   return (
-    <Flex align="center" justify="center" minH="100vh" bg="gray.700">
+    <Flex
+      minH="100vh"
+      align="center"
+      justify="center"
+      bg="#5C5C77"
+      px={4}
+    >
       <Box
-        bg="white"
+        bg="whiteAlpha.200"
+        backdropFilter="blur(15px)"
+        borderRadius="2xl"
         p={8}
-        rounded="md"
-        shadow="lg"
-        w="100%"
-        maxW="400px"
+        w="full"
+        maxW="sm"
+        textAlign="center"
+        boxShadow="dark-lg"
+        color="white"
       >
-        <VStack as="form" spacing={4} onSubmit={handleSubmit}>
-          <Heading size="lg" textAlign="center">
-            Sign Up
-          </Heading>
+        <Avatar src={logoImg} size="xl" mx="auto" mb={6} />
 
-          <FormControl isRequired>
-            <FormLabel>Nombre</FormLabel>
-            <Input
-              value={form.username}
-              onChange={(e) =>
-                setForm({ ...form, username: e.target.value })
-              }
-            />
-          </FormControl>
+        <Heading size="lg" mb={6}>
+          Sign Up
+        </Heading>
 
-          <FormControl isRequired>
-            <FormLabel>Apellido</FormLabel>
-            <Input
-              value={form.apellido}
-              onChange={(e) =>
-                setForm({ ...form, apellido: e.target.value })
-              }
-            />
-          </FormControl>
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={4}>
+            <FormControl isRequired>
+              <Input
+                placeholder="Nombre"
+                name="username"
+                value={form.username}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              value={form.email}
-              onChange={(e) =>
-                setForm({ ...form, email: e.target.value })
-              }
-            />
-          </FormControl>
+            <FormControl isRequired>
+              <Input
+                placeholder="Apellido"
+                name="apellido"
+                value={form.apellido}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
 
-          <FormControl>
-            <FormLabel>Teléfono</FormLabel>
-            <Input
-              value={form.telefono}
-              onChange={(e) =>
-                setForm({ ...form, telefono: e.target.value })
-              }
-            />
-          </FormControl>
+            <FormControl isRequired>
+              <Input
+                type="email"
+                placeholder="Correo electrónico"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
 
-          <FormControl>
-            <FormLabel>Dirección</FormLabel>
-            <Input
-              value={form.direccion}
-              onChange={(e) =>
-                setForm({ ...form, direccion: e.target.value })
-              }
-            />
-          </FormControl>
+            <FormControl>
+              <Input
+                placeholder="Teléfono"
+                name="telefono"
+                value={form.telefono}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
 
-          <FormControl isRequired>
-            <FormLabel>Área de trabajo</FormLabel>
-            <Select
-              placeholder="Selecciona área"
-              value={form.tipoTrabajoId}
-              onChange={(e) =>
-                setForm({ ...form, tipoTrabajoId: e.target.value })
-              }
+            <FormControl>
+              <Input
+                placeholder="Dirección"
+                name="direccion"
+                value={form.direccion}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Select
+                placeholder="Área de trabajo"
+                name="tipoTrabajoId"
+                value={form.tipoTrabajoId}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              >
+                {tipoTrabajos.map((tt: any) => (
+                  <option key={tt.id} value={tt.id}>
+                    {tt.nombre}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired>
+              <Select
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              >
+                <option value="TRABAJADOR">TRABAJADOR</option>
+                <option value="ADMIN">ADMIN</option>
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                type="password"
+                placeholder="Contraseña"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <Input
+                type="password"
+                placeholder="Confirmar contraseña"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                bg="white"
+                color="gray.800"
+              />
+            </FormControl>
+
+            <Checkbox color="white" alignSelf="start" isRequired>
+              Acepto los Términos de servicio y Política de privacidad
+            </Checkbox>
+
+            <Button
+              type="submit"
+              bg="blue.500"
+              color="white"
+              _hover={{ bg: "blue.600" }}
+              w="full"
+              borderRadius="full"
             >
-              {tipoTrabajos.map((tipo: any) => (
-                <option key={tipo.id} value={tipo.id}>
-                  {tipo.nombre}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
+              Registrarse
+            </Button>
+          </VStack>
+        </form>
 
-          <FormControl isRequired>
-            <FormLabel>Rol</FormLabel>
-            <Select
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value })}
-            >
-              <option value="TRABAJADOR">TRABAJADOR</option>
-              <option value="ADMIN">ADMIN</option>
-            </Select>
-          </FormControl>
-
-          <FormControl isRequired>
-            <FormLabel>Contraseña</FormLabel>
-            <Input
-              type="password"
-              value={form.password}
-              onChange={(e) =>
-                setForm({ ...form, password: e.target.value })
-              }
-            />
-          </FormControl>
-
-          <FormControl isRequired>
-            <FormLabel>Confirmar contraseña</FormLabel>
-            <Input
-              type="password"
-              value={form.confirmPassword}
-              onChange={(e) =>
-                setForm({ ...form, confirmPassword: e.target.value })
-              }
-            />
-          </FormControl>
-
-          <Checkbox isRequired>
-            Acepto los Términos de servicio y Política de privacidad
-          </Checkbox>
-
-          <Button
-            type="submit"
-            colorScheme="blue"
-            width="full"
-          >
-            Registrarse
-          </Button>
-
-          <Text fontSize="sm">
-            ¿Ya tienes una cuenta?{" "}
-            <Link color="blue.500" href="/login">
-              Inicia sesión
-            </Link>
-          </Text>
-        </VStack>
+        <Text mt={4} fontSize="sm">
+          ¿Ya tienes una cuenta?{" "}
+          <Link color="blue.200" href="/login" fontWeight="bold">
+            Inicia sesión
+          </Link>
+        </Text>
       </Box>
     </Flex>
   );
