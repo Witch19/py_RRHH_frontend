@@ -99,7 +99,7 @@ const Usuarios = () => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" mb={4}>
-        <Text fontSize="xl" fontWeight="bold">
+        <Text fontSize="xl" fontWeight="bold" color="white">
           Usuarios del sistema
         </Text>
         <Button leftIcon={<AddIcon />} colorScheme="green" onClick={handleNuevo}>
@@ -107,7 +107,6 @@ const Usuarios = () => {
         </Button>
       </Box>
 
-      {/* 🔽 Cuadro blanco con scroll para la tabla */}
       <Box
         bg="white"
         rounded="md"
@@ -116,25 +115,25 @@ const Usuarios = () => {
         overflowY="auto"
         boxShadow="md"
       >
-        <Table variant="simple" colorScheme="gray">
+        <Table variant="simple">
           <Thead bg="gray.100">
             <Tr>
-              <Th>Nombre</Th>
-              <Th>Email</Th>
-              <Th>Teléfono</Th>
-              <Th>Área</Th>
-              <Th>Rol</Th>
-              <Th>Acciones</Th>
+              <Th color="gray.800">Nombre</Th>
+              <Th color="gray.800">Email</Th>
+              <Th color="gray.800">Teléfono</Th>
+              <Th color="gray.800">Área</Th>
+              <Th color="gray.800">Rol</Th>
+              <Th color="gray.800">Acciones</Th>
             </Tr>
           </Thead>
           <Tbody>
             {usuarios.map((u) => (
               <Tr key={u._id}>
-                <Td>{u.username}</Td>
-                <Td>{u.email}</Td>
-                <Td>{u.telefono || "—"}</Td>
-                <Td>{u.tipoTrabajo?.nombre || "—"}</Td>
-                <Td>{u.role}</Td>
+                <Td color="gray.800">{u.username}</Td>
+                <Td color="gray.800">{u.email}</Td>
+                <Td color="gray.800">{u.telefono || "—"}</Td>
+                <Td color="gray.800">{u.tipoTrabajo?.nombre || "—"}</Td>
+                <Td color="gray.800">{u.role}</Td>
                 <Td>
                   <IconButton
                     icon={<EditIcon />}
