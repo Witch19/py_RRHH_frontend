@@ -105,7 +105,8 @@ const Cursos = () => {
         ]);
 
         const propios: CursoInscrito[] = relaciones
-          .filter((r: any) => r.trabajador?.email === user?.email)
+          .filter((r: any) => r.trabajador?.id === user?.trabajadorId)
+
           .map((r: any) => ({ ...r.curso, relacionId: r.id }) as CursoInscrito);
 
         const inscritosIds = new Set(propios.map((c) => String(c.id)));
