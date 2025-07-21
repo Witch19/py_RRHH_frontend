@@ -110,7 +110,7 @@ const Usuarios = () => {
         bg="white"
         rounded="md"
         p={4}
-        maxH="730px"
+        maxH="750px"
         overflowY="auto"
         boxShadow="md"
       >
