@@ -16,7 +16,7 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
-import { useThemeColor } from "../context/ThemeContext";
+//import { useThemeColor } from "../context/ThemeContext";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -34,7 +34,7 @@ const Register = () => {
   const [tipoTrabajos, setTipoTrabajos] = useState([]);
   const navigate = useNavigate();
   const toast = useToast();
-  const { gradient } = useThemeColor();
+  //const { gradient } = useThemeColor();
 
   useEffect(() => {
     const fetchTipoTrabajos = async () => {
