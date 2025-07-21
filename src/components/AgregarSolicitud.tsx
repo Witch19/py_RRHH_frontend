@@ -39,7 +39,7 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
   };
 
   const handleSubmit = async () => {
-    const { tipo, fechaInicio, fechaFin } = form;
+    const { fechaInicio, fechaFin } = form;
 
     // Validación de fechas
     if (new Date(fechaFin) < new Date(fechaInicio)) {
