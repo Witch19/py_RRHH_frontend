@@ -18,9 +18,9 @@ import {
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { useAuth } from "../auth/AuthContext";
-import AgregarTrabajador from "./AgregarTrabajador";
-import EditarTrabajador from "./EditarTrabajador";
-import type { TrabajadorModal } from "./EditarTrabajador";
+import AgregarTrabajador from "../components/AgregarTrabajador";
+import EditarTrabajador from "../components/EditarTrabajador";
+import type { TrabajadorModal } from "../components/EditarTrabajador";
 
 const Trabajadores = () => {
   const [trabajadores, setTrabajadores] = useState<TrabajadorModal[]>([]);

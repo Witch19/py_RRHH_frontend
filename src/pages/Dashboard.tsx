@@ -18,7 +18,8 @@ import { useAuth } from "../auth/AuthContext";
 import Trabajadores from "./Trabajadores";
 import Cursos from "./Cursos";
 import Solicitudes from "./Solicitudes";
-import Aspirantes from "../components/Aspirantes";
+import Aspirantes from "./Aspirantes";
+import Usuarios from "./Usuarios";
 import API from "../api/authService";
 import { useThemeColor } from "../context/ThemeContext";
 
@@ -33,6 +34,7 @@ const Dashboard = () => {
     { key: "cursos", label: "Cursos" },
     { key: "solicitudes", label: "Solicitudes" },
     ...(isAdmin ? [{ key: "aspirantes", label: "Aspirantes" }] : []),
+    ...(isAdmin ? [{ key: "usuarios", label: "Usuarios" }] : []),
     { key: "perfil", label: "Editar Perfil" },
   ];
 
@@ -71,7 +73,6 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // ✅ Asegurar que trabajadorId se conserve tras la actualización
       login(
         { ...data.user, trabajadorId: user?.trabajadorId },
         token
@@ -167,6 +168,7 @@ const Dashboard = () => {
           {activeMenu === "cursos" && <Cursos />}
           {activeMenu === "solicitudes" && <Solicitudes />}
           {activeMenu === "aspirantes" && isAdmin && <Aspirantes />}
+          {activeMenu === "usuarios" && isAdmin && <Usuarios />}
           {activeMenu === "perfil" &&
             (profileLoading ? (
               <Spinner color="white" />
