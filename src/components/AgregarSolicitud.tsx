@@ -32,27 +32,11 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
     fechaFin: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    const { fechaInicio, fechaFin } = form;
-
-    // Validación de fechas
-    if (new Date(fechaFin) < new Date(fechaInicio)) {
-      toast({
-        title: "Error en las fechas",
-        description: "La fecha de fin no puede ser menor que la de inicio.",
-        status: "error",
-        duration: 4000,
-        isClosable: true,
-      });
-      return;
-    }
-
     try {
       await API.post("/solicitudes", form);
       toast({
@@ -64,10 +48,10 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
       onAdd();
       onClose();
       setForm({ tipo: "", descripcion: "", fechaInicio: "", fechaFin: "" });
-    } catch (err: any) {
+    } catch (err) {
       toast({
         title: "Error al enviar solicitud",
-        description: err.response?.data?.message || "Verifica los datos",
+        description: "Verifica los datos",
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -76,7 +60,7 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered size="lg">
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Nueva Solicitud</ModalHeader>
@@ -91,38 +75,19 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
               <option value="Enfermedad">Enfermedad</option>
             </Select>
           </FormControl>
-
           <FormControl mb={3}>
             <FormLabel>Descripción</FormLabel>
-            <Textarea
-              name="descripcion"
-              value={form.descripcion}
-              onChange={handleChange}
-              placeholder="Opcional"
-            />
+            <Textarea name="descripcion" value={form.descripcion} onChange={handleChange} />
           </FormControl>
-
           <FormControl isRequired mb={3}>
             <FormLabel>Fecha Inicio</FormLabel>
-            <Input
-              type="date"
-              name="fechaInicio"
-              value={form.fechaInicio}
-              onChange={handleChange}
-            />
+            <Input type="date" name="fechaInicio" value={form.fechaInicio} onChange={handleChange} />
           </FormControl>
-
           <FormControl isRequired>
             <FormLabel>Fecha Fin</FormLabel>
-            <Input
-              type="date"
-              name="fechaFin"
-              value={form.fechaFin}
-              onChange={handleChange}
-            />
+            <Input type="date" name="fechaFin" value={form.fechaFin} onChange={handleChange} />
           </FormControl>
         </ModalBody>
-
         <ModalFooter>
           <Button variant="ghost" mr={3} onClick={onClose}>
             Cancelar
