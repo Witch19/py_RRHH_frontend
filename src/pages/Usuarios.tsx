@@ -24,10 +24,9 @@ interface Usuario {
   email: string;
   role: string;
   telefono?: string;
-  tipoTrabajo?: {
-    nombre: string;
-  };
+  tipoTrabajo?: string; // ahora es string plano (nombre del área)
 }
+
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
@@ -132,7 +131,8 @@ const Usuarios = () => {
                 <Td color="gray.800">{u.username}</Td>
                 <Td color="gray.800">{u.email}</Td>
                 <Td color="gray.800">{u.telefono || "—"}</Td>
-                <Td color="gray.800">{u.tipoTrabajo?.nombre || "—"}</Td>
+                <Td color="gray.800">{u.tipoTrabajo || "—"}</Td>
+
                 <Td color="gray.800">{u.role}</Td>
                 <Td>
                   <IconButton
