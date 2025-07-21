@@ -14,6 +14,7 @@ import {
   Link,
   Heading,
   Icon,
+  Image,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { FaUser, FaLock, FaCircle } from "react-icons/fa";
@@ -22,9 +23,10 @@ import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 import { useThemeColor } from "../context/ThemeContext";
+import logoImg from "../assets/logo-login.png"; // Cambia por el nombre real de tu logo
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [userInput, setUserInput] = useState(""); // puede ser username o email
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!userInput || !password) {
       toast({
         title: "Campos requeridos",
         description: "Por favor completa todos los campos.",
@@ -47,7 +49,10 @@ const Login = () => {
     }
 
     try {
-      const res = await API.post("auth/login", { email, password });
+      const res = await API.post("auth/login", {
+        emailOrUsername: userInput,
+        password,
+      });
       const { user, token } = res.data;
 
       if (user && token) {
@@ -83,13 +88,7 @@ const Login = () => {
   };
 
   return (
-    <Flex
-      minH="100vh"
-      align="center"
-      justify="center"
-      bg="#5C5C77"
-      px={4}
-    >
+    <Flex minH="100vh" align="center" justify="center" bg="#5C5C77" px={4}>
       <Box
         bg="whiteAlpha.200"
         backdropFilter="blur(10px)"
@@ -101,7 +100,7 @@ const Login = () => {
         boxShadow="2xl"
       >
         <Box mb={6}>
-          <Icon as={FaCircle} boxSize={8} color="white" />
+          <Image src={logoImg} alt="Logo" boxSize="60px" mx="auto" borderRadius="full" />
           <Heading size="md" color="white" mt={2}>
             Technology
           </Heading>
@@ -119,10 +118,10 @@ const Login = () => {
                   <FaUser color="gray" />
                 </InputLeftElement>
                 <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Username"
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  placeholder="Email or Username"
                   bg="white"
                 />
               </InputGroup>
