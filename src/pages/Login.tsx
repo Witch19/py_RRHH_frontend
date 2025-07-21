@@ -23,10 +23,10 @@ import { useNavigate } from "react-router-dom";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 import { useThemeColor } from "../context/ThemeContext";
-import logoImg from "../assets/logo-login.png"; // Cambia por el nombre real de tu logo
+import logoImg from "../../public/Logo.png"; 
 
 const Login = () => {
-  const [userInput, setUserInput] = useState(""); // puede ser username o email
+  const [userInput, setUserInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ const Login = () => {
         boxShadow="2xl"
       >
         <Box mb={6}>
-          <Image src="../../public/Logo.png" alt="Logo" boxSize="60px" mx="auto" borderRadius="full" />
+          <Image src={logoImg} alt="Logo" boxSize="60px" mx="auto" borderRadius="full" />
         </Box>
 
         <Heading size="lg" color="white" mb={6}>
