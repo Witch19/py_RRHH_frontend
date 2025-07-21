@@ -22,7 +22,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
-import { useThemeColor } from "../context/ThemeContext";
 import { useAuth } from "../auth/AuthContext";
 import AgregarSolicitud from "../components/AgregarSolicitud";
 import BtnEliminar from "../components/BtnEliminar";
@@ -50,7 +49,6 @@ const Solicitudes = () => {
   const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
   const [loading, setLoading] = useState(true);
   const toast = useToast();
-  const { gradient } = useThemeColor();
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
 
@@ -120,13 +118,13 @@ const Solicitudes = () => {
 
   if (loading)
     return (
-      <Center minH="200px">
+      <Center minH="200px" bg="#5b5772">
         <Spinner size="lg" color="white" />
       </Center>
     );
 
   return (
-    <Box p={6} bgGradient={gradient} borderRadius="lg" boxShadow="lg" color="white">
+    <Box p={6} bg="#5b5772" borderRadius="lg" boxShadow="lg" color="white" minH="100vh">
       <Heading mb={4} display="flex" alignItems="center" gap={3}>
         Solicitudes{" "}
         <Badge colorScheme="purple" fontSize="0.9em">
