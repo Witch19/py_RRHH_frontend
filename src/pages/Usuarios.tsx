@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 import API from "../api/authService";
-import { useAuth } from "../auth/AuthContext";
+//import { useAuth } from "../auth/AuthContext";
 import ModalUsuario from "../components/ModalUsuario";
 
 interface Usuario {
@@ -36,7 +36,7 @@ const Usuarios = () => {
   const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const { user } = useAuth();
+  //const { user } = useAuth();
 
   const fetchUsuarios = async () => {
     try {

@@ -34,7 +34,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   usuario: Usuario | null;
-  onSave: () => void; // callback para recargar lista después de guardar
+  onSave: () => void;
 }
 
 const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
@@ -76,7 +76,7 @@ const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
         email: usuario.email,
         role: usuario.role,
         telefono: usuario.telefono || "",
-        tipoTrabajoId: usuario.tipoTrabajo?.nombre ? tipoTrabajos.find(t => t.nombre === usuario.tipoTrabajo?.nombre)?.id : undefined
+        tipoTrabajoId: usuario.tipoTrabajoId ?? undefined,
       });
     } else {
       setForm({
@@ -87,11 +87,11 @@ const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
         tipoTrabajoId: undefined,
       });
     }
-  }, [usuario, tipoTrabajos]);
+  }, [usuario]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ ...form, [name]: name === "tipoTrabajoId" ? parseInt(value) : value });
   };
 
   const handleSubmit = async () => {
