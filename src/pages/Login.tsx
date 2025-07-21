@@ -100,10 +100,7 @@ const Login = () => {
         boxShadow="2xl"
       >
         <Box mb={6}>
-          <Image src={logoImg} alt="Logo" boxSize="60px" mx="auto" borderRadius="full" />
-          <Heading size="md" color="white" mt={2}>
-            Technology
-          </Heading>
+          <Image src="../../public/Logo.png" alt="Logo" boxSize="60px" mx="auto" borderRadius="full" />
         </Box>
 
         <Heading size="lg" color="white" mb={6}>
