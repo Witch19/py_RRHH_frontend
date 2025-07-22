@@ -154,13 +154,25 @@ const Home = () => {
 
       {/* PAST EVENTS */}
       <Box bg="teal.400" py={16} px={8} textAlign="center">
-        <Heading mb={8} color="white">Nuestas Soluciones</Heading>
-        <label htmlFor="">Contamos con diversos productos, servicios, insumos, software y convenios de mantención, seleccionados e importados bajo los más áltos estándares de calidad.</label>
+        <Heading mb={8} color="white">Nuestras Soluciones</Heading>
+
+        <Text mb={10} color="white">
+          Contamos con diversos productos, servicios, insumos, software y convenios de mantención, seleccionados e importados bajo los más altos estándares de calidad.
+        </Text>
+
         <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
           {[
-            {name:"Portal de Empleados", src:"/RRHH1.png", role:"Gestión de datos, perfiles, contratos y documentos del personal."},
-            {name:"Sistema de Reclutamiento Online", src:"/RRHH2.png", role:"Publicación de ofertas, recepción de CVs y selección de candidatos."}
-           ].map((src, i) => (
+            {
+              name: "Portal de Empleados",
+              src: "/RRHH1.png",
+              role: "Gestión de datos, perfiles, contratos y documentos del personal.",
+            },
+            {
+              name: "Sistema de Reclutamiento Online",
+              src: "/RRHH2.png",
+              role: "Publicación de ofertas, recepción de CVs y selección de candidatos.",
+            },
+          ].map((o, i) => (
             <MotionBox
               key={i}
               bg="white"
@@ -168,13 +180,16 @@ const Home = () => {
               overflow="hidden"
               whileHover={{ y: -5 }}
               transition={{ duration: 0.3 }}
+              p={4}
             >
-              <Image src={`/${src}`} alt="" />
-              <Text p={4} fontSize="md">Título del evento pasado #{i + 1}</Text>
+              <Image src={o.src} alt={o.name} borderRadius="md" />
+              <Text mt={4} fontWeight="bold">{o.name}</Text>
+              <Text color="gray.500">{o.role}</Text>
             </MotionBox>
           ))}
         </SimpleGrid>
       </Box>
+
 
       {/* SPONSORS */}
       <Box py={16} px={8} textAlign="center">
