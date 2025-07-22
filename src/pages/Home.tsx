@@ -228,19 +228,20 @@ const Home = () => {
       {/* SPONSORS */}
       <Box py={16} px={8} textAlign="center">
         <Heading mb={8}>Empresas asociadas</Heading>
-        <HStack spacing={12} justify="center" >
+        <HStack spacing={16} justify="center">
           {["sponsor1.png", "sponsor2.png", "sponsor3.png", "sponsor4.png", "sponsor5.png"].map((src, i) => (
             <MotionImage
               key={i}
               src={`/${src}`}
               alt=""
-              boxSize="80px"
+              boxSize="120px" // Aumentado para que sean más grandes
               objectFit="contain"
               whileHover={{ scale: 1.2 }}
             />
           ))}
         </HStack>
       </Box>
+
 
       {/* RSVP CTA */}
       <Box bg="#0B1C49" color="white" py={16} px={8}>
