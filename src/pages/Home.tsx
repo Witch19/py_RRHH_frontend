@@ -50,14 +50,26 @@ const Home = () => {
       </Flex>
 
       {/* HERO */}
-      <Box
-        h="90vh"
-        bgImage="url('/hero-people.jpg')"
-        bgSize="cover"
-        bgPosition="center"
-        position="relative"
-      >
-        <Box position="absolute" inset={0} bg="rgba(0, 0, 50, 0.6)" />
+      <Box h="90vh" position="relative" overflow="hidden">
+        {/* 🎥 VIDEO DE FONDO */}
+        <Box as="video"
+          src="/Video_publicitario.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          position="absolute"
+          inset={0}
+          w="100%"
+          h="100%"
+          objectFit="cover"
+          zIndex={0}
+        />
+
+        {/* 🟦 CAPA OSCURA */}
+        <Box position="absolute" inset={0} bg="rgba(0, 0, 50, 0.6)" zIndex={1} />
+
+        {/* 🌟 CONTENIDO */}
         <Flex
           direction="column"
           position="relative"
@@ -66,6 +78,7 @@ const Home = () => {
           h="100%"
           px={6}
           textAlign="center"
+          zIndex={2}
         >
           <MotionBox
             border="2px solid #00FFB3"
@@ -79,10 +92,13 @@ const Home = () => {
               Work Life Balance – Reality or Myth?
             </MotionHeading>
             <Box borderBottom="2px solid #00FFB3" w="80px" mx="auto" mb={4} />
-            <Button colorScheme="blue" as={RouterLink} to="/register">Postúlate</Button>
+            <Button colorScheme="blue" as={RouterLink} to="/register">
+              Postúlate
+            </Button>
           </MotionBox>
         </Flex>
       </Box>
+
 
       {/* ABOUT THE EVENT */}
       <Flex bg="white" py={20} px={8} align="center">
@@ -116,18 +132,19 @@ const Home = () => {
           <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>
             Net‑Work
           </Text>
-          <Heading size="xl" mb={4}>About Net‑Work</Heading>
+          <Heading size="xl" mb={4}>Sobre Nosotros</Heading>
           <Text color="gray.300" mb={4}>
-            I'm a paragraph… Tell a story and let your users know a little more about you.
+            Somos un integrador regional de soluciones tecnológicas para empresas de diversas industrias. Apoyamos a nuestros clientes a enfrentar sus desafíos de transformación tecnológica y digital. Desarrollamos sistemas que integran hardware, software y redes, con servicios de continuidad operativa y de valor agregado, que potencian las operaciones, procesos y experiencia de usuario de nuestros clientes, a través de la innovación y mejora continua.
           </Text>
           <Text color="gray.300">
-            This is a great space to write long text about your company and your services…
+            Representamos y tenemos alianzas con empresas tecnológicas líderes a nivel mundial. En Vigatec somos un equipo multidisciplinario con más de 350 personas. Nuestro Headquarter está en Santiago de Chile y estamos presentes con filiales en Colombia, Ecuador, Perú, Bolivia y Paraguay, con cobertura comercial y técnica en cada país.
           </Text>
         </Box>
         <Box>
           <Image src="/icon-about.png" alt="about icon" boxSize="300px" />
         </Box>
       </Flex>
+
 
       {/* ORGANIZERS */}
       <Box py={16} px={8} textAlign="center">
@@ -154,10 +171,10 @@ const Home = () => {
 
       {/* PAST EVENTS */}
       <Box bg="#2eb3b3ff" py={16} px={8} textAlign="center">
-        <Heading mb={6} color="white">Nuestras Soluciones</Heading>
+        <Heading mb={6} color="white">Nuestras Productos</Heading>
 
         <Text mb={10} color="white" maxW="4xl" mx="auto">
-          Contamos con diversos productos, servicios, insumos, software y convenios de mantención, seleccionados e importados bajo los más altos estándares de calidad.
+          Contamos con diversos productos, servicios, software y convenios de mantenimiento, seleccionados e importados bajo los más altos estándares de calidad.
         </Text>
 
         <SimpleGrid columns={[1, 2, 3]} spacing={6} maxW="7xl" mx="auto">
