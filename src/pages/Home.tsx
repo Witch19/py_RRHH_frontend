@@ -140,9 +140,8 @@ const Home = () => {
       <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
         <Box flex="1" pr={8}>
           <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>
-            Net‑Work
+            <Heading size="xl" mb={4}>Sobre Nosotros</Heading>
           </Text>
-          <Heading size="xl" mb={4}>Sobre Nosotros</Heading>
           <Text color="gray.300" mb={4}>
             Somos un integrador regional de soluciones tecnológicas para empresas de diversas industrias. Apoyamos a nuestros clientes a enfrentar sus desafíos de transformación tecnológica y digital. Desarrollamos sistemas que integran hardware, software y redes, con servicios de continuidad operativa y de valor agregado, que potencian las operaciones, procesos y experiencia de usuario de nuestros clientes, a través de la innovación y mejora continua.
           </Text>
