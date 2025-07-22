@@ -108,6 +108,7 @@ const Home = () => {
             src="/EQUILIBRIO.png" // o usa el path nuevo si es el archivo que subiste
             alt="event icon"
             boxSize={["180px", "240px", "300px"]}
+            borderRadius="full" // 🎯 HACE QUE LA IMAGEN SEA REDONDA
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.6 }}
@@ -123,7 +124,7 @@ const Home = () => {
             letterSpacing="wide"
             mb={2}
           >
-            About the Event
+            Nuevos eventos próximamente!
           </Text>
           <Heading size="xl" mb={4} fontWeight="extrabold" color="#1A253A">
             Work Life Balance – Reality or Myth?
@@ -132,27 +133,6 @@ const Home = () => {
             ¿Es posible encontrar el equilibrio perfecto entre la vida laboral y personal?
             Descubre con nosotros esta reflexión en un evento inspirador que conecta con tu realidad diaria.
           </Text>
-        </Box>
-      </Flex>
-
-
-
-      {/* ABOUT NET-WORK */}
-      <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
-        <Box flex="1" pr={8}>
-          <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>
-            Net‑Work
-          </Text>
-          <Heading size="xl" mb={4}>Sobre Nosotros</Heading>
-          <Text color="gray.300" mb={4}>
-            Somos un integrador regional de soluciones tecnológicas para empresas de diversas industrias. Apoyamos a nuestros clientes a enfrentar sus desafíos de transformación tecnológica y digital. Desarrollamos sistemas que integran hardware, software y redes, con servicios de continuidad operativa y de valor agregado, que potencian las operaciones, procesos y experiencia de usuario de nuestros clientes, a través de la innovación y mejora continua.
-          </Text>
-          <Text color="gray.300">
-            Representamos y tenemos alianzas con empresas tecnológicas líderes a nivel mundial. En Vigatec somos un equipo multidisciplinario con más de 350 personas. Nuestro Headquarter está en Santiago de Chile y estamos presentes con filiales en Colombia, Ecuador, Perú, Bolivia y Paraguay, con cobertura comercial y técnica en cada país.
-          </Text>
-        </Box>
-        <Box>
-          <Image src="/Logo.png" alt="about icon" boxSize="300px" />
         </Box>
       </Flex>
 
@@ -178,6 +158,31 @@ const Home = () => {
           ))}
         </SimpleGrid>
       </Box>
+
+      {/* ABOUT NET-WORK */}
+      <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
+        <Box flex="1" pr={8}>
+          <Text textTransform="uppercase" color="teal.300" letterSpacing="wide" mb={2}>
+            Net‑Work
+          </Text>
+          <Heading size="xl" mb={4}>Sobre Nosotros</Heading>
+          <Text color="gray.300" mb={4}>
+            Somos un integrador regional de soluciones tecnológicas para empresas de diversas industrias. Apoyamos a nuestros clientes a enfrentar sus desafíos de transformación tecnológica y digital. Desarrollamos sistemas que integran hardware, software y redes, con servicios de continuidad operativa y de valor agregado, que potencian las operaciones, procesos y experiencia de usuario de nuestros clientes, a través de la innovación y mejora continua.
+          </Text>
+          <Text color="gray.300">
+            Representamos y tenemos alianzas con empresas tecnológicas líderes a nivel mundial. En Neuratech somos un equipo multidisciplinario con más de 350 personas. Nuestro Headquarter está en Santiago de Chile y estamos presentes con filiales en Colombia, Ecuador, Perú, Bolivia y Paraguay, con cobertura comercial y técnica en cada país.
+          </Text>
+        </Box>
+        <Box>
+          <Image
+            src="/Logo.png"
+            alt="about icon"
+            boxSize="300px"
+            borderRadius="full" // 🎯 Imagen redonda
+          />
+        </Box>
+      </Flex>
+
 
 
       {/* PAST EVENTS */}
