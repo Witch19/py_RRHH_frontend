@@ -83,26 +83,26 @@ const ListaAspirantes = () => {
           borderRadius="lg"
           overflowX="auto"
           boxShadow="md"
-          bg={useColorModeValue("black", "gray.800")}
+          bg={useColorModeValue("white", "gray.800")}
         >
-          <Table variant="simple" colorScheme="teal">
-            <Thead bg={useColorModeValue("gray.100", "gray.700")}>
+          <Table variant="simple">
+            <Thead bg="gray.100">
               <Tr>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>NOMBRE</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>EMAIL</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>ÁREA</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>MENSAJE</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>CV</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>ACCIONES</Th>
+                <Th color="black">NOMBRE</Th>
+                <Th color="black">EMAIL</Th>
+                <Th color="black">ÁREA</Th>
+                <Th color="black">MENSAJE</Th>
+                <Th color="black">CV</Th>
+                <Th color="black">ACCIONES</Th>
               </Tr>
             </Thead>
             <Tbody>
               {aspirantes.map((a) => (
                 <Tr key={a._id}>
-                  <Td>{a.nombre}</Td>
-                  <Td>{a.email}</Td>
-                  <Td>{a.tipoTrabajo?.nombre}</Td>
-                  <Td>{a.mensaje || "—"}</Td>
+                  <Td color="black">{a.nombre}</Td>
+                  <Td color="black">{a.email}</Td>
+                  <Td color="black">{a.tipoTrabajo?.nombre}</Td>
+                  <Td color="black">{a.mensaje || "—"}</Td>
                   <Td>
                     {a.cvUrl ? (
                       <a
@@ -139,7 +139,6 @@ const ListaAspirantes = () => {
         </Text>
       )}
 
-      {/* Confirmación de eliminación */}
       <AlertDialog
         isOpen={isAlertOpen}
         leastDestructiveRef={cancelRef}
