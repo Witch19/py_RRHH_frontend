@@ -9,10 +9,9 @@ import {
   FormControl,
   FormLabel,
   useToast,
-  Icon,
   Spinner,
 } from "@chakra-ui/react";
-import { FaCircle } from "react-icons/fa";
+//import { FaCircle } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useAuth } from "../auth/AuthContext";
 import Trabajadores from "./Trabajadores";
@@ -21,7 +20,7 @@ import Solicitudes from "./Solicitudes";
 import Aspirantes from "./Aspirantes";
 import Usuarios from "./Usuarios";
 import API from "../api/authService";
-import { useThemeColor } from "../context/ThemeContext";
+//import { useThemeColor } from "../context/ThemeContext";
 
 const Dashboard = () => {
   const { user, logout, login } = useAuth();
@@ -38,7 +37,7 @@ const Dashboard = () => {
     { key: "perfil", label: "Editar Perfil" },
   ];
 
-  const { setTheme } = useThemeColor();
+ // const { setTheme } = useThemeColor();
   const toast = useToast();
   const token = localStorage.getItem("token") || "";
 
@@ -130,17 +129,6 @@ const Dashboard = () => {
             ))}
           </VStack>
         </Box>
-
-        <VStack spacing={4}>
-          <Flex justify="center" gap={3}>
-            <Icon as={FaCircle} color="gray.300" cursor="pointer" onClick={() => setTheme("gray")} />
-            <Icon as={FaCircle} color="orange.400" cursor="pointer" onClick={() => setTheme("orange")} />
-            <Icon as={FaCircle} color="teal.400" cursor="pointer" onClick={() => setTheme("teal")} />
-          </Flex>
-          <Button colorScheme="red" size="sm" onClick={logout} width="100%">
-            Cerrar sesión
-          </Button>
-        </VStack>
       </Box>
 
       {/* Contenido principal */}
