@@ -32,7 +32,7 @@ const Home = () => {
         <HStack spacing={4}></HStack>
         <HStack spacing={4}>
           <Button as={RouterLink} to="/" variant="ghost" color="white">Home</Button>
-          <Button as={RouterLink} to="/login" variant="ghost" color="white">Iniciar sesion</Button>
+          <Button as={RouterLink} to="/login" variant="ghost" color="white">Iniciar sesión</Button>
           <Button as={RouterLink} to="/register" variant="ghost" color="white">Registro</Button>
           <ModalAgregarAspirante />
           <IconButton
@@ -47,7 +47,6 @@ const Home = () => {
 
       {/* HERO */}
       <Box h="90vh" position="relative" overflow="hidden">
-        {/* 🎥 VIDEO DE FONDO */}
         <Box as="video"
           src="/Video_publicitario.mp4"
           autoPlay
@@ -61,11 +60,7 @@ const Home = () => {
           objectFit="cover"
           zIndex={0}
         />
-
-        {/* 🟦 CAPA OSCURA */}
         <Box position="absolute" inset={0} bg="rgba(0, 0, 50, 0.6)" zIndex={1} />
-
-        {/* 🌟 CONTENIDO */}
         <Flex
           direction="column"
           position="relative"
@@ -92,7 +87,6 @@ const Home = () => {
         </Flex>
       </Box>
 
-
       {/* ABOUT THE EVENT */}
       <Flex
         bg="white"
@@ -102,20 +96,18 @@ const Home = () => {
         justify="space-between"
         direction={["column", "row"]}
       >
-        {/* Imagen a la izquierda */}
         <Box mb={[8, 0]}>
           <MotionImage
-            src="/EQUILIBRIO.png" // o usa el path nuevo si es el archivo que subiste
+            src="/EQUILIBRIO.png"
             alt="event icon"
             boxSize={["180px", "240px", "300px"]}
-            borderRadius="full" // 🎯 HACE QUE LA IMAGEN SEA REDONDA
+            borderRadius="full"
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.6 }}
           />
         </Box>
 
-        {/* Texto a la derecha */}
         <Box flex="1" pl={[0, 8]}>
           <Text
             textTransform="uppercase"
@@ -143,10 +135,10 @@ const Home = () => {
             <Heading size="xl" mb={4}>Sobre Nosotros</Heading>
           </Text>
           <Text color="gray.300" mb={4}>
-            Somos un integrador regional de soluciones tecnológicas para empresas de diversas industrias. Apoyamos a nuestros clientes a enfrentar sus desafíos de transformación tecnológica y digital. Desarrollamos sistemas que integran hardware, software y redes, con servicios de continuidad operativa y de valor agregado, que potencian las operaciones, procesos y experiencia de usuario de nuestros clientes, a través de la innovación y mejora continua.
+            Somos un integrador regional de soluciones tecnológicas para empresas de diversas industrias. Apoyamos a nuestros clientes a enfrentar sus desafíos de transformación tecnológica y digital...
           </Text>
           <Text color="gray.300">
-            Representamos y tenemos alianzas con empresas tecnológicas líderes a nivel mundial. En Neuratech somos un equipo multidisciplinario con más de 350 personas. Nuestro Headquarter está en Santiago de Chile y estamos presentes con filiales en Colombia, Ecuador, Perú, Bolivia y Paraguay, con cobertura comercial y técnica en cada país.
+            Representamos y tenemos alianzas con empresas tecnológicas líderes a nivel mundial. En Neuratech somos un equipo multidisciplinario con más de 350 personas...
           </Text>
         </Box>
         <Box>
@@ -154,13 +146,12 @@ const Home = () => {
             src="/Logo.png"
             alt="about icon"
             boxSize="300px"
-            borderRadius="full" // 🎯 Imagen redonda
+            borderRadius="full"
           />
         </Box>
       </Flex>
 
-
-      {/* ORGANIZERS */}
+      {/* REPRESENTANTES */}
       <Box py={16} px={8} textAlign="center">
         <Heading mb={8}>Representantes</Heading>
         <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
@@ -182,14 +173,12 @@ const Home = () => {
         </SimpleGrid>
       </Box>
 
-      {/* PAST EVENTS */}
+      {/* PRODUCTOS */}
       <Box bg="#2eb3b3ff" py={16} px={8} textAlign="center">
-        <Heading mb={6} color="white">Nuestras Productos</Heading>
-
+        <Heading mb={6} color="white">Nuestros Productos</Heading>
         <Text mb={10} color="white" maxW="4xl" mx="auto">
-          Contamos con diversos productos, servicios, software y convenios de mantenimiento, seleccionados e importados bajo los más altos estándares de calidad.
+          Contamos con diversos productos, servicios, software y convenios de mantenimiento...
         </Text>
-
         <SimpleGrid columns={[1, 2, 3]} spacing={6} maxW="7xl" mx="auto">
           {[
             {
@@ -252,28 +241,14 @@ const Home = () => {
         </SimpleGrid>
       </Box>
 
-
-
-
-      {/* SPONSORS */}
-      <Box py={16} px={8} textAlign="center">
-        <Heading mb={8}>Empresas asociadas</Heading>
-        <HStack spacing={16} justify="center">
-          {["sponsor1.png", "sponsor2.png", "sponsor3.png", "sponsor4.png", "sponsor5.png"].map((src, i) => (
-            <MotionImage
-              key={i}
-              src={`/${src}`}
-              alt=""
-              boxSize="120px" // Aumentado para que sean más grandes
-              objectFit="contain"
-              whileHover={{ scale: 1.2 }}
-            />
-          ))}
-        </HStack>
+      {/* ÚNETE AL EQUIPO */}
+      <Box textAlign="center" py={16} bg="gray.50">
+        <Heading size="lg" mb={4}>¿Te gustaría formar parte de nuestro equipo?</Heading>
+        <Text mb={6}>Postula ahora y sé parte de una empresa en constante innovación.</Text>
+        <ModalAgregarAspirante />
       </Box>
 
-
-      {/* RSVP CTA */}
+      {/* FOOTER */}
       <Box bg="#0B1C49" color="white" py={16} px={8}>
         <SimpleGrid columns={[1, 2, 3, 6]} spacing={8} maxW="7xl" mx="auto" textAlign="left">
           <Box>
@@ -316,8 +291,6 @@ const Home = () => {
           <Text fontSize="sm">© 2025 Neuratech.</Text>
         </Box>
       </Box>
-
-
     </Box>
   );
 };

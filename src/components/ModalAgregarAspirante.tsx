@@ -11,7 +11,11 @@ interface TipoTrabajo {
   nombre: string;
 }
 
-const ModalAgregarAspirante = () => {
+interface Props {
+  onAdd?: () => void; // Opcional: callback para refrescar tabla
+}
+
+const ModalAgregarAspirante = ({ onAdd }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -65,10 +69,13 @@ const ModalAgregarAspirante = () => {
 
     try {
       setIsSubmitting(true);
-      await API.post("/aspirante", formData); // ✅ no pongas headers
+      const response = await API.post("/aspirante", formData);
+      console.log("✅ Aspirante creado:", response.data);
+
       toast({ title: "Postulación enviada con éxito", status: "success" });
       resetForm();
       onClose();
+      if (onAdd) onAdd(); // refrescar lista si se pasa el callback
     } catch (error: any) {
       toast({
         title: "Error al enviar",

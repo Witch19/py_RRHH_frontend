@@ -19,11 +19,13 @@ import {
   useColorModeValue,
   Icon,
   Link,
+  Flex,
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
 import { AttachmentIcon, DeleteIcon } from "@chakra-ui/icons";
+import ModalAgregarAspirante from "../components/ModalAgregarAspirante"; // asegúrate de que el path sea correcto
 
 interface Aspirante {
   _id: string;
@@ -46,12 +48,23 @@ const ListaAspirantes = () => {
   const cancelRef = useRef(null);
   const [aspiranteAEliminar, setAspiranteAEliminar] = useState<string | null>(null);
 
+  const cargarAspirantes = async () => {
+    try {
+      const res = await API.get("/aspirante");
+      console.log("📄 Aspirantes:", res.data);
+      setAspirantes(res.data);
+    } catch (err) {
+      toast({
+        title: "Error al cargar aspirantes",
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
+
   useEffect(() => {
     if (isAdmin) {
-      API.get("/aspirante").then((res) => {
-        console.log("📄 Aspirantes:", res.data); // Verifica que tenga cvUrl
-        setAspirantes(res.data);
-      });
+      cargarAspirantes();
     }
   }, [isAdmin]);
 
@@ -84,6 +97,13 @@ const ListaAspirantes = () => {
 
   return (
     <Box mt={8}>
+      {isAdmin && (
+        <Flex justify="space-between" align="center" mb={4}>
+          <Text fontSize="xl" fontWeight="bold">Lista de Aspirantes</Text>
+          <ModalAgregarAspirante onAdd={cargarAspirantes} />
+        </Flex>
+      )}
+
       {isAdmin && aspirantes.length > 0 ? (
         <Box
           borderRadius="lg"
