@@ -29,6 +29,7 @@ const Home = () => {
         zIndex={20}
         bg="rgba(0,0,0,0.4)"
       >
+        <HStack spacing={4}></HStack>
         <HStack spacing={4}>
           <Button as={RouterLink} to="/" variant="ghost" color="white">Home</Button>
           <Button as={RouterLink} to="/login" variant="ghost" color="white">Iniciar sesion</Button>
@@ -76,7 +77,7 @@ const Home = () => {
           zIndex={2}
         >
           <MotionBox
-            border="2px solid #00FFB3"
+            border="2px solid #41ac8cff"
             px={6}
             py={4}
             initial={{ opacity: 0, y: -50 }}
@@ -86,7 +87,7 @@ const Home = () => {
             <MotionHeading size="2xl" color="white" mb={4}>
               NEURATECH
             </MotionHeading>
-            <Box borderBottom="2px solid #00FFB3" w="80px" mx="auto" mb={4} />
+            <Box borderBottom="2px solid #4dbd9bff" w="80px" mx="auto" mb={4} />
           </MotionBox>
         </Flex>
       </Box>
@@ -107,7 +108,7 @@ const Home = () => {
         </Box>
         <Box>
           <MotionImage
-            src="/icon-event.png"
+            src="/EQUILIBRIO.png"
             alt="event icon"
             boxSize={["180px", "240px", "300px"]}
             initial={{ scale: 0 }}
