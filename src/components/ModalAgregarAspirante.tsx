@@ -23,22 +23,40 @@ const ModalAgregarAspirante = () => {
   const [tipos, setTipos] = useState<TipoTrabajo[]>([]);
 
   useEffect(() => {
-    // Trae los tipos desde la base de datos
-    API.get("/tipo-trabajo").then((res) => {
-      setTipos(res.data);
-    });
+    const fetchTipos = async () => {
+      try {
+        const res = await API.get("/tipo-trabajo");
+        setTipos(res.data);
+      } catch (err) {
+        toast({
+          title: "Error al cargar tipos de trabajo",
+          status: "error",
+          isClosable: true,
+        });
+      }
+    };
+
+    fetchTipos();
   }, []);
+
+  const resetForm = () => {
+    setNombre("");
+    setEmail("");
+    setTipoTrabajoId("");
+    setMensaje("");
+    setCv(null);
+  };
 
   const handleSubmit = async () => {
     if (!nombre || !email || !tipoTrabajoId || !cv) {
-      toast({ title: "Campos obligatorios faltantes", status: "warning" });
+      toast({ title: "Por favor completa todos los campos obligatorios", status: "warning" });
       return;
     }
 
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("email", email);
-    formData.append("tipoTrabajoId", tipoTrabajoId); // ✅ ID correcto
+    formData.append("tipoTrabajoId", tipoTrabajoId);
     formData.append("mensaje", mensaje);
     formData.append("cv", cv);
 
@@ -48,10 +66,15 @@ const ModalAgregarAspirante = () => {
       });
 
       toast({ title: "Postulación enviada con éxito", status: "success" });
-      setNombre(""); setEmail(""); setTipoTrabajoId(""); setMensaje(""); setCv(null);
+      resetForm();
       onClose();
-    } catch (error) {
-      toast({ title: "Error al enviar", description: "Intenta nuevamente", status: "error" });
+    } catch (error: any) {
+      toast({
+        title: "Error al enviar",
+        description: error.response?.data?.message || "Intenta nuevamente",
+        status: "error",
+        isClosable: true,
+      });
     }
   };
 
@@ -93,12 +116,20 @@ const ModalAgregarAspirante = () => {
             </FormControl>
             <FormControl isRequired mb={3}>
               <FormLabel>Subir CV (PDF)</FormLabel>
-              <Input type="file" accept="application/pdf" onChange={(e) => setCv(e.target.files?.[0] || null)} />
+              <Input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setCv(e.target.files?.[0] || null)}
+              />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSubmit}>Enviar</Button>
-            <Button onClick={onClose} ml={3}>Cancelar</Button>
+            <Button colorScheme="blue" onClick={handleSubmit}>
+              Enviar
+            </Button>
+            <Button onClick={onClose} ml={3}>
+              Cancelar
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
