@@ -136,29 +136,6 @@ const Home = () => {
         </Box>
       </Flex>
 
-
-      {/* ORGANIZERS */}
-      <Box py={16} px={8} textAlign="center">
-        <Heading mb={8}>Representantes</Heading>
-        <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
-          {[
-            { name: "Maria Sassoon", src: "/org1.png", role: "RRHH" },
-            { name: "Tony Selby", src: "/org2.png", role: "Certificaciones" },
-            { name: "Rachel Harbourne", src: "/org3.png", role: "Investigación y Desarrollo" },
-          ].map((o, i) => (
-            <MotionBox
-              key={i}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <Image src={o.src} alt={o.name} borderRadius="md" />
-              <Text mt={4} fontWeight="bold">{o.name}</Text>
-              <Text color="gray.500">{o.role}</Text>
-            </MotionBox>
-          ))}
-        </SimpleGrid>
-      </Box>
-
       {/* ABOUT NET-WORK */}
       <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
         <Box flex="1" pr={8}>
@@ -184,6 +161,27 @@ const Home = () => {
       </Flex>
 
 
+      {/* ORGANIZERS */}
+      <Box py={16} px={8} textAlign="center">
+        <Heading mb={8}>Representantes</Heading>
+        <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
+          {[
+            { name: "Maria Sassoon", src: "/org1.png", role: "RRHH" },
+            { name: "Tony Selby", src: "/org2.png", role: "Certificaciones" },
+            { name: "Rachel Harbourne", src: "/org3.png", role: "Investigación y Desarrollo" },
+          ].map((o, i) => (
+            <MotionBox
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <Image src={o.src} alt={o.name} borderRadius="md" />
+              <Text mt={4} fontWeight="bold">{o.name}</Text>
+              <Text color="gray.500">{o.role}</Text>
+            </MotionBox>
+          ))}
+        </SimpleGrid>
+      </Box>
 
       {/* PAST EVENTS */}
       <Box bg="#2eb3b3ff" py={16} px={8} textAlign="center">
