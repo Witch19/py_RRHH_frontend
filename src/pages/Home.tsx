@@ -89,12 +89,9 @@ const Home = () => {
             transition={{ duration: 1 }}
           >
             <MotionHeading size="2xl" color="white" mb={4}>
-              Work Life Balance – Reality or Myth?
+              NEURATECH
             </MotionHeading>
             <Box borderBottom="2px solid #00FFB3" w="80px" mx="auto" mb={4} />
-            <Button colorScheme="blue" as={RouterLink} to="/register">
-              Postúlate
-            </Button>
           </MotionBox>
         </Flex>
       </Box>
@@ -106,8 +103,10 @@ const Home = () => {
           <Text textTransform="uppercase" color="blue.500" letterSpacing="wide" mb={2}>
             About the event
           </Text>
-          <Heading size="xl" mb={4}>NEURATECH</Heading>
-          
+          <Heading size="xl" mb={4}>Work Life Balance – Reality or Myth?</Heading>
+          <Text color="gray.600">
+            I'm a paragraph. Click here to add your own text and edit me…
+          </Text>
         </Box>
         <Box>
           <MotionImage
