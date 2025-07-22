@@ -94,21 +94,18 @@ const Home = () => {
 
 
       {/* ABOUT THE EVENT */}
-      <Flex bg="white" py={20} px={8} align="center" justify="space-between" direction={["column", "row"]}>
-        <Box flex="1" pr={[0, 8]} mb={[8, 0]}>
-          <Text textTransform="uppercase" color="blue.500" fontWeight="bold" letterSpacing="wide" mb={2}>
-            About the Event
-          </Text>
-          <Heading size="xl" mb={4} fontWeight="extrabold" color="#1A253A">
-            Work Life Balance – Reality or Myth?
-          </Heading>
-          <Text color="gray.600" fontSize="md">
-            ¿Es posible encontrar el equilibrio perfecto entre la vida laboral y personal? Descubre con nosotros esta reflexión en un evento inspirador que conecta con tu realidad diaria.
-          </Text>
-        </Box>
-        <Box>
+      <Flex
+        bg="white"
+        py={20}
+        px={8}
+        align="center"
+        justify="space-between"
+        direction={["column", "row"]}
+      >
+        {/* Imagen a la izquierda */}
+        <Box mb={[8, 0]}>
           <MotionImage
-            src="/EQUILIBRIO.png"
+            src="/EQUILIBRIO.png" // o usa el path nuevo si es el archivo que subiste
             alt="event icon"
             boxSize={["180px", "240px", "300px"]}
             initial={{ scale: 0 }}
@@ -116,7 +113,28 @@ const Home = () => {
             transition={{ duration: 0.6 }}
           />
         </Box>
+
+        {/* Texto a la derecha */}
+        <Box flex="1" pl={[0, 8]}>
+          <Text
+            textTransform="uppercase"
+            color="blue.500"
+            fontWeight="bold"
+            letterSpacing="wide"
+            mb={2}
+          >
+            About the Event
+          </Text>
+          <Heading size="xl" mb={4} fontWeight="extrabold" color="#1A253A">
+            Work Life Balance – Reality or Myth?
+          </Heading>
+          <Text color="gray.600" fontSize="md">
+            ¿Es posible encontrar el equilibrio perfecto entre la vida laboral y personal?
+            Descubre con nosotros esta reflexión en un evento inspirador que conecta con tu realidad diaria.
+          </Text>
+        </Box>
       </Flex>
+
 
 
       {/* ABOUT NET-WORK */}
