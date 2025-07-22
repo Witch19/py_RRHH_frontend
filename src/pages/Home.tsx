@@ -106,10 +106,8 @@ const Home = () => {
           <Text textTransform="uppercase" color="blue.500" letterSpacing="wide" mb={2}>
             About the event
           </Text>
-          <Heading size="xl" mb={4}>Work Life Balance – Reality or Myth?</Heading>
-          <Text color="gray.600">
-            I'm a paragraph. Click here to add your own text and edit me…
-          </Text>
+          <Heading size="xl" mb={4}>NEURATECH</Heading>
+          
         </Box>
         <Box>
           <MotionImage
@@ -141,7 +139,7 @@ const Home = () => {
           </Text>
         </Box>
         <Box>
-          <Image src="/icon-about.png" alt="about icon" boxSize="300px" />
+          <Image src="/Logo.png" alt="about icon" boxSize="300px" />
         </Box>
       </Flex>
 
