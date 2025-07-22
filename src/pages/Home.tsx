@@ -243,28 +243,49 @@ const Home = () => {
       </Box>
 
       {/* RSVP CTA */}
-      <Box
-        bgImage="url('/rsvp-bg.jpg')"
-        bgSize="cover"
-        bgPos="center"
-        position="relative"
-        py={32}
-      >
-        <Box position="absolute" inset={0} bg="rgba(0, 0, 50, 0.6)" />
-        <Box position="relative" textAlign="center" zIndex={1} px={6}>
-          <MotionHeading
-            size="lg"
-            mb={4}
-            color="white"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
-            We can’t wait to see you at our next event.
-          </MotionHeading>
-          <Button colorScheme="blue" as={RouterLink} to="/register">RSVP</Button>
+      <Box bg="#0B1C49" color="white" py={16} px={8}>
+        <SimpleGrid columns={[1, 2, 3, 6]} spacing={8} maxW="7xl" mx="auto" textAlign="left">
+          <Box>
+            <Image src="/logo.png" alt="Josy S." mb={4} w="120px" />
+          </Box>
+
+          <Box>
+            <Text fontWeight="bold" color="teal.300">Chile</Text>
+            <Text><strong>Dirección:</strong> José Ananías 441, Macul, Santiago.</Text>
+            <Text mt={2}><strong>Teléfono:</strong> +56 2 12345678</Text>
+          </Box>
+
+          <Box>
+            <Text fontWeight="bold" color="teal.300">Ecuador</Text>
+            <Text><strong>Quito:</strong> Av. Amazonas 123, Piso 2, Quito.</Text>
+            <Text><strong>Guayaquil:</strong> World Trade Center, Torre A, Of. 206.</Text>
+            <Text mt={2}><strong>Tel:</strong> +593 99 123 4567</Text>
+          </Box>
+
+          <Box>
+            <Text fontWeight="bold" color="teal.300">Colombia</Text>
+            <Text><strong>Dirección:</strong> Calle 99 #12-39 Piso 4, Bogotá.</Text>
+            <Text mt={2}><strong>Tel:</strong> +57 300 1234567</Text>
+          </Box>
+
+          <Box>
+            <Text fontWeight="bold" color="teal.300">Perú</Text>
+            <Text><strong>Dirección:</strong> Monte Rosa 240, Surco, Lima.</Text>
+            <Text mt={2}><strong>Tel:</strong> +51 987654321</Text>
+          </Box>
+
+          <Box>
+            <Text fontWeight="bold" color="teal.300">Paraguay</Text>
+            <Text><strong>Dirección:</strong> Edificio Itasa, Piso 5, Asunción.</Text>
+            <Text mt={2}><strong>Tel:</strong> +595 21 555555</Text>
+          </Box>
+        </SimpleGrid>
+
+        <Box mt={12} borderTop="1px solid rgba(255,255,255,0.1)" pt={6} textAlign="center">
+          <Text fontSize="sm">© 2025 Josy S.</Text>
         </Box>
       </Box>
+
     </Box>
   );
 };
