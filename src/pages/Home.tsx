@@ -135,8 +135,8 @@ const Home = () => {
         <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
           {[
             { name: "Maria Sassoon", src: "/org1.png", role: "RRHH" },
-            { name: "Tony Selby", src: "/org2.png", role: "Encargado de Cursos Externos" },
-            { name: "Rachel Harbourne", src: "/org3.png", role: "Investigación" },
+            { name: "Tony Selby", src: "/org2.png", role: "Certificaciones" },
+            { name: "Rachel Harbourne", src: "/org3.png", role: "Investigación y Desarrollo" },
           ].map((o, i) => (
             <MotionBox
               key={i}
@@ -154,9 +154,13 @@ const Home = () => {
 
       {/* PAST EVENTS */}
       <Box bg="teal.400" py={16} px={8} textAlign="center">
-        <Heading mb={8} color="white">Past Events</Heading>
+        <Heading mb={8} color="white">Nuestas Soluciones</Heading>
+        <label htmlFor="">Contamos con diversos productos, servicios, insumos, software y convenios de mantención, seleccionados e importados bajo los más áltos estándares de calidad.</label>
         <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
-          {["past1.jpg", "past2.jpg", "past3.jpg", "past4.jpg", "past5.jpg", "past6.jpg"].map((src, i) => (
+          {[
+            {name:"Portal de Empleados", src:"/RRHH1.png", role:"Gestión de datos, perfiles, contratos y documentos del personal."},
+            {name:"Sistema de Reclutamiento Online", src:"/RRHH2.png", role:"Publicación de ofertas, recepción de CVs y selección de candidatos."}
+           ].map((src, i) => (
             <MotionBox
               key={i}
               bg="white"
