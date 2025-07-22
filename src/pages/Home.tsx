@@ -154,13 +154,13 @@ const Home = () => {
 
       {/* PAST EVENTS */}
       <Box bg="teal.400" py={16} px={8} textAlign="center">
-        <Heading mb={8} color="white">Nuestras Soluciones</Heading>
+        <Heading mb={6} color="white">Nuestras Soluciones</Heading>
 
-        <Text mb={10} color="white">
+        <Text mb={10} color="white" maxW="3xl" mx="auto">
           Contamos con diversos productos, servicios, insumos, software y convenios de mantención, seleccionados e importados bajo los más altos estándares de calidad.
         </Text>
 
-        <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
+        <SimpleGrid columns={1} spacing={6} maxW="md" mx="auto">
           {[
             {
               name: "Portal de Empleados",
@@ -176,19 +176,21 @@ const Home = () => {
             <MotionBox
               key={i}
               bg="white"
-              borderRadius="md"
+              borderRadius="lg"
               overflow="hidden"
-              whileHover={{ y: -5 }}
+              whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
               p={4}
+              boxShadow="md"
             >
-              <Image src={o.src} alt={o.name} borderRadius="md" />
-              <Text mt={4} fontWeight="bold">{o.name}</Text>
-              <Text color="gray.500">{o.role}</Text>
+              <Image src={o.src} alt={o.name} borderRadius="md" w="100%" h="auto" />
+              <Text mt={4} fontWeight="bold" fontSize="lg">{o.name}</Text>
+              <Text color="gray.500" fontSize="sm">{o.role}</Text>
             </MotionBox>
           ))}
         </SimpleGrid>
       </Box>
+
 
 
       {/* SPONSORS */}
