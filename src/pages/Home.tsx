@@ -172,6 +172,26 @@ const Home = () => {
               src: "/RRHH2.png",
               role: "Publicación de ofertas, recepción de CVs y selección de candidatos.",
             },
+            {
+              name: "Plataforma de Cursos y Certificados",
+              src: "/CERTI1.png",
+              role: "Usuarios pueden tomar cursos, rendir evaluaciones y recibir certificados.",
+            },
+            {
+              name: "Gestor de Certificados Digitales",
+              src: "/CERTI2.png",
+              role: "Permite emitir, descargar y verificar certificados en PDF o con QR.",
+            },
+            {
+              name: "Gestor de Proyectos Web",
+              src: "/INVE1.png",
+              role: "Seguimiento de ideas, desarrollo de soluciones y gestión de tareas técnicas.",
+            },
+            {
+              name: "Panel de Resultados y Métricas",
+              src: "/INVE2.png",
+              role: "Visualización de indicadores de innovación, eficiencia y progreso.",
+            },
           ].map((o, i) => (
             <MotionBox
               key={i}
