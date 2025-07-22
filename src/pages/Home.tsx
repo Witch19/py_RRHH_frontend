@@ -175,7 +175,6 @@ const Home = () => {
           ].map((o, i) => (
             <MotionBox
               key={i}
-              bg="white"
               borderRadius="lg"
               overflow="hidden"
               whileHover={{ y: -4 }}
