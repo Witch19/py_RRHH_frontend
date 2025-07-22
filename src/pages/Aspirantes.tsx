@@ -106,12 +106,12 @@ const ModalAgregarAspirante = () => {
                   <Td>
                     {a.cvUrl ? (
                       <a
-                        href={`${import.meta.env.VITE_BACKEND_URL}/uploads/cv/${a.cvUrl}`}
+                        href={a.cvUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: "#3182ce", fontWeight: "bold" }}
                       >
-                        Ver CV
+                        Ver CV 📄
                       </a>
                     ) : (
                       <Text color="gray.400">Sin archivo</Text>
@@ -124,9 +124,7 @@ const ModalAgregarAspirante = () => {
                       size="sm"
                       borderRadius="lg"
                       leftIcon={<DeleteIcon />}
-                    >
-                      {/* Puedes dejar vacío para solo ícono */}
-                    </Button>
+                    />
                   </Td>
                 </Tr>
               ))}
