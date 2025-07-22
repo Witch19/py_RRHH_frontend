@@ -25,6 +25,7 @@ interface Props {
 
 const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
   const toast = useToast();
+
   const [form, setForm] = useState({
     tipo: "",
     descripcion: "",
@@ -32,12 +33,29 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
     fechaFin: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
+    const { tipo, fechaInicio, fechaFin } = form;
+    if (!tipo || !fechaInicio || !fechaFin) {
+      toast({
+        title: "Campos requeridos",
+        description: "Tipo, Fecha Inicio y Fecha Fin son obligatorios.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
+      setLoading(true);
       await API.post("/solicitudes", form);
       toast({
         title: "Solicitud enviada",
@@ -48,19 +66,22 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
       onAdd();
       onClose();
       setForm({ tipo: "", descripcion: "", fechaInicio: "", fechaFin: "" });
-    } catch (err) {
+    } catch (err: any) {
+      const msg = err.response?.data?.message || "Verifica los datos";
       toast({
         title: "Error al enviar solicitud",
-        description: "Verifica los datos",
+        description: msg,
         status: "error",
         duration: 4000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Nueva Solicitud</ModalHeader>
@@ -75,24 +96,47 @@ const AgregarSolicitud = ({ isOpen, onClose, onAdd }: Props) => {
               <option value="Enfermedad">Enfermedad</option>
             </Select>
           </FormControl>
+
           <FormControl mb={3}>
             <FormLabel>Descripción</FormLabel>
-            <Textarea name="descripcion" value={form.descripcion} onChange={handleChange} />
+            <Textarea
+              name="descripcion"
+              value={form.descripcion}
+              onChange={handleChange}
+              placeholder="(opcional)"
+            />
           </FormControl>
+
           <FormControl isRequired mb={3}>
             <FormLabel>Fecha Inicio</FormLabel>
-            <Input type="date" name="fechaInicio" value={form.fechaInicio} onChange={handleChange} />
+            <Input
+              type="date"
+              name="fechaInicio"
+              value={form.fechaInicio}
+              onChange={handleChange}
+            />
           </FormControl>
+
           <FormControl isRequired>
             <FormLabel>Fecha Fin</FormLabel>
-            <Input type="date" name="fechaFin" value={form.fechaFin} onChange={handleChange} />
+            <Input
+              type="date"
+              name="fechaFin"
+              value={form.fechaFin}
+              onChange={handleChange}
+            />
           </FormControl>
         </ModalBody>
+
         <ModalFooter>
           <Button variant="ghost" mr={3} onClick={onClose}>
             Cancelar
           </Button>
-          <Button colorScheme="blue" onClick={handleSubmit}>
+          <Button
+            colorScheme="blue"
+            onClick={handleSubmit}
+            isLoading={loading}
+          >
             Enviar
           </Button>
         </ModalFooter>
