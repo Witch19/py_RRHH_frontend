@@ -37,7 +37,7 @@ const Dashboard = () => {
     { key: "perfil", label: "Editar Perfil" },
   ];
 
- // const { setTheme } = useThemeColor();
+  // const { setTheme } = useThemeColor();
   const toast = useToast();
   const token = localStorage.getItem("token") || "";
 
@@ -151,7 +151,7 @@ const Dashboard = () => {
           </Button>
         </Flex>
 
-        <Box p={6} flex="1" overflowY="auto" color="white" bg="#5b5772">
+        <Box p={6} flex="1" overflow="hidden" color="white" bg="#5b5772">
           {activeMenu === "trabajadores" && isAdmin && <Trabajadores />}
           {activeMenu === "cursos" && <Cursos />}
           {activeMenu === "solicitudes" && <Solicitudes />}
