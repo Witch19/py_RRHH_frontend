@@ -33,7 +33,7 @@ interface Aspirante {
   };
 }
 
-const ModalAgregarAspirante = () => {
+const ListaAspirantes = () => {
   const toast = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
@@ -99,10 +99,10 @@ const ModalAgregarAspirante = () => {
             <Tbody>
               {aspirantes.map((a) => (
                 <Tr key={a._id}>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.nombre}</Td>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.email}</Td>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.tipoTrabajo?.nombre}</Td>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.mensaje}</Td>
+                  <Td>{a.nombre}</Td>
+                  <Td>{a.email}</Td>
+                  <Td>{a.tipoTrabajo?.nombre}</Td>
+                  <Td>{a.mensaje || "—"}</Td>
                   <Td>
                     {a.cvUrl ? (
                       <a
@@ -124,7 +124,9 @@ const ModalAgregarAspirante = () => {
                       size="sm"
                       borderRadius="lg"
                       leftIcon={<DeleteIcon />}
-                    />
+                    >
+                      Eliminar
+                    </Button>
                   </Td>
                 </Tr>
               ))}
@@ -166,4 +168,4 @@ const ModalAgregarAspirante = () => {
   );
 };
 
-export default ModalAgregarAspirante;
+export default ListaAspirantes;

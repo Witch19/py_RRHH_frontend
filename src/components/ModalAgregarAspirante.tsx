@@ -61,9 +61,7 @@ const ModalAgregarAspirante = () => {
     formData.append("cv", cv);
 
     try {
-      await API.post("/aspirante", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await API.post("/aspirante", formData); // ❌ NO pongas headers
 
       toast({ title: "Postulación enviada con éxito", status: "success" });
       resetForm();
