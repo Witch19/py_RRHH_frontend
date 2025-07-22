@@ -153,7 +153,7 @@ const Home = () => {
 
 
       {/* PAST EVENTS */}
-      <Box bg="#40E0D0" py={16} px={8} textAlign="center">
+      <Box bg="#2eb3b3ff" py={16} px={8} textAlign="center">
         <Heading mb={6} color="white">Nuestras Soluciones</Heading>
 
         <Text mb={10} color="white" maxW="4xl" mx="auto">
