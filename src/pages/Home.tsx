@@ -131,12 +131,12 @@ const Home = () => {
 
       {/* ORGANIZERS */}
       <Box py={16} px={8} textAlign="center">
-        <Heading mb={8}>Organizers</Heading>
+        <Heading mb={8}>Representantes</Heading>
         <SimpleGrid columns={[1, 3]} spacing={8} maxW="7xl" mx="auto">
           {[
-            { name: "Maria Sassoon", src: "/org1.png" },
-            { name: "Tony Selby", src: "/org2.png" },
-            { name: "Rachel Harbourne", src: "/org3.png" },
+            { name: "Maria Sassoon", src: "/org1.png", role: "RRHH" },
+            { name: "Tony Selby", src: "/org2.png", role: "Encargado de Cursos Externos" },
+            { name: "Rachel Harbourne", src: "/org3.png", role: "Investigación" },
           ].map((o, i) => (
             <MotionBox
               key={i}
@@ -145,11 +145,12 @@ const Home = () => {
             >
               <Image src={o.src} alt={o.name} borderRadius="md" />
               <Text mt={4} fontWeight="bold">{o.name}</Text>
-              <Text color="gray.500">Co‑organiser</Text>
+              <Text color="gray.500">{o.role}</Text>
             </MotionBox>
           ))}
         </SimpleGrid>
       </Box>
+
 
       {/* PAST EVENTS */}
       <Box bg="teal.400" py={16} px={8} textAlign="center">
@@ -179,7 +180,7 @@ const Home = () => {
             <MotionImage
               key={i}
               src={`/${src}`}
-              alt="" 
+              alt=""
               boxSize="80px"
               objectFit="contain"
               whileHover={{ scale: 1.2 }}
