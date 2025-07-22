@@ -35,8 +35,7 @@ const Home = () => {
         </HStack>
         <HStack spacing={4}>
           <Button as={RouterLink} to="/" variant="ghost" color="white">Home</Button>
-          <Button as={RouterLink} to="/about" variant="ghost" color="white">About</Button>
-          <Button as={RouterLink} to="/login" variant="ghost" color="white">Login</Button>
+          <Button as={RouterLink} to="/login" variant="ghost" color="white">Iniciar sesion</Button>
           <Button as={RouterLink} to="/register" variant="ghost" color="white">Registro</Button>
           <ModalAgregarAspirante />
           <IconButton
