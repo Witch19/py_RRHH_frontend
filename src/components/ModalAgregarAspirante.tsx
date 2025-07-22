@@ -3,7 +3,7 @@ import {
   ModalBody, ModalCloseButton, Button, FormControl, FormLabel,
   Input, Textarea, Select, useToast, useDisclosure
 } from "@chakra-ui/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/authService";
 
 interface TipoTrabajo {
@@ -11,11 +11,7 @@ interface TipoTrabajo {
   nombre: string;
 }
 
-interface Props {
-  onAdd?: () => void; // Opcional: callback para refrescar tabla
-}
-
-const ModalAgregarAspirante = ({ onAdd }: Props) => {
+const ModalAgregarAspirante = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -25,66 +21,37 @@ const ModalAgregarAspirante = ({ onAdd }: Props) => {
   const [mensaje, setMensaje] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipos, setTipos] = useState<TipoTrabajo[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const fetchTipos = async () => {
-      try {
-        const res = await API.get("/tipo-trabajo");
-        setTipos(res.data);
-      } catch (err) {
-        toast({
-          title: "Error al cargar tipos de trabajo",
-          status: "error",
-          isClosable: true,
-        });
-      }
-    };
-
-    fetchTipos();
+    // Trae los tipos desde la base de datos
+    API.get("/tipo-trabajo").then((res) => {
+      setTipos(res.data);
+    });
   }, []);
-
-  const resetForm = () => {
-    setNombre("");
-    setEmail("");
-    setTipoTrabajoId("");
-    setMensaje("");
-    setCv(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
 
   const handleSubmit = async () => {
     if (!nombre || !email || !tipoTrabajoId || !cv) {
-      toast({ title: "Por favor completa todos los campos obligatorios", status: "warning" });
+      toast({ title: "Campos obligatorios faltantes", status: "warning" });
       return;
     }
 
     const formData = new FormData();
     formData.append("nombre", nombre);
     formData.append("email", email);
-    formData.append("tipoTrabajoId", tipoTrabajoId);
+    formData.append("tipoTrabajoId", tipoTrabajoId); // ✅ ID correcto
     formData.append("mensaje", mensaje);
     formData.append("cv", cv);
 
     try {
-      setIsSubmitting(true);
-      const response = await API.post("/aspirante", formData);
-      console.log("✅ Aspirante creado:", response.data);
+      await API.post("/aspirante", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       toast({ title: "Postulación enviada con éxito", status: "success" });
-      resetForm();
+      setNombre(""); setEmail(""); setTipoTrabajoId(""); setMensaje(""); setCv(null);
       onClose();
-      if (onAdd) onAdd(); // refrescar lista si se pasa el callback
-    } catch (error: any) {
-      toast({
-        title: "Error al enviar",
-        description: error.response?.data?.message || "Intenta nuevamente",
-        status: "error",
-        isClosable: true,
-      });
-    } finally {
-      setIsSubmitting(false);
+    } catch (error) {
+      toast({ title: "Error al enviar", description: "Intenta nuevamente", status: "error" });
     }
   };
 
@@ -126,21 +93,12 @@ const ModalAgregarAspirante = ({ onAdd }: Props) => {
             </FormControl>
             <FormControl isRequired mb={3}>
               <FormLabel>Subir CV (PDF)</FormLabel>
-              <Input
-                type="file"
-                accept="application/pdf"
-                onChange={(e) => setCv(e.target.files?.[0] || null)}
-                ref={fileInputRef}
-              />
+              <Input type="file" accept="application/pdf" onChange={(e) => setCv(e.target.files?.[0] || null)} />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSubmit} isLoading={isSubmitting}>
-              Enviar
-            </Button>
-            <Button onClick={onClose} ml={3}>
-              Cancelar
-            </Button>
+            <Button colorScheme="blue" onClick={handleSubmit}>Enviar</Button>
+            <Button onClick={onClose} ml={3}>Cancelar</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -1,4 +1,3 @@
-// src/pages/ListaAspirantes.tsx
 import {
   Box,
   Table,
@@ -17,15 +16,11 @@ import {
   AlertDialogFooter,
   Button,
   useColorModeValue,
-  Icon,
-  Link,
-  Flex,
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
-import { AttachmentIcon, DeleteIcon } from "@chakra-ui/icons";
-import ModalAgregarAspirante from "../components/ModalAgregarAspirante"; // asegúrate de que el path sea correcto
+import { DeleteIcon } from "@chakra-ui/icons";
 
 interface Aspirante {
   _id: string;
@@ -38,7 +33,7 @@ interface Aspirante {
   };
 }
 
-const ListaAspirantes = () => {
+const ModalAgregarAspirante = () => {
   const toast = useToast();
   const { user } = useAuth();
   const isAdmin = user?.role === "ADMIN";
@@ -48,23 +43,9 @@ const ListaAspirantes = () => {
   const cancelRef = useRef(null);
   const [aspiranteAEliminar, setAspiranteAEliminar] = useState<string | null>(null);
 
-  const cargarAspirantes = async () => {
-    try {
-      const res = await API.get("/aspirante");
-      console.log("📄 Aspirantes:", res.data);
-      setAspirantes(res.data);
-    } catch (err) {
-      toast({
-        title: "Error al cargar aspirantes",
-        status: "error",
-        isClosable: true,
-      });
-    }
-  };
-
   useEffect(() => {
     if (isAdmin) {
-      cargarAspirantes();
+      API.get("/aspirante").then((res) => setAspirantes(res.data));
     }
   }, [isAdmin]);
 
@@ -97,13 +78,6 @@ const ListaAspirantes = () => {
 
   return (
     <Box mt={8}>
-      {isAdmin && (
-        <Flex justify="space-between" align="center" mb={4}>
-          <Text fontSize="xl" fontWeight="bold">Lista de Aspirantes</Text>
-          <ModalAgregarAspirante onAdd={cargarAspirantes} />
-        </Flex>
-      )}
-
       {isAdmin && aspirantes.length > 0 ? (
         <Box
           borderRadius="lg"
@@ -111,37 +85,34 @@ const ListaAspirantes = () => {
           boxShadow="md"
           bg={useColorModeValue("white", "gray.800")}
         >
-          <Table variant="simple">
-            <Thead bg="gray.100">
+          <Table variant="simple" colorScheme="teal">
+            <Thead bg={useColorModeValue("gray.100", "gray.700")}>
               <Tr>
-                <Th color="black">NOMBRE</Th>
-                <Th color="black">EMAIL</Th>
-                <Th color="black">ÁREA</Th>
-                <Th color="black">MENSAJE</Th>
-                <Th color="black">CV</Th>
-                <Th color="black">ACCIONES</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>NOMBRE</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>EMAIL</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>ÁREA</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>MENSAJE</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>CV</Th>
+                <Th color={useColorModeValue("gray.700", "gray.300")}>ACCIONES</Th>
               </Tr>
             </Thead>
             <Tbody>
               {aspirantes.map((a) => (
                 <Tr key={a._id}>
-                  <Td color="black">{a.nombre}</Td>
-                  <Td color="black">{a.email}</Td>
-                  <Td color="black">{a.tipoTrabajo?.nombre}</Td>
-                  <Td color="black">{a.mensaje || "—"}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.nombre}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.email}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.tipoTrabajo?.nombre}</Td>
+                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.mensaje}</Td>
                   <Td>
                     {a.cvUrl ? (
-                      <Link
-                        href={a.cvUrl}
-                        isExternal
-                        color="blue.500"
-                        fontWeight="semibold"
-                        display="flex"
-                        alignItems="center"
-                        _hover={{ textDecoration: "underline" }}
+                      <a
+                        href={`${import.meta.env.VITE_BACKEND_URL}/uploads/cv/${a.cvUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#3182ce", fontWeight: "bold" }}
                       >
-                        <Icon as={AttachmentIcon} mr={1} /> Ver CV
-                      </Link>
+                        Ver CV
+                      </a>
                     ) : (
                       <Text color="gray.400">Sin archivo</Text>
                     )}
@@ -154,7 +125,7 @@ const ListaAspirantes = () => {
                       borderRadius="lg"
                       leftIcon={<DeleteIcon />}
                     >
-                      Eliminar
+                      {/* Puedes dejar vacío para solo ícono */}
                     </Button>
                   </Td>
                 </Tr>
@@ -168,6 +139,7 @@ const ListaAspirantes = () => {
         </Text>
       )}
 
+      {/* Confirmación de eliminación */}
       <AlertDialog
         isOpen={isAlertOpen}
         leastDestructiveRef={cancelRef}
@@ -196,4 +168,4 @@ const ListaAspirantes = () => {
   );
 };
 
-export default ListaAspirantes;
+export default ModalAgregarAspirante;
