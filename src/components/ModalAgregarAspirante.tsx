@@ -1,171 +1,137 @@
-// src/components/ModalAgregarAspirante.tsx
 import {
-  Box,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Text,
-  useToast,
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
-  Button,
-  useColorModeValue,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter,
+  ModalBody, ModalCloseButton, Button, FormControl, FormLabel,
+  Input, Textarea, Select, useToast, useDisclosure
 } from "@chakra-ui/react";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/authService";
-import { useAuth } from "../auth/AuthContext";
-import { DeleteIcon } from "@chakra-ui/icons";
 
-interface Aspirante {
+interface TipoTrabajo {
   id: number;
   nombre: string;
-  email: string;
-  mensaje?: string;
-  cvUrl?: string;
-  tipoTrabajo?: {
-    nombre: string;
-  };
 }
 
 const ModalAgregarAspirante = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const { user } = useAuth();
-  const isAdmin = user?.role === "ADMIN";
 
-  const [aspirantes, setAspirantes] = useState<Aspirante[]>([]);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const cancelRef = useRef(null);
-  const [aspiranteAEliminar, setAspiranteAEliminar] = useState<number | null>(null);
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [tipoTrabajoId, setTipoTrabajoId] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [cv, setCv] = useState<File | null>(null);
+  const [tipos, setTipos] = useState<TipoTrabajo[]>([]);
 
   useEffect(() => {
-    if (isAdmin) {
-      API.get("/aspirante").then((res) => setAspirantes(res.data));
-    }
-  }, [isAdmin]);
+    const fetchTipos = async () => {
+      try {
+        const res = await API.get("/tipo-trabajo");
+        setTipos(res.data);
+      } catch (err) {
+        toast({
+          title: "Error al cargar tipos de trabajo",
+          status: "error",
+          isClosable: true,
+        });
+      }
+    };
 
-  const confirmarEliminar = (id: number) => {
-    setAspiranteAEliminar(id);
-    setIsAlertOpen(true);
+    fetchTipos();
+  }, []);
+
+  const resetForm = () => {
+    setNombre("");
+    setEmail("");
+    setTipoTrabajoId("");
+    setMensaje("");
+    setCv(null);
   };
 
-  const eliminarAspirante = async () => {
-    if (!aspiranteAEliminar) return;
+  const handleSubmit = async () => {
+    if (!nombre || !email || !tipoTrabajoId || !cv) {
+      toast({ title: "Por favor completa todos los campos obligatorios", status: "warning" });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("email", email);
+    formData.append("tipoTrabajoId", tipoTrabajoId);
+    formData.append("mensaje", mensaje);
+    formData.append("cv", cv);
+
     try {
-      await API.delete(`/aspirante/${aspiranteAEliminar}`);
-      setAspirantes((prev) => prev.filter((a) => a.id !== aspiranteAEliminar));
+      await API.post("/aspirante", formData); // ❌ NO pongas headers
+
+      toast({ title: "Postulación enviada con éxito", status: "success" });
+      resetForm();
+      onClose();
+    } catch (error: any) {
       toast({
-        title: "Aspirante eliminado",
-        status: "success",
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: "Error al eliminar aspirante",
+        title: "Error al enviar",
+        description: error.response?.data?.message || "Intenta nuevamente",
         status: "error",
         isClosable: true,
       });
-    } finally {
-      setIsAlertOpen(false);
-      setAspiranteAEliminar(null);
     }
   };
 
   return (
-    <Box mt={8}>
-      {isAdmin && aspirantes.length > 0 ? (
-        <Box
-          borderRadius="lg"
-          overflowX="auto"
-          boxShadow="md"
-          bg={useColorModeValue("white", "gray.800")}
-        >
-          <Table variant="simple" colorScheme="teal">
-            <Thead bg={useColorModeValue("gray.100", "gray.700")}>
-              <Tr>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>NOMBRE</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>EMAIL</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>ÁREA</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>MENSAJE</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>CV</Th>
-                <Th color={useColorModeValue("gray.700", "gray.300")}>ACCIONES</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {aspirantes.map((a) => (
-                <Tr key={a.id}>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.nombre}</Td>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.email}</Td>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.tipoTrabajo?.nombre}</Td>
-                  <Td color={useColorModeValue("gray.800", "gray.200")}>{a.mensaje || "—"}</Td>
-                  <Td>
-                    {a.cvUrl ? (
-                      <a
-                        href={a.cvUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: "#3182ce", fontWeight: "bold" }}
-                      >
-                        Ver CV 📄
-                      </a>
-                    ) : (
-                      <Text color="gray.400">Sin archivo</Text>
-                    )}
-                  </Td>
-                  <Td>
-                    <Button
-                      onClick={() => confirmarEliminar(a.id)}
-                      colorScheme="red"
-                      size="sm"
-                      borderRadius="lg"
-                      leftIcon={<DeleteIcon />}
-                    >
-                      Eliminar
-                    </Button>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
-      ) : (
-        <Text mt={4} color="gray.500" fontWeight="medium" textAlign="center">
-          No hay postulaciones registradas.
-        </Text>
-      )}
+    <>
+      <Button variant="link" color="white" onClick={onOpen}>
+        Trabaja con nosotros
+      </Button>
 
-      {/* Confirmación de eliminación */}
-      <AlertDialog
-        isOpen={isAlertOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={() => setIsAlertOpen(false)}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Eliminar Aspirante
-            </AlertDialogHeader>
-            <AlertDialogBody>
-              ¿Estás seguro de que deseas eliminar este aspirante? Esta acción no se puede deshacer.
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={() => setIsAlertOpen(false)}>
-                Cancelar
-              </Button>
-              <Button colorScheme="red" onClick={eliminarAspirante} ml={3}>
-                Eliminar
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </Box>
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Postulación de Aspirante</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl isRequired mb={3}>
+              <FormLabel>Nombre</FormLabel>
+              <Input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            </FormControl>
+            <FormControl isRequired mb={3}>
+              <FormLabel>Email</FormLabel>
+              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </FormControl>
+            <FormControl isRequired mb={3}>
+              <FormLabel>Tipo de Trabajo</FormLabel>
+              <Select
+                placeholder="Selecciona un tipo"
+                value={tipoTrabajoId}
+                onChange={(e) => setTipoTrabajoId(e.target.value)}
+              >
+                {tipos.map((tipo) => (
+                  <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl mb={3}>
+              <FormLabel>Mensaje (opcional)</FormLabel>
+              <Textarea value={mensaje} onChange={(e) => setMensaje(e.target.value)} />
+            </FormControl>
+            <FormControl isRequired mb={3}>
+              <FormLabel>Subir CV (PDF)</FormLabel>
+              <Input
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => setCv(e.target.files?.[0] || null)}
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={handleSubmit}>
+              Enviar
+            </Button>
+            <Button onClick={onClose} ml={3}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
