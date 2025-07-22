@@ -16,11 +16,13 @@ import {
   AlertDialogFooter,
   Button,
   useColorModeValue,
+  Icon,
+  Link,
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 import API from "../api/authService";
 import { useAuth } from "../auth/AuthContext";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { AttachmentIcon, DeleteIcon } from "@chakra-ui/icons";
 
 interface Aspirante {
   _id: string;
@@ -105,14 +107,16 @@ const ListaAspirantes = () => {
                   <Td color="black">{a.mensaje || "—"}</Td>
                   <Td>
                     {a.cvUrl ? (
-                      <a
+                      <Link
                         href={a.cvUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: "#3182ce", fontWeight: "bold" }}
+                        isExternal
+                        color="blue.500"
+                        fontWeight="semibold"
+                        display="flex"
+                        alignItems="center"
                       >
-                        Ver CV 📄
-                      </a>
+                        <Icon as={AttachmentIcon} mr={1} /> Ver CV
+                      </Link>
                     ) : (
                       <Text color="gray.400">Sin archivo</Text>
                     )}
