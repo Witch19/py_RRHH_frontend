@@ -83,7 +83,7 @@ const ListaAspirantes = () => {
           borderRadius="lg"
           overflowX="auto"
           boxShadow="md"
-          bg={useColorModeValue("white", "gray.800")}
+          bg={useColorModeValue("black", "gray.800")}
         >
           <Table variant="simple" colorScheme="teal">
             <Thead bg={useColorModeValue("gray.100", "gray.700")}>
