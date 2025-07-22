@@ -3,7 +3,7 @@ import {
   ModalBody, ModalCloseButton, Button, FormControl, FormLabel,
   Input, Textarea, Select, useToast, useDisclosure
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import API from "../api/authService";
 
 interface TipoTrabajo {
@@ -21,6 +21,8 @@ const ModalAgregarAspirante = () => {
   const [mensaje, setMensaje] = useState("");
   const [cv, setCv] = useState<File | null>(null);
   const [tipos, setTipos] = useState<TipoTrabajo[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchTipos = async () => {
@@ -45,6 +47,7 @@ const ModalAgregarAspirante = () => {
     setTipoTrabajoId("");
     setMensaje("");
     setCv(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async () => {
@@ -61,8 +64,8 @@ const ModalAgregarAspirante = () => {
     formData.append("cv", cv);
 
     try {
-      await API.post("/aspirante", formData); // ❌ NO pongas headers
-
+      setIsSubmitting(true);
+      await API.post("/aspirante", formData); // ✅ no pongas headers
       toast({ title: "Postulación enviada con éxito", status: "success" });
       resetForm();
       onClose();
@@ -73,6 +76,8 @@ const ModalAgregarAspirante = () => {
         status: "error",
         isClosable: true,
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -118,11 +123,12 @@ const ModalAgregarAspirante = () => {
                 type="file"
                 accept="application/pdf"
                 onChange={(e) => setCv(e.target.files?.[0] || null)}
+                ref={fileInputRef}
               />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" onClick={handleSubmit}>
+            <Button colorScheme="blue" onClick={handleSubmit} isLoading={isSubmitting}>
               Enviar
             </Button>
             <Button onClick={onClose} ml={3}>

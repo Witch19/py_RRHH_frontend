@@ -1,3 +1,4 @@
+// src/pages/ListaAspirantes.tsx
 import {
   Box,
   Table,
@@ -47,7 +48,10 @@ const ListaAspirantes = () => {
 
   useEffect(() => {
     if (isAdmin) {
-      API.get("/aspirante").then((res) => setAspirantes(res.data));
+      API.get("/aspirante").then((res) => {
+        console.log("📄 Aspirantes:", res.data); // Verifica que tenga cvUrl
+        setAspirantes(res.data);
+      });
     }
   }, [isAdmin]);
 
@@ -114,6 +118,7 @@ const ListaAspirantes = () => {
                         fontWeight="semibold"
                         display="flex"
                         alignItems="center"
+                        _hover={{ textDecoration: "underline" }}
                       >
                         <Icon as={AttachmentIcon} mr={1} /> Ver CV
                       </Link>
