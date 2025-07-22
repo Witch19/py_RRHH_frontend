@@ -45,12 +45,14 @@ const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
     telefono: "",
     tipoTrabajoId: undefined,
   });
+
   const [tipoTrabajos, setTipoTrabajos] = useState<TipoTrabajo[]>([]);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const isEdit = !!usuario;
 
+  // Cargar lista de áreas
   useEffect(() => {
     const fetchTipoTrabajos = async () => {
       try {
@@ -65,10 +67,10 @@ const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
         });
       }
     };
-
     fetchTipoTrabajos();
   }, []);
 
+  // Cargar datos del usuario en el modal si se va a editar
   useEffect(() => {
     if (usuario) {
       setForm({
@@ -89,9 +91,14 @@ const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
     }
   }, [usuario]);
 
-  const handleChange = (e: any) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: name === "tipoTrabajoId" ? parseInt(value) : value });
+    setForm({
+      ...form,
+      [name]: name === "tipoTrabajoId" ? parseInt(value) : value,
+    });
   };
 
   const handleSubmit = async () => {
@@ -99,15 +106,24 @@ const ModalUsuario = ({ isOpen, onClose, usuario, onSave }: Props) => {
     try {
       if (isEdit && usuario?._id) {
         await API.put(`/auth/${usuario._id}`, form);
-        toast({ title: "Usuario actualizado", status: "success", duration: 3000 });
+        toast({
+          title: "Usuario actualizado",
+          status: "success",
+          duration: 3000,
+        });
       } else {
         const password = prompt("Asignar contraseña al nuevo usuario:");
         if (!password) throw new Error("Contraseña requerida");
 
         await API.post("/auth/register", { ...form, password });
-        toast({ title: "Usuario creado", status: "success", duration: 3000 });
+        toast({
+          title: "Usuario creado",
+          status: "success",
+          duration: 3000,
+        });
       }
-      onSave();
+
+      onSave(); // 🔁 actualiza la tabla de usuarios
     } catch (err: any) {
       toast({
         title: "Error",
