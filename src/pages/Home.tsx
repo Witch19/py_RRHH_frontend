@@ -30,10 +30,6 @@ const Home = () => {
         bg="rgba(0,0,0,0.4)"
       >
         <HStack spacing={4}>
-          <Image src="/Logo.png" alt="Logo" boxSize="40px" />
-          <Heading size="md" color="white">Neuratech</Heading>
-        </HStack>
-        <HStack spacing={4}>
           <Button as={RouterLink} to="/" variant="ghost" color="white">Home</Button>
           <Button as={RouterLink} to="/login" variant="ghost" color="white">Iniciar sesion</Button>
           <Button as={RouterLink} to="/register" variant="ghost" color="white">Registro</Button>
@@ -97,21 +93,23 @@ const Home = () => {
 
 
       {/* ABOUT THE EVENT */}
-      <Flex bg="white" py={20} px={8} align="center">
-        <Box flex="1" pr={8}>
-          <Text textTransform="uppercase" color="blue.500" letterSpacing="wide" mb={2}>
-            About the event
+      <Flex bg="white" py={20} px={8} align="center" justify="space-between" direction={["column", "row"]}>
+        <Box flex="1" pr={[0, 8]} mb={[8, 0]}>
+          <Text textTransform="uppercase" color="blue.500" fontWeight="bold" letterSpacing="wide" mb={2}>
+            About the Event
           </Text>
-          <Heading size="xl" mb={4}>Work Life Balance – Reality or Myth?</Heading>
-          <Text color="gray.600">
-            I'm a paragraph. Click here to add your own text and edit me…
+          <Heading size="xl" mb={4} fontWeight="extrabold" color="#1A253A">
+            Work Life Balance – Reality or Myth?
+          </Heading>
+          <Text color="gray.600" fontSize="md">
+            ¿Es posible encontrar el equilibrio perfecto entre la vida laboral y personal? Descubre con nosotros esta reflexión en un evento inspirador que conecta con tu realidad diaria.
           </Text>
         </Box>
         <Box>
           <MotionImage
             src="/icon-event.png"
             alt="event icon"
-            boxSize="300px"
+            boxSize={["180px", "240px", "300px"]}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.6 }}
@@ -119,8 +117,6 @@ const Home = () => {
         </Box>
       </Flex>
 
-      {/* INTERMEDIATE IMAGE */}
-      <Image src="/crowd.jpg" alt="Crowd at event" w="100%" />
 
       {/* ABOUT NET-WORK */}
       <Flex bg="#1A253A" color="white" py={20} px={8} align="center">
