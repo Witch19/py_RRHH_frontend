@@ -153,14 +153,14 @@ const Home = () => {
 
 
       {/* PAST EVENTS */}
-      <Box bg="teal.200" py={16} px={8} textAlign="center">
+      <Box bg="#40E0D0" py={16} px={8} textAlign="center">
         <Heading mb={6} color="white">Nuestras Soluciones</Heading>
 
-        <Text mb={10} color="white" maxW="3xl" mx="auto">
+        <Text mb={10} color="white" maxW="4xl" mx="auto">
           Contamos con diversos productos, servicios, insumos, software y convenios de mantención, seleccionados e importados bajo los más altos estándares de calidad.
         </Text>
 
-        <SimpleGrid columns={1} spacing={6} maxW="md" mx="auto">
+        <SimpleGrid columns={[1, 2, 3]} spacing={6} maxW="7xl" mx="auto">
           {[
             {
               name: "Portal de Empleados",
@@ -202,14 +202,26 @@ const Home = () => {
               transition={{ duration: 0.3 }}
               p={4}
               boxShadow="md"
+              textAlign="left"
+              w="100%"
+              minH="240px"
             >
-              <Image src={o.src} alt={o.name} borderRadius="md" w="100%" h="auto" />
-              <Text mt={4} fontWeight="bold" fontSize="lg">{o.name}</Text>
+              <Image
+                src={o.src}
+                alt={o.name}
+                borderRadius="md"
+                w="80px"
+                h="80px"
+                objectFit="contain"
+                mb={4}
+              />
+              <Text fontWeight="bold" fontSize="md" mb={1}>{o.name}</Text>
               <Text color="gray.500" fontSize="sm">{o.role}</Text>
             </MotionBox>
           ))}
         </SimpleGrid>
       </Box>
+
 
 
 
